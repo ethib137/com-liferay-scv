@@ -14,28 +14,22 @@
  */
 --%>
 
-<%@ include file="/init.jsp" %>
-
 <%
-PortletURL portletURL = renderResponse.createRenderURL();
-
-String tabs1 = ParamUtil.getString(request, "tabs1");
+String selUser = ParamUtil.getString(request, "selUser", "Evan");
 %>
 
-<div class="container-fluid-1280">
-	<liferay-ui:tabs
-		names="User Index,User Mapper"
-		param="tabs1"
-		portletURL="<%= portletURL %>"
-		refresh="<%= false %>"
-		type="tabs nav-tabs-default"
-	>
-		<liferay-ui:section>
-			<%@ include file="/user_index.jspf" %>
-		</liferay-ui:section>
+<div class="row">
+	<div class="col-md-3 user-list">
+		<liferay-ui:tabs
+			names="Evan,John"
+			param="selUser"
+			portletURL="<%= portletURL %>"
+			type="pills"
+		/>
+	</div>
+	<div class="col-md-9">
+		<%= selUser %>
 
-		<liferay-ui:section>
-			<%@ include file="/user_mapping.jspf" %>
-		</liferay-ui:section>
-	</liferay-ui:tabs>
+		<%@ include file="/user_view.jspf" %>
+	</div>
 </div>

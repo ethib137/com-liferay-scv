@@ -14,28 +14,21 @@
  */
 --%>
 
-<%@ include file="/init.jsp" %>
+<portlet:renderURL var="userIndexURL">
+	<portlet:param name="mvcPath" value="/user_index.jsp" />
+	<portlet:param name="redirect" value="<%= currentURL %>" />
+</portlet:renderURL>
 
-<%
-PortletURL portletURL = renderResponse.createRenderURL();
+<portlet:renderURL var="userMapperURL">
+	<portlet:param name="mvcPath" value="/view.jsp" />
+	<portlet:param name="redirect" value="<%= currentURL %>" />
+</portlet:renderURL>
 
-String tabs1 = ParamUtil.getString(request, "tabs1");
-%>
-
-<div class="container-fluid-1280">
-	<liferay-ui:tabs
-		names="User Index,User Mapper"
-		param="tabs1"
-		portletURL="<%= portletURL %>"
-		refresh="<%= false %>"
-		type="tabs nav-tabs-default"
-	>
-		<liferay-ui:section>
-			<%@ include file="/user_index.jspf" %>
-		</liferay-ui:section>
-
-		<liferay-ui:section>
-			<%@ include file="/user_mapping.jspf" %>
-		</liferay-ui:section>
-	</liferay-ui:tabs>
-</div>
+<liferay-ui:tabs
+	names="User Index, User Mapper"
+	type="tabs nav-tabs-default"
+	value="<%= currentTab %>"
+	url="<%= currentURL %>"
+	url0="<%= userIndexURL %>"
+	url1="<%= userMapperURL %>"
+/>

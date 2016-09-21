@@ -26,6 +26,11 @@ DataSource dataSource = DataSourceUtil.getDataSource(dataSourceId);
 String tableName = ParamUtil.getString(request, "tableName");
 %>
 
+<liferay-ui:header
+	backURL="<%= redirect %>"
+	title="add-user-mapping-rule"
+/>
+
 <liferay-portlet:actionURL name="addUserMappingRule" var="addUserMappingRuleURL" />
 
 <aui:form action="<%= addUserMappingRuleURL %>" cssClass="container-fluid-1280" method="post" name="fm">
