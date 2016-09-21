@@ -1,0 +1,103 @@
+<%--
+/**
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+--%>
+
+<%@ include file="/init.jsp" %>
+
+<%
+PortletURL portletURL = renderResponse.createRenderURL();
+%>
+
+<div class="container-fluid-1280">
+	<aui:form method="post" name="fm">
+		<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
+
+		<liferay-ui:search-container
+			emptyResultsMessage="no-user-mapping-rules-were-found"
+			iteratorURL="<%= portletURL %>"
+		>
+
+			<%
+			List<UserMappingRule> userMappingRules = UserMappingRuleServiceUtil.getUserMappingRules(searchContainer.getStart(), searchContainer.getEnd());
+			%>
+
+			<liferay-ui:search-container-results
+				results="<%= userMappingRules %>"
+			/>
+
+			<liferay-ui:search-container-row
+				className="com.liferay.osb.scv.user.mapper.model.UserMappingRule"
+				escapedModel="<%= true %>"
+				keyProperty="userMappingRuleId"
+				modelVar="userMappingRule"
+			>
+				<liferay-ui:search-container-column-text
+					cssClass="content-column name-column title-column"
+					name="source-field"
+					property="sourceField"
+				/>
+
+				<%
+				DataSource dataSource = DataSourceUtil.getDataSource(userMappingRule.getDataSourceId());
+				%>
+
+				<liferay-ui:search-container-column-text
+					name="data-source"
+					value="<%= dataSource.getName() %>"
+				/>
+
+				<liferay-ui:search-container-column-text
+					name="destination-field"
+					property="destinationField"
+				/>
+
+				<%
+				Frequency frequency = FrequencyUtil.getFrequency(userMappingRule.getFrequency());
+				%>
+
+				<liferay-ui:search-container-column-text
+					name="frequency"
+					value="<%= frequency.getName() %>"
+				/>
+
+				<%
+				FieldSet fieldSet = FieldSetUtil.getFieldSet(userMappingRule.getFieldSetId());
+				%>
+
+				<liferay-ui:search-container-column-text
+					name="field-set"
+					value="<%= fieldSet.getName() %>"
+				/>
+
+				<liferay-ui:search-container-column-jsp
+					align="right"
+					cssClass="entry-action-column"
+					path="/rules_action.jsp"
+				/>
+			</liferay-ui:search-container-row>
+
+			<liferay-ui:search-iterator markupView="lexicon" />
+		</liferay-ui:search-container>
+	</aui:form>
+
+	<portlet:renderURL var="addRuleURL">
+		<portlet:param name="mvcPath" value="/add_rule.jsp" />
+		<portlet:param name="redirect" value="<%= currentURL %>" />
+	</portlet:renderURL>
+
+	<liferay-frontend:add-menu>
+		<liferay-frontend:add-menu-item title='<%= LanguageUtil.get(request, "add-user-mapping-rule") %>' url="<%= addRuleURL %>" />
+	</liferay-frontend:add-menu>
+</div>

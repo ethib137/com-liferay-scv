@@ -1,0 +1,12 @@
+Bundle-Name: Liferay OSB SCV User Mapper API
+Bundle-SymbolicName: com.liferay.osb.scv.user.mapper.api
+Bundle-Version: 1.0.0
+Export-Package:\
+	com.liferay.osb.scv.user.mapper.exception,\
+	com.liferay.osb.scv.user.mapper.model,\
+	com.liferay.osb.scv.user.mapper.model.constants,\
+	com.liferay.osb.scv.user.mapper.sample,\
+	com.liferay.osb.scv.user.mapper.service,\
+	com.liferay.osb.scv.user.mapper.service.persistence
+Liferay-Releng-Module-Group-Description:
+Liferay-Releng-Module-Group-Title: SCV User Mapper

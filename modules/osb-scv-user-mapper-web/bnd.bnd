@@ -1,0 +1,5 @@
+Bundle-Name: Liferay OSB SCV User Mapper Web
+Bundle-SymbolicName: com.liferay.osb.scv.user.mapper.web
+Bundle-Version: 1.0.0
+Liferay-Releng-Module-Group-Description:
+Liferay-Releng-Module-Group-Title: SCV User Mapper

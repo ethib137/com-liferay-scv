@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 7.0.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_7_0_0.dtd">
+
+<service-builder auto-namespace-tables="true" package-path="com.liferay.osb.scv.user.mapper">
+	<namespace>OSB_SCV</namespace>
+	<entity local-service="true" name="UserMappingRule" remote-service="true">
+
+		<!-- PK fields -->
+
+		<column name="userMappingRuleId" primary="true" type="long" />
+
+		<!-- Audit fields -->
+
+		<column name="companyId" type="long" />
+		<column name="userId" type="long" />
+		<column name="userName" type="String" />
+		<column name="createDate" type="Date" />
+		<column name="modifiedDate" type="Date" />
+
+		<!-- Other fields -->
+
+		<column name="dataSourceId" type="long" />
+		<column name="fieldSetId" type="long" />
+		<column name="sourceField" type="String" />
+		<column name="destinationField" type="String" />
+		<column name="frequency" type="int" />
+
+		<!-- Finder methods -->
+
+		<finder name="CompanyId" return-type="Collection">
+			<finder-column name="companyId" />
+		</finder>
+
+		<finder name="D_F" return-type="Collection">
+			<finder-column name="dataSourceId" />
+			<finder-column name="frequency" />
+		</finder>
+	</entity>
+</service-builder>
