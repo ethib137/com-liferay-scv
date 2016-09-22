@@ -11,6 +11,10 @@ gradle.properties
 .gradle
 build/
 
+# IDE #
+
+*.iml
+*.touch
 
 # Compiled source #
 ###################
@@ -20,7 +24,7 @@ build/
 *.exe
 *.o
 *.so
-
+modules/*/build/lib
 
 # OS generated files #
 ######################
