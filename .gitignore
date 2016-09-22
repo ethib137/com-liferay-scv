@@ -2,7 +2,14 @@
 
 bundles
 
+# Custom Settings #
+
 gradle.properties
+
+# Built Files #
+
+.gradle
+build/
 
 
 # Compiled source #
