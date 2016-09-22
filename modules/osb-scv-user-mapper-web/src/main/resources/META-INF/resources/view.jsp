@@ -18,15 +18,11 @@
 
 <%
 PortletURL portletURL = renderResponse.createRenderURL();
-
-String tabs1 = ParamUtil.getString(request, "tabs1");
 %>
 
 <div class="container-fluid-1280">
 	<liferay-ui:tabs
 		names="User Index,User Mapper"
-		param="tabs1"
-		portletURL="<%= portletURL %>"
 		refresh="<%= false %>"
 		type="tabs nav-tabs-default"
 	>

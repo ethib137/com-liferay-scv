@@ -34,9 +34,9 @@ for (int i = 0; i < jsonArray.length(); i++) {
 	JSONObject jsonObject = jsonArray.getJSONObject(i);
 %>
 
-	<div>
-		<span><%= jsonObject.getString("label") %></span>: <span><%= jsonObject.getString("value") %></span>
-	</div>
+	<aui:fieldset-group>
+		<aui:fieldset label="<%= jsonObject.getString("label") %>"><%= jsonObject.getString("value") %></aui:fieldset>
+	</aui:fieldset-group>
 
 <%
 }

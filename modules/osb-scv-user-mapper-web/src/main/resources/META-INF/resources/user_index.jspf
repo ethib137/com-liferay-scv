@@ -21,6 +21,7 @@ String selUser = ParamUtil.getString(request, "selUser", "Evan");
 <div class="row">
 	<div class="col-md-3 user-list">
 		<liferay-ui:tabs
+			formName="different"
 			names="Evan,John"
 			param="selUser"
 			portletURL="<%= portletURL %>"
