@@ -28,11 +28,14 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -45,35 +48,95 @@ public class UpdateUsersEvent extends BaseEvent {
 		long dataSourceId, List<UserMappingRule> userMappingRules) {
 
 		_dataSourceId = dataSourceId;
-		_userMappingRules = userMappingRules;
+
+		for (UserMappingRule userMappingRule : userMappingRules) {
+			List<UserMappingRule> userMapperRulesList =
+				_userMappingRulesMap.get(userMappingRule.getModelName());
+
+			if (userMapperRulesList == null) {
+				userMapperRulesList = new ArrayList<>();
+
+				_userMappingRulesMap.put(
+					userMappingRule.getModelName(), userMapperRulesList);
+			}
+
+			userMapperRulesList.add(userMappingRule);
+		}
 	}
 
 	@Override
 	public void run() {
 		try {
-			if (_userMappingRules.isEmpty()) {
+			if (_userMappingRulesMap.isEmpty()) {
 				return;
 			}
 
 			Map<String, Object> parameters = new HashMap<>();
 
-			Map<String, List<String>> fields = new HashMap<>();
+			Map<String, List<String>> fieldsMap = new HashMap<>();
 
-			parameters.put("method", EventConstants.GET_USERS);
+			parameters.put("method", EventConstants.GET_USERS + "2");
 
-			for (UserMappingRule userMappingRule : _userMappingRules) {
-				addField(fields, userMappingRule.getSourceField());
+			for (Map.Entry<String, List<UserMappingRule>> entry :
+					_userMappingRulesMap.entrySet()) {
+
+				List<UserMappingRule> userMappingRules = entry.getValue();
+
+				for (UserMappingRule userMappingRule : userMappingRules) {
+					List<String> fields = fieldsMap.get(entry.getKey());
+
+					if (fields == null) {
+						fields = new ArrayList<>();
+
+						fieldsMap.put(entry.getKey(), fields);
+					}
+
+					fields.add(userMappingRule.getSourceField());
+				}
 			}
 
 			DataSource dataSource = DataSourceUtil.getDataSource(_dataSourceId);
 
-			addField(fields, dataSource.getIdField());
+			Map<String, List<String>> idFields = dataSource.getIdFields();
 
-			for (String requiredField : dataSource.getRequiredFields()) {
-				addField(fields, requiredField);
+			for (Map.Entry<String, List<String>> entry : idFields.entrySet()) {
+				String key = entry.getKey();
+
+				List<String> fields = fieldsMap.get(key);
+
+				if ((fields == null)) {
+					if (!key.equals("User")) {
+						continue;
+					}
+
+					fields = new ArrayList<>();
+
+					fieldsMap.put(key, fields);
+				}
+
+				for (String field : entry.getValue()) {
+					fields.add(field);
+				}
 			}
 
-			parameters.put("fields", fields);
+			Map<String, List<String>> requiredFields =
+				dataSource.getRequiredFields();
+
+			for (Map.Entry<String, List<String>> entry :
+					requiredFields.entrySet()) {
+
+				String key = entry.getKey();
+
+				List<String> fields = fieldsMap.get(key);
+
+				if ((fields != null)) {
+					for (String field : entry.getValue()) {
+						fields.add(field);
+					}
+				}
+			}
+
+			parameters.put("fields", fieldsMap);
 			parameters.put("dataSourceId", _dataSourceId);
 
 			run(parameters);
@@ -83,59 +146,67 @@ public class UpdateUsersEvent extends BaseEvent {
 		}
 	}
 
-	protected void addField(Map<String, List<String>> fields, String field) {
-		int index = field.indexOf("#");
-
-		String tableName = field.substring(0, index);
-		String fieldName = field.substring(index + 1);
-
-		List<String> tableFields = fields.get(tableName);
-
-		if (tableFields == null) {
-			tableFields = new ArrayList<>();
-		}
-
-		if (!tableFields.contains(fieldName)) {
-			tableFields.add(fieldName);
-		}
-
-		fields.put(tableName, tableFields);
-	}
-
 	public void handleResponse(Message message) throws Exception {
-		JSONArray sourceJSONArray = JSONFactoryUtil.createJSONArray(
+		JSONObject sourceJSONObject = JSONFactoryUtil.createJSONObject(
 			String.valueOf(message.getPayload()));
+
+		JSONObject destinationJSONObject = JSONFactoryUtil.createJSONObject();
 
 		DataSource dataSource = DataSourceUtil.getDataSource(_dataSourceId);
 
-		for (int i = 0; i < sourceJSONArray.length(); i++) {
-			JSONObject sourceJSONObject = sourceJSONArray.getJSONObject(i);
+		Map<String, List<String>> idFields = dataSource.getIdFields();
 
-			JSONObject destinationJSONObject =
-				JSONFactoryUtil.createJSONObject();
-
-			for (UserMappingRule userMappingRule : _userMappingRules) {
-				destinationJSONObject.put(
-					userMappingRule.getDestinationField(),
-					sourceJSONObject.get(userMappingRule.getSourceField()));
-			}
-
-			Map<String, String> idFields = new HashMap<>();
-
-			idFields.put(
-				"idField", _dataSourceId + "#" +
-					sourceJSONObject.get(dataSource.getIdField()));
-
-			String searchTerm = dataSource.getRequiredFields().get(0);
-
-			idFields.put(
-				"searchTerm", sourceJSONObject.getString(searchTerm));
-
-			UserProfileUtil.addSCVUserProfile(idFields, destinationJSONObject);
+		if (!_userMappingRulesMap.containsKey("User")) {
+			destinationJSONObject.put(
+				"User", sourceJSONObject.getJSONArray("User"));
 		}
+
+		Iterator<String> keys = sourceJSONObject.keys();
+
+		while (keys.hasNext()) {
+			String key = keys.next();
+
+			List<UserMappingRule> userMappingRules = _userMappingRulesMap.get(
+				key);
+
+			if (ListUtil.isNotNull(userMappingRules)) {
+				JSONArray sourceModelJSONArray =
+					sourceJSONObject.getJSONArray(key);
+
+				JSONArray destinationModelJSONArray =
+					JSONFactoryUtil.createJSONArray();
+
+				for (int i = 0; i < sourceModelJSONArray.length(); i++) {
+					JSONObject sourceModelJSONObject =
+						sourceModelJSONArray.getJSONObject(i);
+					JSONObject destinationModelJSONObject =
+						JSONFactoryUtil.createJSONObject();
+
+					for (UserMappingRule userMappingRule : userMappingRules) {
+						destinationModelJSONObject.put(
+							userMappingRule.getDestinationField(),
+							sourceModelJSONObject.getString(
+								userMappingRule.getSourceField()));
+
+						for (String idField : idFields.get(key)) {
+							destinationModelJSONObject.put(
+								idField,
+								sourceModelJSONObject.getString(idField));
+						}
+					}
+
+					destinationModelJSONArray.put(destinationModelJSONObject);
+				}
+
+				destinationJSONObject.put(key, destinationModelJSONArray);
+			}
+		}
+
+		UserProfileUtil.updateDataSourceEntries(_dataSourceId, dataSource.getRequiredFields(), destinationJSONObject);
 	}
 
 	private final long _dataSourceId;
-	private final List<UserMappingRule> _userMappingRules;
+	private final Map<String, List<UserMappingRule>> _userMappingRulesMap =
+		new HashMap<>();
 
 }

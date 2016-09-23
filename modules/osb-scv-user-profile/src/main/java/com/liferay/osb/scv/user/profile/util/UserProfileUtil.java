@@ -27,6 +27,7 @@ import com.liferay.portal.kernel.util.Validator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -48,10 +49,8 @@ import org.osgi.service.component.annotations.Reference;
 public class UserProfileUtil {
 
 	public static JSONArray getSCVUserProfiles() {
-
+		return JSONFactoryUtil.createJSONArray();
 	}
-
-	private static
 
 	public static JSONObject getSCVUserProfile(String scvUserProfileId)
 		throws Exception {
@@ -95,7 +94,8 @@ public class UserProfileUtil {
 	}
 
 	public static void updateDataSourceEntries(
-			long dataSourceId, String idFieldName, JSONObject jsonObject)
+			long dataSourceId, Map<String, List<String>> searchTermFieldName,
+			JSONObject jsonObject)
 		throws Exception {
 
 		Iterator<String> iterator = jsonObject.keys();

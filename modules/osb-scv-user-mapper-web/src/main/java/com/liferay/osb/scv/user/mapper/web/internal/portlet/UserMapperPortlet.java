@@ -71,8 +71,8 @@ public class UserMapperPortlet extends MVCPortlet {
 		int frequency = ParamUtil.getInteger(actionRequest, "frequency");
 
 		_userMappingRuleService.addUserMappingRule(
-			dataSourceId, fieldSetId, tableName.concat("#").concat(sourceField),
-			destinationField, frequency);
+			dataSourceId, fieldSetId, tableName, sourceField, destinationField,
+			frequency);
 	}
 
 	public void deleteUserMappingRule(
