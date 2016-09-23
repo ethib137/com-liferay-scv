@@ -120,12 +120,18 @@ public class UpdateUsersEvent extends BaseEvent {
 					sourceJSONObject.get(userMappingRule.getSourceField()));
 			}
 
+			Map<String, String> idFields = new HashMap<>();
+
+			idFields.put(
+				"idField", _dataSourceId + "#" +
+					sourceJSONObject.get(dataSource.getIdField()));
+
 			String searchTerm = dataSource.getRequiredFields().get(0);
 
-			UserProfileUtil.updateDataSourceEntry(
-				_dataSourceId,
-				sourceJSONObject.getString(dataSource.getIdField()),
-				sourceJSONObject.getString(searchTerm), destinationJSONObject);
+			idFields.put(
+				"searchTerm", sourceJSONObject.getString(searchTerm));
+
+			UserProfileUtil.addSCVUserProfile(idFields, destinationJSONObject);
 		}
 	}
 
