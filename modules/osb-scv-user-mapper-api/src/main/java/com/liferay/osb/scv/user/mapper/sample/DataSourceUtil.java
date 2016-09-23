@@ -19,6 +19,8 @@ import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
@@ -28,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -133,11 +136,46 @@ public class DataSourceUtil {
 					return jsonObject.getString("idField");
 				}
 
-				public List<String> getRequiredFields() {
-					String requiredFields = jsonObject.getString(
+				public Map<String, List<String>> getIdFields() {
+					JSONObject idFields = jsonObject.getJSONObject("idFields");
+
+					Iterator<String> keys = idFields.keys();
+
+					Map<String, List<String>> idFieldsMap = new HashMap<>();
+
+					while (keys.hasNext()) {
+						String key = keys.next();
+
+						idFieldsMap.put(
+							key,
+							Arrays.asList(
+								StringUtil.split(
+									idFields.getString(key))));
+					}
+
+					return idFieldsMap;
+				}
+
+				public Map<String, List<String>> getRequiredFields() {
+					JSONObject requiredFields = jsonObject.getJSONObject(
 						"requiredFields");
 
-					return Arrays.asList(StringUtil.split(requiredFields));
+					Iterator<String> keys = requiredFields.keys();
+
+					Map<String, List<String>> requiredFieldsMap =
+						new HashMap<>();
+
+					while (keys.hasNext()) {
+						String key = keys.next();
+
+						requiredFieldsMap.put(
+							key,
+							Arrays.asList(
+								StringUtil.split(
+									requiredFields.getString(key))));
+					}
+
+					return requiredFieldsMap;
 				}
 
 				public String getType() {

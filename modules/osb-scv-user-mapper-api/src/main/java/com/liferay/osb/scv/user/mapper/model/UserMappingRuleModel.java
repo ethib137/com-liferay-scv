@@ -205,6 +205,21 @@ public interface UserMappingRuleModel extends AuditedModel,
 	public void setFieldSetId(long fieldSetId);
 
 	/**
+	 * Returns the model name of this user mapping rule.
+	 *
+	 * @return the model name of this user mapping rule
+	 */
+	@AutoEscape
+	public String getModelName();
+
+	/**
+	 * Sets the model name of this user mapping rule.
+	 *
+	 * @param modelName the model name of this user mapping rule
+	 */
+	public void setModelName(String modelName);
+
+	/**
 	 * Returns the source field of this user mapping rule.
 	 *
 	 * @return the source field of this user mapping rule

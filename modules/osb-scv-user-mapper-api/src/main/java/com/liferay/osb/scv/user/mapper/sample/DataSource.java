@@ -32,7 +32,9 @@ public interface DataSource {
 
 	public String getIdField();
 
-	public List<String> getRequiredFields();
+	public Map<String, List<String>> getIdFields();
+
+	public Map<String, List<String>> getRequiredFields();
 
 	public List<String> getTableNames();
 

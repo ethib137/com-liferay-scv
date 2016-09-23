@@ -66,6 +66,7 @@ public class UserMappingRuleWrapper implements UserMappingRule,
 		attributes.put("modifiedDate", getModifiedDate());
 		attributes.put("dataSourceId", getDataSourceId());
 		attributes.put("fieldSetId", getFieldSetId());
+		attributes.put("modelName", getModelName());
 		attributes.put("sourceField", getSourceField());
 		attributes.put("destinationField", getDestinationField());
 		attributes.put("frequency", getFrequency());
@@ -121,6 +122,12 @@ public class UserMappingRuleWrapper implements UserMappingRule,
 
 		if (fieldSetId != null) {
 			setFieldSetId(fieldSetId);
+		}
+
+		String modelName = (String)attributes.get("modelName");
+
+		if (modelName != null) {
+			setModelName(modelName);
 		}
 
 		String sourceField = (String)attributes.get("sourceField");
@@ -215,6 +222,16 @@ public class UserMappingRuleWrapper implements UserMappingRule,
 	@Override
 	public java.lang.String getDestinationField() {
 		return _userMappingRule.getDestinationField();
+	}
+
+	/**
+	* Returns the model name of this user mapping rule.
+	*
+	* @return the model name of this user mapping rule
+	*/
+	@Override
+	public java.lang.String getModelName() {
+		return _userMappingRule.getModelName();
 	}
 
 	/**
@@ -421,6 +438,16 @@ public class UserMappingRuleWrapper implements UserMappingRule,
 	@Override
 	public void setFrequency(int frequency) {
 		_userMappingRule.setFrequency(frequency);
+	}
+
+	/**
+	* Sets the model name of this user mapping rule.
+	*
+	* @param modelName the model name of this user mapping rule
+	*/
+	@Override
+	public void setModelName(java.lang.String modelName) {
+		_userMappingRule.setModelName(modelName);
 	}
 
 	/**

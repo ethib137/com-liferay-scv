@@ -23,13 +23,22 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Address;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.Contact;
+import com.liferay.portal.kernel.model.EmailAddress;
+import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.Organization;
+import com.liferay.portal.kernel.model.Phone;
+import com.liferay.portal.kernel.model.Role;
+import com.liferay.portal.kernel.model.Team;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.model.Website;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.UniqueList;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.beans.BeanInfo;
@@ -39,10 +48,14 @@ import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -64,7 +77,7 @@ import org.osgi.service.component.annotations.Reference;
 public class SCVUserJSONWS {
 
 	@Activate
-	public void activate() throws Exception {
+	protected void activate() throws Exception {
 		BeanInfo beanInfo = Introspector.getBeanInfo(BaseModel.class);
 
 		PropertyDescriptor[] propertyDescriptors =
@@ -80,11 +93,11 @@ public class SCVUserJSONWS {
 	}
 
 	@Deactivate
-	public void deactivate() throws Exception {
+	protected void deactivate() throws Exception {
 		_ignoredFields.clear();
 	}
 
-	public Class<?> getClass(String className) throws ClassNotFoundException {
+	protected Class<?> getClass(String className) throws ClassNotFoundException {
 		try {
 			Thread currentThread = Thread.currentThread();
 
@@ -122,7 +135,7 @@ public class SCVUserJSONWS {
 		return jsonArray;
 	}
 
-	public void getUser(
+	protected void addUser(
 		JSONObject jsonObject, BaseModel baseModel, List<String> fields) {
 
 		if ((fields == null) || fields.isEmpty()) {
@@ -157,6 +170,32 @@ public class SCVUserJSONWS {
 				jsonObject.put(className.concat(field), value);
 			}
 		}
+	}
+
+	protected JSONObject addUser2(
+		JSONObject jsonObject, BaseModel baseModel, List<String> fields) {
+
+		if ((fields == null) || fields.isEmpty()) {
+			return null;
+		}
+
+		ExpandoBridge expandoBridge = baseModel.getExpandoBridge();
+
+		for (String field : fields) {
+			if (field.startsWith(_CUSTOM_FIELD)) {
+				Serializable attribute = expandoBridge.getAttribute(
+					field.replace(_CUSTOM_FIELD, StringPool.BLANK));
+
+				jsonObject.put(field, String.valueOf(attribute));
+			}
+			else {
+				String value = BeanPropertiesUtil.getString(baseModel, field);
+
+				jsonObject.put(field, value);
+			}
+		}
+
+		return jsonObject;
 	}
 
 //	public JSONArray getUsers(String fields, int start, int end) {
@@ -204,11 +243,11 @@ public class SCVUserJSONWS {
 
 			// User
 
-			getUser(jsonObject, user, userFields);
+			addUser(jsonObject, user, userFields);
 
 			// Contact
 
-			getUser(jsonObject, user.getContact(), contactFields);
+			addUser(jsonObject, user.getContact(), contactFields);
 
 			if (jsonObject.length() == 0) {
 				continue;
@@ -218,6 +257,187 @@ public class SCVUserJSONWS {
 		}
 
 		return usersJSONArray;
+	}
+
+	public JSONObject getUsers2(Map<String, List<String>> fields)
+		throws Exception {
+
+		JSONObject usersJSONObject = JSONFactoryUtil.createJSONObject();
+
+		List<String> userFields = fields.get("User");
+
+		Map<String, Set<BaseModel<?>>> associatedModels = new HashMap<>();
+
+		JSONArray usersJSONArray = JSONFactoryUtil.createJSONArray();
+
+		for (User user : _userLocalService.getUsers(-1, -1)) {
+			JSONObject userJSONObject = JSONFactoryUtil.createJSONObject();
+
+			addUser2(userJSONObject, user, userFields);
+
+			addAssociations(userJSONObject, user, fields, associatedModels);
+
+			usersJSONArray.put(userJSONObject);
+		}
+
+		usersJSONObject.put("User", usersJSONArray);
+
+		for (Map.Entry<String, Set<BaseModel<?>>> entrySet :
+				associatedModels.entrySet()) {
+
+			JSONArray modelsJSONArray = JSONFactoryUtil.createJSONArray();
+
+			List<String> modelFields = fields.get(entrySet.getKey());
+
+			for (BaseModel<?> baseModel : entrySet.getValue()) {
+				JSONObject modelJSONObject = JSONFactoryUtil.createJSONObject();
+
+				addUser2(modelJSONObject, baseModel, modelFields);
+
+				modelsJSONArray.put(modelJSONObject);
+			}
+
+			usersJSONObject.put(entrySet.getKey(), modelsJSONArray);
+		}
+
+		return usersJSONObject;
+	}
+
+	protected void addModel(
+		Map<String, Set<BaseModel<?>>> modelMap, String key,
+		List<? extends BaseModel<?>> modelList) {
+
+		Set<BaseModel<?>> models = modelMap.get(key);
+
+		if (models == null) {
+			models = new HashSet<>();
+		}
+
+		models.addAll(modelList);
+
+		modelMap.put(key, models);
+	}
+
+	protected void addAssociations(
+			JSONObject jsonObject, User user,
+			Map<String, List<String>> fields,
+			Map<String, Set<BaseModel<?>>> models)
+		throws Exception {
+
+		// Address
+
+		if (fields.containsKey("Address")) {
+			List<Address> addresses = user.getAddresses();
+
+			List<Long> addressIds = new ArrayList<>();
+
+			for (Address address : addresses) {
+				addressIds.add(address.getAddressId());
+			}
+
+			jsonObject.put("addressIds", addressIds);
+
+			addModel(models, "Address", addresses);
+		}
+
+		// Contact
+
+		if (fields.containsKey("Contact")) {
+			jsonObject.put("contactIds", user.getContactId());
+
+			List<BaseModel<?>> contacts = new ArrayList<>();
+
+			contacts.add(user.getContact());
+
+			addModel(models, "Contact", contacts);
+		}
+
+		// Email address
+
+		if (fields.containsKey("Email")) {
+			List<EmailAddress> emailAddresses = user.getEmailAddresses();
+
+			List<Long> emailAddressIds = new ArrayList<>();
+
+			for (EmailAddress emailAddress : emailAddresses) {
+				emailAddressIds.add(emailAddress.getEmailAddressId());
+			}
+
+			jsonObject.put("emailAddressIds", emailAddressIds);
+
+			addModel(models, "EmailAddress", emailAddresses);
+		}
+
+		// Group
+
+		if (fields.containsKey("Group")) {
+			jsonObject.put("groupIds", user.getGroupIds());
+
+			addModel(models, "Group", user.getGroups());
+		}
+
+		// Organization
+
+		if (fields.containsKey("Organization")) {
+			jsonObject.put("organizationIds", user.getOrganizationIds());
+
+			addModel(models, "Organization", user.getOrganizations());
+		}
+
+		// Role
+
+		if (fields.containsKey("Role")) {
+			jsonObject.put("roleIds", user.getRoleIds());
+
+			addModel(models, "Role", user.getRoles());
+		}
+
+
+		// Team
+
+		if (fields.containsKey("Team")) {
+			jsonObject.put("teamIds", user.getTeamIds());
+
+			addModel(models, "Team", user.getTeams());
+		}
+
+		// Phone
+
+		if (fields.containsKey("Phone")) {
+			List<Phone> phones = user.getPhones();
+			List<Long> phoneIds = new ArrayList<>();
+
+			for (Phone phone : phones) {
+				phoneIds.add(phone.getPhoneId());
+			}
+
+			jsonObject.put("phoneIds", phoneIds);
+
+			addModel(models, "Phone", phones);
+		}
+
+		// User group
+
+		if (fields.containsKey("UserGroup")) {
+			jsonObject.put("userGroupIds", user.getUserGroupIds());
+
+			addModel(models, "UserGroup", user.getUserGroups());
+		}
+
+		// Website
+
+		if (fields.containsKey("Website")) {
+			List<Website> websites = user.getWebsites();
+			List<Long> websiteIds = new ArrayList<>();
+
+			for (Website website : websites) {
+				websiteIds.add(website.getWebsiteId());
+			}
+
+			jsonObject.put("websiteIds", websiteIds);
+
+			addModel(models, "Website", websites);
+		}
 	}
 
 	public int getUsersCount() {
@@ -269,7 +489,16 @@ public class SCVUserJSONWS {
 	private static final String _CUSTOM_FIELD = "CUSTOM_FIELD#";
 
 	private static final Class[] _MODEL_CLASSES =
-		new Class[] {Contact.class, User.class};
+		new Class[] {Address.class,
+					 Contact.class,
+					 EmailAddress.class,
+					 Group.class,
+					 Organization.class,
+					 Phone.class,
+					 Role.class,
+					 Team.class,
+					 User.class,
+					 Website.class};
 
 	private static final Log _log = LogFactoryUtil.getLog(SCVUserJSONWS.class);
 

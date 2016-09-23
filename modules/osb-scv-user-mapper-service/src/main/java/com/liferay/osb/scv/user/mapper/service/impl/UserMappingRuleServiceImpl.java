@@ -32,13 +32,13 @@ public class UserMappingRuleServiceImpl extends UserMappingRuleServiceBaseImpl {
 
 	@Override
 	public UserMappingRule addUserMappingRule(
-			long dataSourceId, long fieldSetId, String sourceField,
-			String destinationField, int frequency)
+			long dataSourceId, long fieldSetId, String modelName,
+			String sourceField, String destinationField, int frequency)
 		throws PortalException {
 
 		return userMappingRuleLocalService.addUserMappingRule(
 			CompanyThreadLocal.getCompanyId(), getUserId(), dataSourceId,
-			fieldSetId, sourceField, destinationField, frequency);
+			modelName, fieldSetId, sourceField, destinationField, frequency);
 	}
 
 	@Override

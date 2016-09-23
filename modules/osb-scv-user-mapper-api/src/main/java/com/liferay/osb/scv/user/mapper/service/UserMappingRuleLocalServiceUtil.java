@@ -54,12 +54,13 @@ public class UserMappingRuleLocalServiceUtil {
 	}
 
 	public static com.liferay.osb.scv.user.mapper.model.UserMappingRule addUserMappingRule(
-		long companyId, long userId, long dataSourceId, long fieldSetId,
+		long companyId, long userId, long dataSourceId,
+		java.lang.String modelName, long fieldSetId,
 		java.lang.String sourceField, java.lang.String destinationField,
 		int frequency) {
 		return getService()
 				   .addUserMappingRule(companyId, userId, dataSourceId,
-			fieldSetId, sourceField, destinationField, frequency);
+			modelName, fieldSetId, sourceField, destinationField, frequency);
 	}
 
 	/**

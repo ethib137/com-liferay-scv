@@ -71,8 +71,9 @@ public interface UserMappingRuleLocalService extends BaseLocalService,
 	public UserMappingRule addUserMappingRule(UserMappingRule userMappingRule);
 
 	public UserMappingRule addUserMappingRule(long companyId, long userId,
-		long dataSourceId, long fieldSetId, java.lang.String sourceField,
-		java.lang.String destinationField, int frequency);
+		long dataSourceId, java.lang.String modelName, long fieldSetId,
+		java.lang.String sourceField, java.lang.String destinationField,
+		int frequency);
 
 	/**
 	* Creates a new user mapping rule with the primary key. Does not add the user mapping rule to the database.

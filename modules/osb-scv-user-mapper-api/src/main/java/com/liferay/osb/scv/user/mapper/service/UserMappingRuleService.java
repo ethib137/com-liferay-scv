@@ -55,9 +55,9 @@ public interface UserMappingRuleService extends BaseService {
 	 * Never modify or reference this interface directly. Always use {@link UserMappingRuleServiceUtil} to access the user mapping rule remote service. Add custom service methods to {@link com.liferay.osb.scv.user.mapper.service.impl.UserMappingRuleServiceImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
 	public UserMappingRule addUserMappingRule(long dataSourceId,
-		long fieldSetId, java.lang.String sourceField,
-		java.lang.String destinationField, int frequency)
-		throws PortalException;
+		long fieldSetId, java.lang.String modelName,
+		java.lang.String sourceField, java.lang.String destinationField,
+		int frequency) throws PortalException;
 
 	public UserMappingRule deleteUserMappingRule(long userMappingRuleId)
 		throws PortalException;

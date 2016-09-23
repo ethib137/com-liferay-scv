@@ -78,6 +78,7 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 			{ "modifiedDate", Types.TIMESTAMP },
 			{ "dataSourceId", Types.BIGINT },
 			{ "fieldSetId", Types.BIGINT },
+			{ "modelName", Types.VARCHAR },
 			{ "sourceField", Types.VARCHAR },
 			{ "destinationField", Types.VARCHAR },
 			{ "frequency", Types.INTEGER }
@@ -93,12 +94,13 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 		TABLE_COLUMNS_MAP.put("modifiedDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("dataSourceId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("fieldSetId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("modelName", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("sourceField", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("destinationField", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("frequency", Types.INTEGER);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table OSB_SCV_UserMappingRule (userMappingRuleId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,dataSourceId LONG,fieldSetId LONG,sourceField VARCHAR(75) null,destinationField VARCHAR(75) null,frequency INTEGER)";
+	public static final String TABLE_SQL_CREATE = "create table OSB_SCV_UserMappingRule (userMappingRuleId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,dataSourceId LONG,fieldSetId LONG,modelName VARCHAR(75) null,sourceField VARCHAR(75) null,destinationField VARCHAR(75) null,frequency INTEGER)";
 	public static final String TABLE_SQL_DROP = "drop table OSB_SCV_UserMappingRule";
 	public static final String ORDER_BY_JPQL = " ORDER BY userMappingRule.userMappingRuleId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY OSB_SCV_UserMappingRule.userMappingRuleId ASC";
@@ -140,6 +142,7 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 		model.setModifiedDate(soapModel.getModifiedDate());
 		model.setDataSourceId(soapModel.getDataSourceId());
 		model.setFieldSetId(soapModel.getFieldSetId());
+		model.setModelName(soapModel.getModelName());
 		model.setSourceField(soapModel.getSourceField());
 		model.setDestinationField(soapModel.getDestinationField());
 		model.setFrequency(soapModel.getFrequency());
@@ -216,6 +219,7 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 		attributes.put("modifiedDate", getModifiedDate());
 		attributes.put("dataSourceId", getDataSourceId());
 		attributes.put("fieldSetId", getFieldSetId());
+		attributes.put("modelName", getModelName());
 		attributes.put("sourceField", getSourceField());
 		attributes.put("destinationField", getDestinationField());
 		attributes.put("frequency", getFrequency());
@@ -274,6 +278,12 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 
 		if (fieldSetId != null) {
 			setFieldSetId(fieldSetId);
+		}
+
+		String modelName = (String)attributes.get("modelName");
+
+		if (modelName != null) {
+			setModelName(modelName);
 		}
 
 		String sourceField = (String)attributes.get("sourceField");
@@ -436,6 +446,22 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 
 	@JSON
 	@Override
+	public String getModelName() {
+		if (_modelName == null) {
+			return StringPool.BLANK;
+		}
+		else {
+			return _modelName;
+		}
+	}
+
+	@Override
+	public void setModelName(String modelName) {
+		_modelName = modelName;
+	}
+
+	@JSON
+	@Override
 	public String getSourceField() {
 		if (_sourceField == null) {
 			return StringPool.BLANK;
@@ -528,6 +554,7 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 		userMappingRuleImpl.setModifiedDate(getModifiedDate());
 		userMappingRuleImpl.setDataSourceId(getDataSourceId());
 		userMappingRuleImpl.setFieldSetId(getFieldSetId());
+		userMappingRuleImpl.setModelName(getModelName());
 		userMappingRuleImpl.setSourceField(getSourceField());
 		userMappingRuleImpl.setDestinationField(getDestinationField());
 		userMappingRuleImpl.setFrequency(getFrequency());
@@ -650,6 +677,14 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 
 		userMappingRuleCacheModel.fieldSetId = getFieldSetId();
 
+		userMappingRuleCacheModel.modelName = getModelName();
+
+		String modelName = userMappingRuleCacheModel.modelName;
+
+		if ((modelName != null) && (modelName.length() == 0)) {
+			userMappingRuleCacheModel.modelName = null;
+		}
+
 		userMappingRuleCacheModel.sourceField = getSourceField();
 
 		String sourceField = userMappingRuleCacheModel.sourceField;
@@ -673,7 +708,7 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(23);
+		StringBundler sb = new StringBundler(25);
 
 		sb.append("{userMappingRuleId=");
 		sb.append(getUserMappingRuleId());
@@ -691,6 +726,8 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 		sb.append(getDataSourceId());
 		sb.append(", fieldSetId=");
 		sb.append(getFieldSetId());
+		sb.append(", modelName=");
+		sb.append(getModelName());
 		sb.append(", sourceField=");
 		sb.append(getSourceField());
 		sb.append(", destinationField=");
@@ -704,7 +741,7 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(37);
+		StringBundler sb = new StringBundler(40);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.osb.scv.user.mapper.model.UserMappingRule");
@@ -743,6 +780,10 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 		sb.append(getFieldSetId());
 		sb.append("]]></column-value></column>");
 		sb.append(
+			"<column><column-name>modelName</column-name><column-value><![CDATA[");
+		sb.append(getModelName());
+		sb.append("]]></column-value></column>");
+		sb.append(
 			"<column><column-name>sourceField</column-name><column-value><![CDATA[");
 		sb.append(getSourceField());
 		sb.append("]]></column-value></column>");
@@ -777,6 +818,7 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 	private long _originalDataSourceId;
 	private boolean _setOriginalDataSourceId;
 	private long _fieldSetId;
+	private String _modelName;
 	private String _sourceField;
 	private String _destinationField;
 	private int _frequency;

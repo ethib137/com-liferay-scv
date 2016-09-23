@@ -10,6 +10,7 @@
 		<field name="modifiedDate" type="Date" />
 		<field name="dataSourceId" type="long" />
 		<field name="fieldSetId" type="long" />
+		<field name="modelName" type="String" />
 		<field name="sourceField" type="String" />
 		<field name="destinationField" type="String" />
 		<field name="frequency" type="int" />

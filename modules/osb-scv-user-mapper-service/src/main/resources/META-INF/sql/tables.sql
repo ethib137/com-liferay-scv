@@ -7,6 +7,7 @@ create table OSB_SCV_UserMappingRule (
 	modifiedDate DATE null,
 	dataSourceId LONG,
 	fieldSetId LONG,
+	modelName VARCHAR(75) null,
 	sourceField VARCHAR(75) null,
 	destinationField VARCHAR(75) null,
 	frequency INTEGER
