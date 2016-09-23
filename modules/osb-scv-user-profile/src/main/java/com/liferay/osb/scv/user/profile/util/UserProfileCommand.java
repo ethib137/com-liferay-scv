@@ -14,28 +14,34 @@
 
 package com.liferay.osb.scv.user.profile.util;
 
-import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.osb.scv.user.profile.model.DataSourceEntry;
 import com.liferay.portal.kernel.json.JSONObject;
+
+import java.util.List;
 
 /**
  * @author Matthew Kong
  */
 public interface UserProfileCommand {
 
-	public void add(String id, JSONObject jsonObject);
+	public void add(DataSourceEntry dataSourceEntry, String documentType);
 
-	public void delete(String id);
+	public void delete(String dataSourceEntryId, String documentType);
 
 	public void deleteAll();
 
-	public void deleteField(String field);
+	public void deleteField(String field, String documentType);
 
-	public JSONObject getSCVUserProfile(String id) throws Exception;
+	public DataSourceEntry getDataSourceEntry(
+		String dataSourceEntryId, String documentType);
 
-	public JSONArray search(JSONObject jsonObject) throws Exception;
+	public List<DataSourceEntry> search(
+		JSONObject jsonObject, String documentType);
 
-	public void update(String id, JSONObject jsonObject);
+	public void update(DataSourceEntry dataSourceEntry, String documentType);
 
-	public void update(String id, String field, Object value);
+	public void update(
+		String dataSourceEntryId, String field, Object value,
+		String documentType);
 
 }

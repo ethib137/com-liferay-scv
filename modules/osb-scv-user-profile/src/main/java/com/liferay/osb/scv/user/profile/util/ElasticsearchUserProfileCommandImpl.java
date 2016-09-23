@@ -14,15 +14,16 @@
 
 package com.liferay.osb.scv.user.profile.util;
 
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.osb.scv.user.profile.model.DataSourceEntry;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 
 import java.net.InetAddress;
 
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -91,12 +92,12 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 	}
 
 	@Override
-	public void add(String id, JSONObject jsonObject) {
+	public void add(DataSourceEntry dataSourceEntry, String documentType) {
 		IndexRequestBuilder indexRequestBuilder = _client.prepareIndex(
-			_INDEX_NAME, _DOCUMENT_TYPE, id);
+			_INDEX_NAME, documentType, dataSourceEntry.getDataSourceEntryId());
 
 		indexRequestBuilder.setRefresh(true);
-		indexRequestBuilder.setSource(jsonObject.toString());
+		indexRequestBuilder.setSource(dataSourceEntry.getSource());
 
 		IndexResponse indexResponse = indexRequestBuilder.get();
 
@@ -106,9 +107,9 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 	}
 
 	@Override
-	public void delete(String id) {
+	public void delete(String dataSourceEntryId, String documentType) {
 		DeleteRequestBuilder deleteRequestBuilder = _client.prepareDelete(
-			_INDEX_NAME, _DOCUMENT_TYPE, id);
+			_INDEX_NAME, documentType, dataSourceEntryId);
 
 		DeleteResponse deleteResponse = deleteRequestBuilder.get();
 
@@ -124,7 +125,9 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 		SearchRequestBuilder searchRequestBuilder = _client.prepareSearch(
 			_INDEX_NAME);
 
-		searchRequestBuilder.setTypes(_DOCUMENT_TYPE);
+		searchRequestBuilder.setTypes(
+			UserProfileConstants.DOCUMENT_TYPE_PROFILE,
+			UserProfileConstants.DOCUMENT_TYPE_VERSIONING);
 
 		searchRequestBuilder.setScroll(_SEARCH_SCROLL_KEEP_ALIVE_TIME_VALUE);
 		searchRequestBuilder.setSearchType(SearchType.SCAN);
@@ -170,13 +173,13 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 	}
 
 	@Override
-	public void deleteField(String field) {
+	public void deleteField(String field, String documentType) {
 		BulkRequestBuilder bulkRequestBuilder = _client.prepareBulk();
 
 		SearchRequestBuilder searchRequestBuilder = _client.prepareSearch(
 			_INDEX_NAME);
 
-		searchRequestBuilder.setTypes(_DOCUMENT_TYPE);
+		searchRequestBuilder.setTypes(documentType);
 
 		searchRequestBuilder.setScroll(_SEARCH_SCROLL_KEEP_ALIVE_TIME_VALUE);
 		searchRequestBuilder.setSearchType(SearchType.SCAN);
@@ -186,7 +189,7 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 		while (true) {
 			for (SearchHit searchHit : getSearchHitArray(searchResponse)) {
 				IndexRequestBuilder indexRequestBuilder = _client.prepareIndex(
-					_INDEX_NAME, _DOCUMENT_TYPE, searchHit.getId());
+					_INDEX_NAME, documentType, searchHit.getId());
 
 				Map<String, Object> source = searchHit.getSource();
 
@@ -224,19 +227,23 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 	}
 
 	@Override
-	public JSONObject getSCVUserProfile(String id) throws Exception {
+	public DataSourceEntry getDataSourceEntry(
+		String dataSourceEntryId, String documentType) {
+
 		GetRequestBuilder getRequestBuilder = _client.prepareGet(
-			_INDEX_NAME, _DOCUMENT_TYPE, id);
+			_INDEX_NAME, documentType, dataSourceEntryId);
 
 		GetResponse getResponse = getRequestBuilder.get();
 
-		return JSONFactoryUtil.createJSONObject(
-			getResponse.getSourceAsString());
+		return new DataSourceEntry(
+			getResponse.getId(), getResponse.getSourceAsString());
 	}
 
 	@Override
-	public JSONArray search(JSONObject jsonObject) throws Exception {
-		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+	public List<DataSourceEntry> search(
+		JSONObject jsonObject, String documentType) {
+
+		List<DataSourceEntry> dataSourceEntries = new ArrayList<>();
 
 		SearchRequestBuilder searchRequestBuilder = _client.prepareSearch(
 			_INDEX_NAME);
@@ -256,8 +263,7 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 
 		searchRequestBuilder.setQuery(boolQueryBuilder);
 
-		searchRequestBuilder.setTypes(_DOCUMENT_TYPE);
-		searchRequestBuilder.setSize(1);
+		searchRequestBuilder.setTypes(documentType);
 
 		SearchResponse searchResponse = searchRequestBuilder.get();
 
@@ -266,23 +272,20 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 		for (int i = 0; i < searchHitsArray.length; i++) {
 			SearchHit searchHit = searchHitsArray[i];
 
-			JSONObject searchHitJSONObject = JSONFactoryUtil.createJSONObject();
-
-			searchHitJSONObject.put("id", searchHit.getId());
-			searchHitJSONObject.put("source", searchHit.getSourceAsString());
-
-			jsonArray.put(searchHitJSONObject);
+			dataSourceEntries.add(
+				new DataSourceEntry(
+					searchHit.getId(), searchHit.getSourceAsString()));
 		}
 
-		return jsonArray;
+		return dataSourceEntries;
 	}
 
 	@Override
-	public void update(String id, JSONObject jsonObject) {
+	public void update(DataSourceEntry dataSourceEntry, String documentType) {
 		UpdateRequestBuilder updateRequestBuilder = _client.prepareUpdate(
-			_INDEX_NAME, _DOCUMENT_TYPE, id);
+			_INDEX_NAME, documentType, dataSourceEntry.getDataSourceEntryId());
 
-		updateRequestBuilder.setDoc(jsonObject.toString());
+		updateRequestBuilder.setDoc(dataSourceEntry.getSource());
 		updateRequestBuilder.setRefresh(true);
 
 		UpdateResponse updateResponse = updateRequestBuilder.get();
@@ -293,17 +296,25 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 	}
 
 	@Override
-	public void update(String id, String field, Object value) {
-		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+	public void update(
+		String dataSourceEntryId, String field, Object value,
+		String documentType) {
 
-		jsonObject.put(field, value);
+		DataSourceEntry dataSourceEntry = new DataSourceEntry(
+			dataSourceEntryId);
 
-		update(id, jsonObject);
+		dataSourceEntry.addProperty(field, value);
+
+		update(dataSourceEntry, documentType);
 	}
 
 	@Deactivate
 	protected void deactivate() {
+		_client.threadPool().shutdown();
+
 		_client.close();
+
+		_client = null;
 	}
 
 	protected SearchHit[] getSearchHitArray(SearchResponse searchResponse) {
@@ -313,8 +324,6 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 	}
 
 	private static final String _CLUSTER_NAME = "elastictest";
-
-	private static final String _DOCUMENT_TYPE = "SCVUserProfile";
 
 	private static final String _INDEX_NAME = "scv";
 

@@ -14,8 +14,11 @@
 
 package com.liferay.osb.scv.user.profile.util;
 
-import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.osb.scv.user.profile.model.DataSourceEntry;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+
+import java.util.List;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -26,36 +29,57 @@ import org.osgi.service.component.annotations.Reference;
 @Component(immediate = true, service = UserProfileCommandUtil.class)
 public class UserProfileCommandUtil {
 
-	public static void delete(String id) {
-		_userProfileCommand.delete(id);
+	public static void add(
+		DataSourceEntry dataSourceEntry, String documentType) {
+
+		_userProfileCommand.add(dataSourceEntry, documentType);
+	}
+
+	public static void delete(String id, String documentType) {
+		_userProfileCommand.delete(id, documentType);
 	}
 
 	public static void deleteAll() {
 		_userProfileCommand.deleteAll();
 	}
 
-	public static void deleteField(String field) {
-		_userProfileCommand.deleteField(field);
+	public static void deleteField(String field, String documentType) {
+		_userProfileCommand.deleteField(field, documentType);
 	}
 
-	public static JSONObject getSCVUserProfile(String id) throws Exception {
-		return _userProfileCommand.getSCVUserProfile(id);
+	public static DataSourceEntry getDataSourceEntry(
+		String getDataSourceEntryId, String documentType) {
+
+		return _userProfileCommand.getDataSourceEntry(
+			getDataSourceEntryId, documentType);
 	}
 
-	public static JSONArray search(JSONObject jsonObject) throws Exception {
-		return _userProfileCommand.search(jsonObject);
+	public static List<DataSourceEntry> search(
+		JSONObject jsonObject, String documentType) {
+
+		return _userProfileCommand.search(jsonObject, documentType);
 	}
 
-	public static void update(String id, JSONObject jsonObject) {
-		_userProfileCommand.update(id, jsonObject);
+	public static void update(
+		DataSourceEntry dataSourceEntry, String documentType) {
+
+		_userProfileCommand.update(dataSourceEntry, documentType);
 	}
 
-	public static void update(String id, String field, Object value) {
-		_userProfileCommand.update(id, field, value);
+	public static void update(
+		String id, String field, Object value, String documentType) {
+
+		_userProfileCommand.update(id, field, value, documentType);
 	}
 
-	public void add(String id, JSONObject jsonObject) {
-		_userProfileCommand.add(id, jsonObject);
+	public List<DataSourceEntry> search(
+		String key, String value, String documentType) {
+
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+		jsonObject.put(key, value);
+
+		return _userProfileCommand.search(jsonObject, documentType);
 	}
 
 	@Reference(unbind = "-")
