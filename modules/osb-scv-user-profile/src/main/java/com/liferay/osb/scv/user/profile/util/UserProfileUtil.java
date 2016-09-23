@@ -16,14 +16,16 @@ package com.liferay.osb.scv.user.profile.util;
 
 import com.liferay.counter.kernel.service.CounterLocalServiceUtil;
 import com.liferay.osb.scv.user.profile.model.DataSourceEntry;
-import com.liferay.osb.scv.user.profile.model.ProfileDataSourceEntry;
+import com.liferay.osb.scv.user.profile.model.VersionedDataSourceEntry;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
@@ -34,8 +36,22 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Matthew Kong
  */
-@Component(immediate = true, service = UserProfileUtil.class)
+@Component(
+	immediate = true,
+	property = {
+		"json.web.service.context.name=SCVUserProfileUtil",
+		"json.web.service.context.path=SCVUserProfileUtil"
+	},
+	service = UserProfileUtil.class
+)
+@JSONWebService
 public class UserProfileUtil {
+
+	public static JSONArray getSCVUserProfiles() {
+
+	}
+
+	private static
 
 	public static JSONObject getSCVUserProfile(String scvUserProfileId)
 		throws Exception {
@@ -43,7 +59,7 @@ public class UserProfileUtil {
 		List<DataSourceEntry> dataSourceEntries =
 			_userProfileCommandUtil.search(
 				"scvUserProfileId", scvUserProfileId,
-				UserProfileConstants.DOCUMENT_TYPE_PROFILE);
+				UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE);
 
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
@@ -78,42 +94,90 @@ public class UserProfileUtil {
 		return jsonObject;
 	}
 
+	public static void updateDataSourceEntries(
+			long dataSourceId, String idFieldName, JSONObject jsonObject)
+		throws Exception {
+
+		Iterator<String> iterator = jsonObject.keys();
+
+		while (iterator.hasNext()) {
+			String tableName = iterator.next();
+
+			JSONArray jsonArray = jsonObject.getJSONArray(tableName);
+
+			for (int i = 0; i < jsonArray.length(); i++) {
+				JSONObject entityJSONObject = jsonArray.getJSONObject(i);
+
+				Iterator<String> entityIterator = entityJSONObject.keys();
+
+				while (entityIterator.hasNext()) {
+					String field = entityIterator.next();
+
+
+				}
+			}
+
+
+
+		}
+
+
+	}
+
 	public static void updateDataSourceEntry(
 			long dataSourceId, String idField, String searchTermsString,
 			JSONObject jsonObject)
 		throws Exception {
 
-		ProfileDataSourceEntry profileDataSourceEntry =
-			getProfileDataSourceEntry(dataSourceId, idField, searchTermsString);
+		String documentType = UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE;
 
-		String scvUserProfileId = getSCVUserProfileId(searchTermsString);
+		if (Validator.isNull(searchTermsString)) {
+			documentType = UserProfileConstants.DOCUMENT_TYPE_ASSOCIATION;
+		}
 
-		profileDataSourceEntry.addProperties(jsonObject);
+		VersionedDataSourceEntry versionedDataSourceEntry =
+			getVersionedDataSourceEntry(
+				dataSourceId, idField, searchTermsString, documentType);
 
-		if (Validator.isNull(profileDataSourceEntry.getDataSourceEntryId())) {
-			profileDataSourceEntry.addProperty(
-				"scvUserProfileId", scvUserProfileId);
+		String scvUserProfileId = null;
+
+		if (documentType == UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE) {
+			scvUserProfileId = getSCVUserProfileId(searchTermsString);
+		}
+
+		versionedDataSourceEntry.addProperties(jsonObject);
+
+		if (Validator.isNull(versionedDataSourceEntry.getDataSourceEntryId())) {
+			if (documentType ==
+					UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE) {
+
+				versionedDataSourceEntry.addProperty(
+					"scvUserProfileId", scvUserProfileId);
+			}
 
 			_userProfileCommandUtil.add(
-				profileDataSourceEntry,
-				UserProfileConstants.DOCUMENT_TYPE_PROFILE);
+				versionedDataSourceEntry,
+				UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE);
 		}
 		else {
 			_userProfileCommandUtil.update(
-				profileDataSourceEntry,
-				UserProfileConstants.DOCUMENT_TYPE_PROFILE);
+				versionedDataSourceEntry,
+				UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE);
 		}
 
-		if (!profileDataSourceEntry.hasChanges()) {
+		if (!versionedDataSourceEntry.hasChanges()) {
 			return;
 		}
 
 		DataSourceEntry versioningDataSourceEntry =
-			profileDataSourceEntry.getVersioningDataSourceEntry();
+			versionedDataSourceEntry.getVersioningDataSourceEntry();
 
 		versioningDataSourceEntry.addProperty("dataSourceId", dataSourceId);
-		versioningDataSourceEntry.addProperty(
-			"scvUserProfileId", scvUserProfileId);
+
+		if (documentType == UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE) {
+			versioningDataSourceEntry.addProperty(
+				"scvUserProfileId", scvUserProfileId);
+		}
 
 		_userProfileCommandUtil.add(
 			versioningDataSourceEntry,
@@ -136,8 +200,9 @@ public class UserProfileUtil {
 		return "modifiedDate";
 	}
 
-	protected static ProfileDataSourceEntry getProfileDataSourceEntry(
-			long dataSourceId, String idField, String searchTermsString)
+	protected static VersionedDataSourceEntry getVersionedDataSourceEntry(
+			long dataSourceId, String idField, String searchTermsString,
+			String documentType)
 		throws Exception {
 
 		DataSourceEntry dataSourceEntry = null;
@@ -148,8 +213,7 @@ public class UserProfileUtil {
 		jsonObject.put("idField", idField);
 
 		List<DataSourceEntry> dataSourceEntries =
-			_userProfileCommandUtil.search(
-				jsonObject, UserProfileConstants.DOCUMENT_TYPE_PROFILE);
+			_userProfileCommandUtil.search(jsonObject, documentType);
 
 		if (!dataSourceEntries.isEmpty()) {
 			dataSourceEntry = dataSourceEntries.get(0);
@@ -160,17 +224,19 @@ public class UserProfileUtil {
 			dataSourceEntry.addProperties(jsonObject);
 		}
 
-		JSONArray searchTermsJSONArray = JSONFactoryUtil.createJSONArray();
+		if (Validator.isNotNull(searchTermsString)) {
+			JSONArray searchTermsJSONArray = JSONFactoryUtil.createJSONArray();
 
-		String[] searchTerms = StringUtil.split(searchTermsString);
+			String[] searchTerms = StringUtil.split(searchTermsString);
 
-		for (String searchTerm : searchTerms) {
-			searchTermsJSONArray.put(searchTerm);
+			for (String searchTerm : searchTerms) {
+				searchTermsJSONArray.put(searchTerm);
+			}
+
+			dataSourceEntry.addProperty("searchTerms", searchTermsJSONArray);
 		}
 
-		dataSourceEntry.addProperty("searchTerms", searchTermsJSONArray);
-
-		return new ProfileDataSourceEntry(dataSourceEntry);
+		return new VersionedDataSourceEntry(dataSourceEntry);
 	}
 
 	protected static String getSCVUserProfileId(String searchTermString)
@@ -185,7 +251,8 @@ public class UserProfileUtil {
 
 			List<DataSourceEntry> dataSourceEntries =
 				_userProfileCommandUtil.search(
-					jsonObject, UserProfileConstants.DOCUMENT_TYPE_PROFILE);
+					jsonObject,
+					UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE);
 
 			if (dataSourceEntries.isEmpty()) {
 				continue;

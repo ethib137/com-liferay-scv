@@ -24,19 +24,19 @@ import java.util.Objects;
 /**
  * @author Matthew Kong
  */
-public class ProfileDataSourceEntry extends DataSourceEntry {
+public class VersionedDataSourceEntry extends DataSourceEntry {
 
-	public ProfileDataSourceEntry() {
+	public VersionedDataSourceEntry() {
 		this(null, null);
 	}
 
-	public ProfileDataSourceEntry(DataSourceEntry dataSourceEntry) {
+	public VersionedDataSourceEntry(DataSourceEntry dataSourceEntry) {
 		this(
 			dataSourceEntry.getDataSourceEntryId(),
 			dataSourceEntry.getSource());
 	}
 
-	public ProfileDataSourceEntry(String dataSourceEntryId, String source) {
+	public VersionedDataSourceEntry(String dataSourceEntryId, String source) {
 		super(dataSourceEntryId, source);
 
 		_versioningDataSourceEntry = new DataSourceEntry();

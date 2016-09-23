@@ -126,7 +126,7 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 			_INDEX_NAME);
 
 		searchRequestBuilder.setTypes(
-			UserProfileConstants.DOCUMENT_TYPE_PROFILE,
+			UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE,
 			UserProfileConstants.DOCUMENT_TYPE_VERSIONING);
 
 		searchRequestBuilder.setScroll(_SEARCH_SCROLL_KEEP_ALIVE_TIME_VALUE);

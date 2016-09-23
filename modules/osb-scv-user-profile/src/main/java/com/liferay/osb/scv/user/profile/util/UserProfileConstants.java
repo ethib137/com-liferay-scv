@@ -19,7 +19,9 @@ package com.liferay.osb.scv.user.profile.util;
  */
 public class UserProfileConstants {
 
-	public static final String DOCUMENT_TYPE_PROFILE = "SCVUserProfile";
+	public static final String DOCUMENT_TYPE_ASSOCIATION = "SCVAssociation";
+
+	public static final String DOCUMENT_TYPE_USER_PROFILE = "SCVUserProfile";
 
 	public static final String DOCUMENT_TYPE_VERSIONING = "SCVVersioning";
 
