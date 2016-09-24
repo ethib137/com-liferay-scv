@@ -21,9 +21,12 @@ import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
+import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -48,8 +51,18 @@ import org.osgi.service.component.annotations.Reference;
 @JSONWebService
 public class UserProfileUtil {
 
-	public static JSONArray getSCVUserProfiles() {
-		return JSONFactoryUtil.createJSONArray();
+	public static JSONArray getSCVUserProfiles() throws Exception {
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+		List<String> scvUserProfileIds = _userProfileCommandUtil.search(
+			"scvUserProfileId",
+			UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE);
+
+		for (String scvUserProfileId : scvUserProfileIds) {
+			jsonArray.put(getSCVUserProfile(scvUserProfileId));
+		}
+
+		return jsonArray;
 	}
 
 	public static JSONObject getSCVUserProfile(String scvUserProfileId)
@@ -82,9 +95,7 @@ public class UserProfileUtil {
 				}
 			}
 			else if (Objects.equals(mergeRule, "dataSource")) {
-
 				// need dataSourcePriority logic
-
 			}
 
 			jsonObject.put(key, value);
@@ -93,56 +104,87 @@ public class UserProfileUtil {
 		return jsonObject;
 	}
 
+	private static final String _ASSOCIATED_FIELD = "ASSOCIATED_FIELD_";
+
 	public static void updateDataSourceEntries(
-			long dataSourceId, Map<String, List<String>> searchTermFieldName,
+			long dataSourceId, Map<String, List<String>> searchTermFieldNameMap,
 			JSONObject jsonObject)
 		throws Exception {
+
+		List<String> tableNames = new ArrayList<String>();
+		List<String> pkFields = new ArrayList<String>();
 
 		Iterator<String> iterator = jsonObject.keys();
 
 		while (iterator.hasNext()) {
 			String tableName = iterator.next();
 
+			tableNames.add(tableName);
+
+			if (!StringUtil.equalsIgnoreCase(tableName, "user")) {
+				pkFields.add(StringUtil.lowerCase(tableName) + "Ids");
+			}
+		}
+
+		for (String tableName : tableNames) {
+			List<String> searchTermFieldNames = searchTermFieldNameMap.get(
+				tableName);
+
 			JSONArray jsonArray = jsonObject.getJSONArray(tableName);
 
 			for (int i = 0; i < jsonArray.length(); i++) {
 				JSONObject entityJSONObject = jsonArray.getJSONObject(i);
 
-				Iterator<String> entityIterator = entityJSONObject.keys();
+				String idField = entityJSONObject.getString(
+					StringUtil.lowerCase(tableName) + "Id");
 
-				while (entityIterator.hasNext()) {
-					String field = entityIterator.next();
+				List<String> searchTerms = new ArrayList<String>();
 
+				if (!ListUtil.isEmpty(searchTermFieldNames)) {
+					for (String searchTermFieldName : searchTermFieldNames) {
+						searchTerms.add(
+							entityJSONObject.getString(searchTermFieldName));
+					}
 
+					for (String pkField : pkFields) {
+						Object value = entityJSONObject.get(pkField);
+
+						if (value == null) {
+							continue;
+						}
+
+						entityJSONObject.put(
+							_ASSOCIATED_FIELD + pkField, value);
+						entityJSONObject.remove(pkField);
+					}
 				}
+
+				updateDataSourceEntry(
+					dataSourceId, tableName, idField, searchTerms,
+					entityJSONObject);
 			}
-
-
-
 		}
-
-
 	}
 
 	public static void updateDataSourceEntry(
-			long dataSourceId, String idField, String searchTermsString,
-			JSONObject jsonObject)
+			long dataSourceId, String tableName, String idField,
+			List<String> searchTerms, JSONObject jsonObject)
 		throws Exception {
 
 		String documentType = UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE;
 
-		if (Validator.isNull(searchTermsString)) {
+		if (searchTerms.isEmpty()) {
 			documentType = UserProfileConstants.DOCUMENT_TYPE_ASSOCIATION;
 		}
 
 		VersionedDataSourceEntry versionedDataSourceEntry =
 			getVersionedDataSourceEntry(
-				dataSourceId, idField, searchTermsString, documentType);
+				dataSourceId, tableName, idField, searchTerms, documentType);
 
 		String scvUserProfileId = null;
 
 		if (documentType == UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE) {
-			scvUserProfileId = getSCVUserProfileId(searchTermsString);
+			scvUserProfileId = getSCVUserProfileId(searchTerms);
 		}
 
 		versionedDataSourceEntry.addProperties(jsonObject);
@@ -155,14 +197,11 @@ public class UserProfileUtil {
 					"scvUserProfileId", scvUserProfileId);
 			}
 
-			_userProfileCommandUtil.add(
-				versionedDataSourceEntry,
-				UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE);
+			_userProfileCommandUtil.add(versionedDataSourceEntry, documentType);
 		}
 		else {
 			_userProfileCommandUtil.update(
-				versionedDataSourceEntry,
-				UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE);
+				versionedDataSourceEntry, documentType);
 		}
 
 		if (!versionedDataSourceEntry.hasChanges()) {
@@ -201,8 +240,8 @@ public class UserProfileUtil {
 	}
 
 	protected static VersionedDataSourceEntry getVersionedDataSourceEntry(
-			long dataSourceId, String idField, String searchTermsString,
-			String documentType)
+			long dataSourceId, String tableName, String idField,
+			List<String> searchTerms, String documentType)
 		throws Exception {
 
 		DataSourceEntry dataSourceEntry = null;
@@ -211,6 +250,7 @@ public class UserProfileUtil {
 
 		jsonObject.put("dataSourceId", dataSourceId);
 		jsonObject.put("idField", idField);
+		jsonObject.put("tableName", StringUtil.lowerCase(tableName));
 
 		List<DataSourceEntry> dataSourceEntries =
 			_userProfileCommandUtil.search(jsonObject, documentType);
@@ -224,10 +264,8 @@ public class UserProfileUtil {
 			dataSourceEntry.addProperties(jsonObject);
 		}
 
-		if (Validator.isNotNull(searchTermsString)) {
+		if (!searchTerms.isEmpty()) {
 			JSONArray searchTermsJSONArray = JSONFactoryUtil.createJSONArray();
-
-			String[] searchTerms = StringUtil.split(searchTermsString);
 
 			for (String searchTerm : searchTerms) {
 				searchTermsJSONArray.put(searchTerm);
@@ -239,10 +277,8 @@ public class UserProfileUtil {
 		return new VersionedDataSourceEntry(dataSourceEntry);
 	}
 
-	protected static String getSCVUserProfileId(String searchTermString)
+	protected static String getSCVUserProfileId(List<String> searchTerms)
 		throws Exception {
-
-		String[] searchTerms = StringUtil.split(searchTermString);
 
 		for (String searchTerm : searchTerms) {
 			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();

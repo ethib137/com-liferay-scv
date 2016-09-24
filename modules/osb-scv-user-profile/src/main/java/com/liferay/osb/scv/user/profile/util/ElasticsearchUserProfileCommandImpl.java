@@ -52,9 +52,14 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 
+import org.elasticsearch.search.aggregations.AggregationBuilders;
+import org.elasticsearch.search.aggregations.Aggregations;
+import org.elasticsearch.search.aggregations.bucket.terms.Terms;
+import org.elasticsearch.search.aggregations.bucket.terms.TermsBuilder;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
+import org.osgi.service.component.annotations.Modified;
 
 /**
  * @author Matthew Kong
@@ -89,6 +94,15 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 		_client = transportClient;
 
 		deleteAll();
+	}
+
+	@Modified
+	protected synchronized void modified() {
+		if (_client != null) {
+			deactivate();
+
+			activate();
+		}
 	}
 
 	@Override
@@ -127,7 +141,8 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 
 		searchRequestBuilder.setTypes(
 			UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE,
-			UserProfileConstants.DOCUMENT_TYPE_VERSIONING);
+			UserProfileConstants.DOCUMENT_TYPE_VERSIONING,
+			UserProfileConstants.DOCUMENT_TYPE_ASSOCIATION);
 
 		searchRequestBuilder.setScroll(_SEARCH_SCROLL_KEEP_ALIVE_TIME_VALUE);
 		searchRequestBuilder.setSearchType(SearchType.SCAN);
@@ -226,6 +241,40 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 		}
 	}
 
+	public List<String> search(String field, String documentType) {
+		List<String> searchResults = new ArrayList<String>();
+
+		SearchRequestBuilder searchRequestBuilder = _client.prepareSearch();
+
+		searchRequestBuilder.setIndices(_INDEX_NAME);
+		searchRequestBuilder.setSize(0);
+		searchRequestBuilder.setQuery(QueryBuilders.matchAllQuery());
+		searchRequestBuilder.setTypes(documentType);
+
+		TermsBuilder termsBuilder = AggregationBuilders.terms("ids");
+
+		termsBuilder.field(field);
+		termsBuilder.size(0);
+
+		searchRequestBuilder.addAggregation(termsBuilder);
+
+		SearchResponse searchResponse = searchRequestBuilder.get();
+
+		Aggregations aggregations = searchResponse.getAggregations();
+
+		Terms terms = aggregations.get("ids");
+
+		List<Terms.Bucket> buckets = terms.getBuckets();
+
+		for (int i = 0; i < buckets.size(); i++) {
+			Terms.Bucket bucket = buckets.get(i);
+
+			searchResults.add((String)bucket.getKey());
+		}
+
+		return searchResults;
+	}
+
 	@Override
 	public DataSourceEntry getDataSourceEntry(
 		String dataSourceEntryId, String documentType) {
@@ -248,9 +297,9 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 		SearchRequestBuilder searchRequestBuilder = _client.prepareSearch(
 			_INDEX_NAME);
 
-		Iterator<String> iterator = jsonObject.keys();
-
 		BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
+
+		Iterator<String> iterator = jsonObject.keys();
 
 		while (iterator.hasNext()) {
 			String key = iterator.next();
@@ -310,8 +359,6 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 
 	@Deactivate
 	protected void deactivate() {
-		_client.threadPool().shutdown();
-
 		_client.close();
 
 		_client = null;

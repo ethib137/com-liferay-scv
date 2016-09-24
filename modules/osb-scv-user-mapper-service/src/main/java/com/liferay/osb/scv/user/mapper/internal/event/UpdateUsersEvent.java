@@ -155,6 +155,8 @@ public class UpdateUsersEvent extends BaseEvent {
 		DataSource dataSource = DataSourceUtil.getDataSource(_dataSourceId);
 
 		Map<String, List<String>> idFields = dataSource.getIdFields();
+		Map<String, List<String>> requiredFields =
+			dataSource.getRequiredFields();
 
 		if (!_userMappingRulesMap.containsKey("User")) {
 			destinationJSONObject.put(
@@ -188,10 +190,29 @@ public class UpdateUsersEvent extends BaseEvent {
 							sourceModelJSONObject.getString(
 								userMappingRule.getSourceField()));
 
-						for (String idField : idFields.get(key)) {
-							destinationModelJSONObject.put(
-								idField,
-								sourceModelJSONObject.getString(idField));
+						List<String> idFieldsList = idFields.get(
+							key);
+
+						if (!ListUtil.isEmpty(idFieldsList)) {
+							for (String idField : idFields.get(key)) {
+								destinationModelJSONObject.put(
+									idField,
+									sourceModelJSONObject.getString(idField));
+							}
+						}
+
+						List<String> requiredFieldsList = requiredFields.get(
+							key);
+
+						if (!ListUtil.isEmpty(requiredFieldsList)) {
+							for (String requiredField :
+									requiredFields.get(key)) {
+
+								destinationModelJSONObject.put(
+									requiredField,
+									sourceModelJSONObject.getString(
+										requiredField));
+							}
 						}
 					}
 
@@ -202,7 +223,9 @@ public class UpdateUsersEvent extends BaseEvent {
 			}
 		}
 
-		UserProfileUtil.updateDataSourceEntries(_dataSourceId, dataSource.getRequiredFields(), destinationJSONObject);
+		UserProfileUtil.updateDataSourceEntries(
+			_dataSourceId, dataSource.getRequiredFields(),
+			destinationJSONObject);
 	}
 
 	private final long _dataSourceId;

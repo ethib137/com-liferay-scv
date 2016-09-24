@@ -35,6 +35,8 @@ public interface UserProfileCommand {
 	public DataSourceEntry getDataSourceEntry(
 		String dataSourceEntryId, String documentType);
 
+	public List<String> search(String field, String documentType);
+
 	public List<DataSourceEntry> search(
 		JSONObject jsonObject, String documentType);
 

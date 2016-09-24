@@ -75,7 +75,7 @@ public class DataSourceUtil {
 		JSONWebServiceClientImpl jsonWebServiceClient =
 			new JSONWebServiceClientImpl();
 
-		URL url = new URL("https://shinnlok.github.io/get-data-sources");
+		URL url = new URL("https://shinnlok.github.io/get-data-sources-2");
 
 		jsonWebServiceClient.setHostName(url.getHost());
 		jsonWebServiceClient.setHostPort(url.getPort());
@@ -83,7 +83,7 @@ public class DataSourceUtil {
 		jsonWebServiceClient.setPassword(null);
 
 		String response = jsonWebServiceClient.doGet(
-			"https://shinnlok.github.io/get-data-sources",
+			"https://shinnlok.github.io/get-data-sources-2",
 			Collections.<String, String>emptyMap());
 
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray(response);
