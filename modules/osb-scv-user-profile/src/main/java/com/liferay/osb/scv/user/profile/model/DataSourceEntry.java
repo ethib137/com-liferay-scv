@@ -82,8 +82,8 @@ public class DataSourceEntry {
 		return sourceJSONObject.toString();
 	}
 
-	public Object getTimestamp(String key) {
-		return getProperty(key + "_timestamp");
+	public long getTimestamp(String key) {
+		return sourceJSONObject.getLong(key + "_timestamp");
 	}
 
 	protected String dataSourceEntryId;

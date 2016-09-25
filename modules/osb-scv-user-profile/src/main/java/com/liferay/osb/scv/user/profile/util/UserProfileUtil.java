@@ -85,8 +85,7 @@ public class UserProfileUtil {
 
 			if (Objects.equals(mergeRule, "modifiedDate")) {
 				for (DataSourceEntry dataSourceEntry : dataSourceEntries) {
-					long currentTimestamp = (long)dataSourceEntry.getTimestamp(
-						key);
+					long currentTimestamp = dataSourceEntry.getTimestamp(key);
 
 					if (currentTimestamp > timestamp) {
 						timestamp = currentTimestamp;
