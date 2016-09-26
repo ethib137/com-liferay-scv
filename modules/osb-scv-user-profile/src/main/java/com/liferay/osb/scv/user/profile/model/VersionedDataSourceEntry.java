@@ -99,8 +99,8 @@ public class VersionedDataSourceEntry extends DataSourceEntry {
 		return false;
 	}
 
-	private static final long _timestamp = System.currentTimeMillis();
+	private long _timestamp = System.currentTimeMillis();
 
-	private final DataSourceEntry _versioningDataSourceEntry;
+	private DataSourceEntry _versioningDataSourceEntry;
 
 }
