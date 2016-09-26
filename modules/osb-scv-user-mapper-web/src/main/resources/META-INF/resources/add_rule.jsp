@@ -128,29 +128,32 @@ String tableName = ParamUtil.getString(request, "tableName");
 	dataSourceId.on(
 		'change',
 		function() {
-		var data = {
-			sourceField: sourceField.val(),
-			dataSourceId: dataSourceId.val(),
-			destinationField: destinationField.val(),
-			frequency: frequency.val(),
-			tableName: tableName.val(),
-			fieldSet: fieldSet.val()
-		};
+			var data = {
+				sourceField: sourceField.val(),
+				dataSourceId: dataSourceId.val(),
+				destinationField: destinationField.val(),
+				frequency: frequency.val(),
+				tableName: tableName.val(),
+				fieldSet: fieldSet.val()
+			};
 
-	Liferay.Portlet.refresh('#p_p_id<portlet:namespace />', Liferay.Util.ns('<portlet:namespace />', data));
-	})
+			Liferay.Portlet.refresh('#p_p_id<portlet:namespace />', Liferay.Util.ns('<portlet:namespace />', data));
+		}
+	)
 
 	tableName.on(
-	'change',
-	function() {
-	var data = {
-	sourceField: sourceField.val(),
-	dataSourceId: dataSourceId.val(),
-	destinationField: destinationField.val(),
-	frequency: frequency.val(),
-	tableName: tableName.val(),
-	fieldSet: fieldSet.val()
-	};
-	Liferay.Portlet.refresh('#p_p_id<portlet:namespace />', Liferay.Util.ns('<portlet:namespace />', data));
-	})
+		'change',
+		function() {
+			var data = {
+				sourceField: sourceField.val(),
+				dataSourceId: dataSourceId.val(),
+				destinationField: destinationField.val(),
+				frequency: frequency.val(),
+				tableName: tableName.val(),
+				fieldSet: fieldSet.val()
+			};
+
+			Liferay.Portlet.refresh('#p_p_id<portlet:namespace />', Liferay.Util.ns('<portlet:namespace />', data));
+		}
+	)
 </aui:script>

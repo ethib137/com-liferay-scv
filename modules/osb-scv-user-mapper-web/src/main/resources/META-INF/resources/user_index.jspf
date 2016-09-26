@@ -14,23 +14,55 @@
  */
 --%>
 
-<%
-String selUser = ParamUtil.getString(request, "selUser", "Evan");
-%>
-
-<div class="row">
-	<div class="col-md-3 user-list">
-		<liferay-ui:tabs
-			formName="different"
-			names="Evan,John"
-			param="selUser"
-			portletURL="<%= portletURL %>"
-			type="pills"
-		/>
+<div class="scv-profile-viewer row">
+	<div class="col-md-3">
+		<ul class="scv-user-list" id="scvUserList"></ul>
 	</div>
 	<div class="col-md-9">
-		<%= selUser %>
-
-		<%@ include file="/user_view.jspf" %>
+		<div class="scv-user-profile" id="scvUserProfile">Please select a user.</div>
 	</div>
 </div>
+
+<aui:script use="aui-base">
+	var scvUserList = A.one("#scvUserList");
+	var result;
+
+	Liferay.Service(
+		'/SCVUserProfileUtil.userprofileutil/get-scv-user-profiles',
+		function(obj) {
+			result = obj
+			for (var key in result) {
+				var userData = result[key];
+
+				var firstName = userData["First Name"];
+				var lastName = userData["Last Name"];
+
+				var userListHTML = '<li class="user" id="' + key + '">' + key + ' ' + firstName + ' ' + lastName + '</li>';
+
+				scvUserList.appendChild(userListHTML);
+			}
+		}
+	);
+
+	scvUserList.delegate(
+		'click',
+		function(event) {
+			var target = event.currentTarget;
+
+			var scvUserProfileId = target.getAttribute('id');
+
+			var userData = result[scvUserProfileId];
+
+			var scvUserProfile = A.one("#scvUserProfile");
+
+			scvUserProfile.html("");
+
+			for (var key in userData) {
+				var profileHTML = '<div class="row"><div class="col-md-3 field-name">' + key + '</div><div class="col-md-6">' + userData[key] + '</div></div>';
+
+				scvUserProfile.appendChild(profileHTML);
+			}
+		},
+		'li, .user'
+	);
+</aui:script>
