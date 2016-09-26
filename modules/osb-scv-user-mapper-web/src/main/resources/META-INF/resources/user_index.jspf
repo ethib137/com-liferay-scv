@@ -15,17 +15,25 @@
 --%>
 
 <div class="scv-profile-viewer row">
-	<div class="col-md-3">
+	<div class="col-md-4">
 		<ul class="scv-user-list" id="scvUserList"></ul>
 	</div>
-	<div class="col-md-9">
+	<div class="col-md-8">
 		<div class="scv-user-profile" id="scvUserProfile">Please select a user.</div>
 	</div>
 </div>
 
-<aui:script use="aui-base">
+<aui:script use="aui-base,aui-loading-mask-deprecated">
 	var scvUserList = A.one("#scvUserList");
 	var result;
+
+	var loadingMask = new A.LoadingMask(
+		{
+			target: scvUserList
+		}
+	);
+
+	loadingMask.show();
 
 	Liferay.Service(
 		'/SCVUserProfileUtil.userprofileutil/get-scv-user-profiles',
@@ -34,13 +42,14 @@
 			for (var key in result) {
 				var userData = result[key];
 
-				var firstName = userData["First Name"];
-				var lastName = userData["Last Name"];
+				var emailAddress = userData["emailAddress"];
 
-				var userListHTML = '<li class="user" id="' + key + '">' + key + ' ' + firstName + ' ' + lastName + '</li>';
+				var userListHTML = '<li class="user" id="' + key + '">' + emailAddress + '</li>';
 
 				scvUserList.appendChild(userListHTML);
 			}
+
+			loadingMask.hide();
 		}
 	);
 

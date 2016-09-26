@@ -25,6 +25,7 @@ build/
 *.o
 *.so
 modules/*/build/lib
+.sass-cache/
 
 # OS generated files #
 ######################

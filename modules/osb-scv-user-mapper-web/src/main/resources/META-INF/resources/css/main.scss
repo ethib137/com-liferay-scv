@@ -1,0 +1,25 @@
+.scv-user-list {
+	height: 500px;
+	list-style: none;
+	overflow-y: scroll;
+
+	li.user {
+		cursor: pointer;
+		padding: 5px;
+	}
+
+	li.user:hover {
+		background-color: #365D9E;
+		color: white;
+	}
+}
+
+.scv-user-profile {
+	background-color: #F5F8FA;
+	border-radius: 10px;
+	padding: 20px;
+
+	.field-name {
+		font-weight: bold;
+	}
+}
