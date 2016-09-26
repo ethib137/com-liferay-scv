@@ -25,4 +25,6 @@ public class UserProfileConstants {
 
 	public static final String DOCUMENT_TYPE_VERSIONING = "SCVVersioning";
 
+	public static final String FIELD_ASSOCIATED = "$ASSOCIATED$";
+
 }

@@ -84,27 +84,105 @@ public class UserProfileUtil {
 
 			String mergeRule = getMergeRule(key);
 
-			if (Objects.equals(mergeRule, "modifiedDate")) {
+			if (mergeRule.equals("modifiedDate")) {
 				for (DataSourceEntry dataSourceEntry : dataSourceEntries) {
 					long currentTimestamp = dataSourceEntry.getTimestamp(key);
 
 					if (currentTimestamp > timestamp) {
 						timestamp = currentTimestamp;
-						value = dataSourceEntry.getProperty(key);
+
+						if (key.startsWith(
+								UserProfileConstants.FIELD_ASSOCIATED)) {
+
+							String idFieldName = StringUtil.replace(
+								key, UserProfileConstants.FIELD_ASSOCIATED,
+								StringPool.BLANK);
+
+							int index = idFieldName.lastIndexOf("Ids");
+
+							String tableName = idFieldName.substring(0, index);
+
+							Object currentValue = dataSourceEntry.getProperty(
+								key);
+
+							value = getAssociatedJSONArray(
+								(String)dataSourceEntry.getProperty(
+									"dataSourceId"),
+								tableName,
+								JSONFactoryUtil.createJSONArray(
+									currentValue.toString()));
+
+							jsonObject.put(
+								UserProfileConstants.FIELD_ASSOCIATED +
+									tableName,
+								value);
+						}
+						else {
+							value = dataSourceEntry.getProperty(key);
+
+							jsonObject.put(key, value);
+						}
 					}
 				}
 			}
-			else if (Objects.equals(mergeRule, "dataSource")) {
+			else if (mergeRule.equals("dataSource")) {
 				// need dataSourcePriority logic
 			}
-
-			jsonObject.put(key, value);
 		}
 
 		return jsonObject;
 	}
 
-	private static final String _ASSOCIATED_FIELD = "ASSOCIATED_FIELD_";
+	protected static JSONArray getAssociatedJSONArray(
+			String dataSourceId, String tableName, JSONArray idFieldsJSONArray)
+		throws Exception {
+
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+		JSONObject searchJSONObject = JSONFactoryUtil.createJSONObject();
+
+		searchJSONObject.put("dataSourceId", dataSourceId);
+		searchJSONObject.put("tableName", tableName);
+
+		for (int i = 0; i < idFieldsJSONArray.length(); i++) {
+			JSONObject associatedJSONObject =
+				JSONFactoryUtil.createJSONObject();
+
+			String idField = idFieldsJSONArray.getString(i);
+
+			searchJSONObject.put("id", idField);
+
+			List<DataSourceEntry> dataSourceEntries =
+				_userProfileCommandUtil.search(
+					searchJSONObject,
+					UserProfileConstants.DOCUMENT_TYPE_ASSOCIATION);
+
+			if (dataSourceEntries.isEmpty()) {
+				continue;
+			}
+
+			DataSourceEntry dataSourceEntry = dataSourceEntries.get(0);
+
+			JSONObject sourceJSONObject = JSONFactoryUtil.createJSONObject(
+				dataSourceEntry.getSource());
+
+			Iterator<String> keys = sourceJSONObject.keys();
+
+			while (keys.hasNext()) {
+				String key = keys.next();
+
+				if (key.endsWith("_timestamp")) {
+					continue;
+				}
+
+				associatedJSONObject.put(key, sourceJSONObject.get(key));
+			}
+
+			jsonArray.put(associatedJSONObject);
+		}
+
+		return jsonArray;
+	}
 
 	public static void updateDataSourceEntries(
 			long dataSourceId, Map<String, List<String>> searchTermFieldNameMap,
@@ -135,7 +213,7 @@ public class UserProfileUtil {
 			for (int i = 0; i < jsonArray.length(); i++) {
 				JSONObject entityJSONObject = jsonArray.getJSONObject(i);
 
-				String idField = entityJSONObject.getString(
+				String id = entityJSONObject.getString(
 					StringUtil.lowerCase(tableName) + "Id");
 
 				List<String> searchTerms = new ArrayList<String>();
@@ -154,20 +232,21 @@ public class UserProfileUtil {
 						}
 
 						entityJSONObject.put(
-							_ASSOCIATED_FIELD + pkField, value);
+							UserProfileConstants.FIELD_ASSOCIATED + pkField,
+							value);
 						entityJSONObject.remove(pkField);
 					}
 				}
 
 				updateDataSourceEntry(
-					dataSourceId, tableName, idField, searchTerms,
+					dataSourceId, tableName, id, searchTerms,
 					entityJSONObject);
 			}
 		}
 	}
 
 	public static void updateDataSourceEntry(
-			long dataSourceId, String tableName, String idField,
+			long dataSourceId, String tableName, String id,
 			List<String> searchTerms, JSONObject jsonObject)
 		throws Exception {
 
@@ -179,7 +258,7 @@ public class UserProfileUtil {
 
 		VersionedDataSourceEntry versionedDataSourceEntry =
 			getVersionedDataSourceEntry(
-				dataSourceId, tableName, idField, searchTerms, documentType);
+				dataSourceId, tableName, id, searchTerms, documentType);
 
 		String scvUserProfileId = null;
 
@@ -240,7 +319,7 @@ public class UserProfileUtil {
 	}
 
 	protected static VersionedDataSourceEntry getVersionedDataSourceEntry(
-			long dataSourceId, String tableName, String idField,
+			long dataSourceId, String tableName, String id,
 			List<String> searchTerms, String documentType)
 		throws Exception {
 
@@ -249,7 +328,7 @@ public class UserProfileUtil {
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
 		jsonObject.put("dataSourceId", dataSourceId);
-		jsonObject.put("idField", idField);
+		jsonObject.put("id", id);
 		jsonObject.put("tableName", StringUtil.lowerCase(tableName));
 
 		List<DataSourceEntry> dataSourceEntries =
