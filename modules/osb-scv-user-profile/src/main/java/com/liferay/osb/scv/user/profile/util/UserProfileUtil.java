@@ -51,18 +51,19 @@ import org.osgi.service.component.annotations.Reference;
 @JSONWebService
 public class UserProfileUtil {
 
-	public static JSONArray getSCVUserProfiles() throws Exception {
-		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+	public static JSONObject getSCVUserProfiles() throws Exception {
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
 		List<String> scvUserProfileIds = _userProfileCommandUtil.search(
 			"scvUserProfileId",
 			UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE);
 
 		for (String scvUserProfileId : scvUserProfileIds) {
-			jsonArray.put(getSCVUserProfile(scvUserProfileId));
+			jsonObject.put(
+				scvUserProfileId, getSCVUserProfile(scvUserProfileId));
 		}
 
-		return jsonArray;
+		return jsonObject;
 	}
 
 	public static JSONObject getSCVUserProfile(String scvUserProfileId)
