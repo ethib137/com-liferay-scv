@@ -80,7 +80,8 @@ public class UserMappingRuleLocalServiceImpl
 	public List<UserMappingRule> getUserMappingRules(
 		long dataSourceId, int frequency) {
 
-		return userMappingRulePersistence.findByD_F(dataSourceId, frequency);
+		return userMappingRulePersistence.findByD_F(
+			dataSourceId, frequency, -1, -1, null, false);
 	}
 
 	@Override
