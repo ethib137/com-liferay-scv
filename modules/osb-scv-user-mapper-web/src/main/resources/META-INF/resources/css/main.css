@@ -1,3 +1,25 @@
-.user-list .nav-pills > li {
-	float: none;
+.scv-user-list {
+	height: 500px;
+	list-style: none;
+	overflow-y: scroll;
+}
+
+.scv-user-list li.user {
+	cursor: pointer;
+	padding: 5px;
+}
+
+.scv-user-list li.user:hover {
+	background-color: #365D9E;
+	color: white;
+}
+
+.scv-user-profile {
+	background-color: #F5F8FA;
+	border-radius: 10px;
+	padding: 20px
+}
+
+.scv-user-profile .field-name {
+	font-weight: bold;
 }
