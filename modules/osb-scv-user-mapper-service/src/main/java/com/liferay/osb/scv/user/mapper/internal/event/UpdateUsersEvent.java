@@ -35,9 +35,11 @@ import com.liferay.portal.kernel.util.Validator;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Shinn Lok
@@ -172,6 +174,8 @@ public class UpdateUsersEvent extends BaseEvent {
 				key);
 
 			if (ListUtil.isNotNull(userMappingRules)) {
+				Set<String> processKeys = new HashSet<>();
+
 				JSONArray sourceModelJSONArray =
 					sourceJSONObject.getJSONArray(key);
 
@@ -185,6 +189,8 @@ public class UpdateUsersEvent extends BaseEvent {
 						JSONFactoryUtil.createJSONObject();
 
 					for (UserMappingRule userMappingRule : userMappingRules) {
+						processKeys.add(userMappingRule.getSourceField());
+
 						destinationModelJSONObject.put(
 							userMappingRule.getDestinationField(),
 							sourceModelJSONObject.getString(
@@ -214,6 +220,19 @@ public class UpdateUsersEvent extends BaseEvent {
 										requiredField));
 							}
 						}
+					}
+
+					Iterator<String> allKeys = sourceModelJSONObject.keys();
+
+					while (allKeys.hasNext()) {
+						String curKey = allKeys.next();
+
+						if (processKeys.contains(curKey)) {
+							continue;
+						}
+
+						destinationModelJSONObject.put(
+							curKey, sourceModelJSONObject.getString(curKey));
 					}
 
 					destinationModelJSONArray.put(destinationModelJSONObject);
