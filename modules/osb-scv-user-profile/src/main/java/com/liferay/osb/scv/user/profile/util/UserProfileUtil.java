@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -380,8 +381,8 @@ public class UserProfileUtil {
 
 			DataSourceEntry dataSourceEntry = dataSourceEntries.get(0);
 
-			long scvUserProfileId = (long)dataSourceEntry.getProperty(
-				"scvUserProfileId");
+			long scvUserProfileId = GetterUtil.getLong(
+				dataSourceEntry.getProperty("scvUserProfileId"));
 
 			if (Validator.isNotNull(scvUserProfileId)) {
 				return scvUserProfileId;

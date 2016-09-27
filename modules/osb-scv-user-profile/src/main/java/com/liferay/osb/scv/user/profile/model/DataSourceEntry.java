@@ -51,12 +51,12 @@ public class DataSourceEntry {
 		while (iterator.hasNext()) {
 			String key = iterator.next();
 
-			addProperty(key, jsonObject.getString(key));
+			addProperty(key, jsonObject.get(key));
 		}
 	}
 
 	public void addProperty(String key, Object value) {
-		sourceJSONObject.put(key, GetterUtil.getString(value));
+		sourceJSONObject.put(key, value);
 	}
 
 	public String getDataSourceEntryId() {
