@@ -74,7 +74,7 @@ public class DataSourceUtil {
 
 		String response = StringUtil.read(
 			DataSourceUtil.class.getResourceAsStream(
-				"data_sources.json"));
+				"dependencies/data_sources.json"));
 
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray(response);
 
