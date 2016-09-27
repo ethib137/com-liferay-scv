@@ -50,6 +50,10 @@ import org.osgi.service.component.annotations.Reference;
 @JSONWebService
 public class UserProfileUtil {
 
+	public static void deleteAll() {
+		_userProfileCommandUtil.deleteAll();
+	}
+
 	public static JSONObject getSCVUserProfile(String scvUserProfileId)
 		throws Exception {
 
