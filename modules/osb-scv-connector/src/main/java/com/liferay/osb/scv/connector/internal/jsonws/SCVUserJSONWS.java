@@ -343,7 +343,11 @@ public class SCVUserJSONWS {
 		// Contact
 
 		if (fields.containsKey("Contact")) {
-			jsonObject.put("contactIds", user.getContactId());
+			List<Object> contactIds = new ArrayList<>();
+
+			contactIds.add(user.getContactId());
+
+			jsonObject.put("contactIds", contactIds);
 
 			List<BaseModel<?>> contacts = new ArrayList<>();
 
