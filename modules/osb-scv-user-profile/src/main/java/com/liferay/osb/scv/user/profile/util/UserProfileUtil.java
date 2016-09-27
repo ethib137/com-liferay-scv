@@ -51,6 +51,45 @@ import org.osgi.service.component.annotations.Reference;
 @JSONWebService
 public class UserProfileUtil {
 
+	public static JSONObject getSCVVersioning(
+			String scvUserProfileId, String field)
+		throws Exception {
+
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+		List<DataSourceEntry> dataSourceEntries =
+			_userProfileCommandUtil.search(
+				"scvUserProfileId", scvUserProfileId,
+				UserProfileConstants.DOCUMENT_TYPE_VERSIONING);
+
+		// TODO Improve the query in the future on the database end,
+		// so we don't have to filter out the undesired field
+
+		for (DataSourceEntry dataSourceEntry : dataSourceEntries) {
+			List<String> keys = dataSourceEntry.getKeys();
+
+			for (String key : keys) {
+				if (key.equals(field)) {
+					JSONObject jsonVersionObject =
+						JSONFactoryUtil.createJSONObject();
+
+					jsonVersionObject.put(
+						field, dataSourceEntry.getProperty(field));
+					jsonVersionObject.put(
+						"dataSourceId",
+						dataSourceEntry.getProperty("dataSourceId"));
+
+					jsonObject.put(
+						dataSourceEntry.getProperty("timestamp").toString(),
+						jsonVersionObject
+					);
+				}
+			}
+		}
+
+		return jsonObject;
+	}
+
 	public static JSONObject getSCVUserProfiles() throws Exception {
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
