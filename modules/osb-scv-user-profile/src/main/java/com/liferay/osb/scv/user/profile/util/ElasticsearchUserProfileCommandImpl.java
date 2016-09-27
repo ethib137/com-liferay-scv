@@ -18,9 +18,11 @@ import com.liferay.osb.scv.user.profile.model.DataSourceEntry;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
+
 import java.net.InetAddress;
 
 import java.util.ArrayList;
@@ -29,11 +31,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import com.liferay.portal.kernel.util.StringUtil;
 import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequestBuilder;
 import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
-import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequestBuilder;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteRequestBuilder;
@@ -60,11 +60,11 @@ import org.elasticsearch.index.query.MatchQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
-
 import org.elasticsearch.search.aggregations.AggregationBuilders;
 import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsBuilder;
+
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
@@ -75,6 +75,20 @@ import org.osgi.service.component.annotations.Modified;
  */
 @Component(immediate = true, service = UserProfileCommand.class)
 public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
+
+	public static String getResourceAsString(
+		Class<?> clazz, String resourceName) {
+
+		try (InputStream inputStream = clazz.getResourceAsStream(
+				resourceName)) {
+
+			return StringUtil.read(inputStream);
+		}
+		catch (IOException ioe) {
+			throw new RuntimeException(
+				"Unable to load resource: " + resourceName, ioe);
+		}
+	}
 
 	@Activate
 	public void activate() {
@@ -109,76 +123,6 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 		deleteAll();
 	}
 
-	protected static boolean hasIndex(String indexName) {
-		AdminClient adminClient = _client.admin();
-
-		IndicesAdminClient indicesAdminClient = adminClient.indices();
-
-		IndicesExistsRequestBuilder indicesExistsRequestBuilder =
-			indicesAdminClient.prepareExists(indexName);
-
-		IndicesExistsResponse indicesExistsResponse =
-			indicesExistsRequestBuilder.get();
-
-		return indicesExistsResponse.isExists();
-	}
-
-	public static String getResourceAsString(
-		Class<?> clazz, String resourceName) {
-
-		try (InputStream inputStream = clazz.getResourceAsStream(
-				resourceName)) {
-
-			return StringUtil.read(inputStream);
-		}
-		catch (IOException ioe) {
-			throw new RuntimeException(
-				"Unable to load resource: " + resourceName, ioe);
-		}
-	}
-
-	public void addIndex() {
-		String[] documentTypes =
-			new String[] {
-				UserProfileConstants.DOCUMENT_TYPE_ASSOCIATION,
-				UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE,
-				UserProfileConstants.DOCUMENT_TYPE_VERSIONING
-			};
-
-		AdminClient adminClient = _client.admin();
-
-		IndicesAdminClient indicesAdminClient = adminClient.indices();
-
-		CreateIndexRequestBuilder createIndexRequestBuilder =
-			indicesAdminClient.prepareCreate(_INDEX_NAME);
-
-		String mappings = getResourceAsString(
-			getClass(), "/META-INF/mappings/mappings.json");
-
-		for (String documentType : documentTypes) {
-			String currentMappings = StringUtil.replace(
-				mappings, "$DOCUMENT_TYPE$", documentType);
-
-			createIndexRequestBuilder.addMapping(documentType, currentMappings);
-		}
-
-		createIndexRequestBuilder.get();
-	}
-
-	@Modified
-	protected synchronized void modified() {
-		if (_client == null) {
-			System.out.println("------------------- client is null----------");
-		}
-		else {
-			System.out.println("------------------- client is NOT null----------");
-		}
-
-		deactivate();
-
-		activate();
-	}
-
 	@Override
 	public void add(DataSourceEntry dataSourceEntry, String documentType) {
 		IndexRequestBuilder indexRequestBuilder = _client.prepareIndex(
@@ -192,6 +136,27 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 		if (_log.isDebugEnabled()) {
 			_log.debug(indexResponse.toString());
 		}
+	}
+
+	public void addIndex() {
+		AdminClient adminClient = _client.admin();
+
+		IndicesAdminClient indicesAdminClient = adminClient.indices();
+
+		CreateIndexRequestBuilder createIndexRequestBuilder =
+			indicesAdminClient.prepareCreate(_INDEX_NAME);
+
+		String mappings = getResourceAsString(
+			getClass(), "/META-INF/mappings/mappings.json");
+
+		for (String documentType : _DOCUMENT_TYPES) {
+			String currentMappings = StringUtil.replace(
+				mappings, "$DOCUMENT_TYPE$", documentType);
+
+			createIndexRequestBuilder.addMapping(documentType, currentMappings);
+		}
+
+		createIndexRequestBuilder.get();
 	}
 
 	@Override
@@ -213,10 +178,7 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 		SearchRequestBuilder searchRequestBuilder = _client.prepareSearch(
 			_INDEX_NAME);
 
-		searchRequestBuilder.setTypes(
-			UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE,
-			UserProfileConstants.DOCUMENT_TYPE_VERSIONING,
-			UserProfileConstants.DOCUMENT_TYPE_ASSOCIATION);
+		searchRequestBuilder.setTypes(_DOCUMENT_TYPES);
 
 		searchRequestBuilder.setScroll(_SEARCH_SCROLL_KEEP_ALIVE_TIME_VALUE);
 		searchRequestBuilder.setSearchType(SearchType.SCAN);
@@ -315,40 +277,6 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 		}
 	}
 
-	public List<String> search(String field, String documentType) {
-		List<String> searchResults = new ArrayList<String>();
-
-		SearchRequestBuilder searchRequestBuilder = _client.prepareSearch();
-
-		searchRequestBuilder.setIndices(_INDEX_NAME);
-		searchRequestBuilder.setSize(0);
-		searchRequestBuilder.setQuery(QueryBuilders.matchAllQuery());
-		searchRequestBuilder.setTypes(documentType);
-
-		TermsBuilder termsBuilder = AggregationBuilders.terms("ids");
-
-		termsBuilder.field(field);
-		termsBuilder.size(0);
-
-		searchRequestBuilder.addAggregation(termsBuilder);
-
-		SearchResponse searchResponse = searchRequestBuilder.get();
-
-		Aggregations aggregations = searchResponse.getAggregations();
-
-		Terms terms = aggregations.get("ids");
-
-		List<Terms.Bucket> buckets = terms.getBuckets();
-
-		for (int i = 0; i < buckets.size(); i++) {
-			Terms.Bucket bucket = buckets.get(i);
-
-			searchResults.add((String)bucket.getKey());
-		}
-
-		return searchResults;
-	}
-
 	@Override
 	public DataSourceEntry getDataSourceEntry(
 		String dataSourceEntryId, String documentType) {
@@ -403,6 +331,40 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 		return dataSourceEntries;
 	}
 
+	public List<String> search(String field, String documentType) {
+		List<String> searchResults = new ArrayList<>();
+
+		SearchRequestBuilder searchRequestBuilder = _client.prepareSearch();
+
+		searchRequestBuilder.setIndices(_INDEX_NAME);
+		searchRequestBuilder.setSize(0);
+		searchRequestBuilder.setQuery(QueryBuilders.matchAllQuery());
+		searchRequestBuilder.setTypes(documentType);
+
+		TermsBuilder termsBuilder = AggregationBuilders.terms("ids");
+
+		termsBuilder.field(field);
+		termsBuilder.size(0);
+
+		searchRequestBuilder.addAggregation(termsBuilder);
+
+		SearchResponse searchResponse = searchRequestBuilder.get();
+
+		Aggregations aggregations = searchResponse.getAggregations();
+
+		Terms terms = aggregations.get("ids");
+
+		List<Terms.Bucket> buckets = terms.getBuckets();
+
+		for (int i = 0; i < buckets.size(); i++) {
+			Terms.Bucket bucket = buckets.get(i);
+
+			searchResults.add((String)bucket.getKey());
+		}
+
+		return searchResults;
+	}
+
 	@Override
 	public void update(DataSourceEntry dataSourceEntry, String documentType) {
 		UpdateRequestBuilder updateRequestBuilder = _client.prepareUpdate(
@@ -431,6 +393,20 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 		update(dataSourceEntry, documentType);
 	}
 
+	protected static boolean hasIndex(String indexName) {
+		AdminClient adminClient = _client.admin();
+
+		IndicesAdminClient indicesAdminClient = adminClient.indices();
+
+		IndicesExistsRequestBuilder indicesExistsRequestBuilder =
+			indicesAdminClient.prepareExists(indexName);
+
+		IndicesExistsResponse indicesExistsResponse =
+			indicesExistsRequestBuilder.get();
+
+		return indicesExistsResponse.isExists();
+	}
+
 	@Deactivate
 	protected void deactivate() {
 		if (_client != null) {
@@ -448,13 +424,18 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 
 	private static final String _CLUSTER_NAME = "elasticsearch";
 
+	private static final String[] _DOCUMENT_TYPES = new String[] {
+		UserProfileConstants.DOCUMENT_TYPE_ASSOCIATION,
+		UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE,
+		UserProfileConstants.DOCUMENT_TYPE_VERSIONING
+	};
+
 	private static final String _INDEX_NAME = "scv";
 
 	private static final TimeValue _SEARCH_SCROLL_KEEP_ALIVE_TIME_VALUE =
 		new TimeValue(1, TimeUnit.MINUTES);
 
-	private static final String _TRANSPORT_ADDRESS =
-		"localhost";
+	private static final String _TRANSPORT_ADDRESS = "localhost";
 
 	private static final int _TRANSPORT_ADDRESS_PORT = 9300;
 

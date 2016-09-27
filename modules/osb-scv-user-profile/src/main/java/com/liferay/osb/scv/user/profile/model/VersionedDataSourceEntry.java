@@ -100,7 +100,6 @@ public class VersionedDataSourceEntry extends DataSourceEntry {
 	}
 
 	private long _timestamp = System.currentTimeMillis();
-
 	private DataSourceEntry _versioningDataSourceEntry;
 
 }

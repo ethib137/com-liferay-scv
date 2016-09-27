@@ -54,14 +54,14 @@ public class UserProfileCommandUtil {
 			getDataSourceEntryId, documentType);
 	}
 
-	public static List<String> search(String field, String documentType) {
-		return _userProfileCommand.search(field, documentType);
-	}
-
 	public static List<DataSourceEntry> search(
 		JSONObject jsonObject, String documentType) {
 
 		return _userProfileCommand.search(jsonObject, documentType);
+	}
+
+	public static List<String> search(String field, String documentType) {
+		return _userProfileCommand.search(field, documentType);
 	}
 
 	public static void update(

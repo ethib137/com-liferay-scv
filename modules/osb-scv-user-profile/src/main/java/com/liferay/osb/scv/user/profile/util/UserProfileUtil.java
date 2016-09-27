@@ -31,7 +31,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 
 import org.osgi.service.component.annotations.Component;
@@ -50,60 +49,6 @@ import org.osgi.service.component.annotations.Reference;
 )
 @JSONWebService
 public class UserProfileUtil {
-
-	public static JSONObject getSCVVersioning(
-			String scvUserProfileId, String field)
-		throws Exception {
-
-		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
-
-		List<DataSourceEntry> dataSourceEntries =
-			_userProfileCommandUtil.search(
-				"scvUserProfileId", scvUserProfileId,
-				UserProfileConstants.DOCUMENT_TYPE_VERSIONING);
-
-		// TODO Improve the query in the future on the database end,
-		// so we don't have to filter out the undesired field
-
-		for (DataSourceEntry dataSourceEntry : dataSourceEntries) {
-			List<String> keys = dataSourceEntry.getKeys();
-
-			for (String key : keys) {
-				if (key.equals(field)) {
-					JSONObject jsonVersionObject =
-						JSONFactoryUtil.createJSONObject();
-
-					jsonVersionObject.put(
-						field, dataSourceEntry.getProperty(field));
-					jsonVersionObject.put(
-						"dataSourceId",
-						dataSourceEntry.getProperty("dataSourceId"));
-
-					jsonObject.put(
-						dataSourceEntry.getProperty("timestamp").toString(),
-						jsonVersionObject
-					);
-				}
-			}
-		}
-
-		return jsonObject;
-	}
-
-	public static JSONObject getSCVUserProfiles() throws Exception {
-		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
-
-		List<String> scvUserProfileIds = _userProfileCommandUtil.search(
-			"scvUserProfileId",
-			UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE);
-
-		for (String scvUserProfileId : scvUserProfileIds) {
-			jsonObject.put(
-				scvUserProfileId, getSCVUserProfile(scvUserProfileId));
-		}
-
-		return jsonObject;
-	}
 
 	public static JSONObject getSCVUserProfile(String scvUserProfileId)
 		throws Exception {
@@ -165,62 +110,66 @@ public class UserProfileUtil {
 				}
 			}
 			else if (mergeRule.equals("dataSource")) {
+
 				// need dataSourcePriority logic
+
 			}
 		}
 
 		return jsonObject;
 	}
 
-	protected static JSONArray getAssociatedJSONArray(
-			String dataSourceId, String tableName, JSONArray idFieldsJSONArray)
-		throws Exception {
+	public static JSONObject getSCVUserProfiles() throws Exception {
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
-		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+		List<String> scvUserProfileIds = _userProfileCommandUtil.search(
+			"scvUserProfileId",
+			UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE);
 
-		JSONObject searchJSONObject = JSONFactoryUtil.createJSONObject();
-
-		searchJSONObject.put("dataSourceId", dataSourceId);
-		searchJSONObject.put("tableName", tableName);
-
-		for (int i = 0; i < idFieldsJSONArray.length(); i++) {
-			JSONObject associatedJSONObject =
-				JSONFactoryUtil.createJSONObject();
-
-			String idField = idFieldsJSONArray.getString(i);
-
-			searchJSONObject.put("id", idField);
-
-			List<DataSourceEntry> dataSourceEntries =
-				_userProfileCommandUtil.search(
-					searchJSONObject,
-					UserProfileConstants.DOCUMENT_TYPE_ASSOCIATION);
-
-			if (dataSourceEntries.isEmpty()) {
-				continue;
-			}
-
-			DataSourceEntry dataSourceEntry = dataSourceEntries.get(0);
-
-			JSONObject sourceJSONObject = JSONFactoryUtil.createJSONObject(
-				dataSourceEntry.getSource());
-
-			Iterator<String> keys = sourceJSONObject.keys();
-
-			while (keys.hasNext()) {
-				String key = keys.next();
-
-				if (key.endsWith("_timestamp")) {
-					continue;
-				}
-
-				associatedJSONObject.put(key, sourceJSONObject.get(key));
-			}
-
-			jsonArray.put(associatedJSONObject);
+		for (String scvUserProfileId : scvUserProfileIds) {
+			jsonObject.put(
+				scvUserProfileId, getSCVUserProfile(scvUserProfileId));
 		}
 
-		return jsonArray;
+		return jsonObject;
+	}
+
+	public static JSONObject getSCVVersioning(
+			String scvUserProfileId, String field)
+		throws Exception {
+
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+		List<DataSourceEntry> dataSourceEntries =
+			_userProfileCommandUtil.search(
+				"scvUserProfileId", scvUserProfileId,
+				UserProfileConstants.DOCUMENT_TYPE_VERSIONING);
+
+		// TODO Improve the query in the future on the database end,
+		// so we don't have to filter out the undesired field
+
+		for (DataSourceEntry dataSourceEntry : dataSourceEntries) {
+			List<String> keys = dataSourceEntry.getKeys();
+
+			for (String key : keys) {
+				if (key.equals(field)) {
+					JSONObject jsonVersionObject =
+						JSONFactoryUtil.createJSONObject();
+
+					jsonVersionObject.put(
+						field, dataSourceEntry.getProperty(field));
+					jsonVersionObject.put(
+						"dataSourceId",
+						dataSourceEntry.getProperty("dataSourceId"));
+
+					jsonObject.put(
+						dataSourceEntry.getProperty("timestamp").toString(),
+						jsonVersionObject);
+				}
+			}
+		}
+
+		return jsonObject;
 	}
 
 	public static void updateDataSourceEntries(
@@ -228,8 +177,8 @@ public class UserProfileUtil {
 			JSONObject jsonObject)
 		throws Exception {
 
-		List<String> tableNames = new ArrayList<String>();
-		List<String> pkFields = new ArrayList<String>();
+		List<String> tableNames = new ArrayList<>();
+		List<String> pkFields = new ArrayList<>();
 
 		Iterator<String> iterator = jsonObject.keys();
 
@@ -255,7 +204,7 @@ public class UserProfileUtil {
 				String id = entityJSONObject.getString(
 					StringUtil.lowerCase(tableName) + "Id");
 
-				List<String> searchTerms = new ArrayList<String>();
+				List<String> searchTerms = new ArrayList<>();
 
 				if (!ListUtil.isEmpty(searchTermFieldNames)) {
 					for (String searchTermFieldName : searchTermFieldNames) {
@@ -278,8 +227,7 @@ public class UserProfileUtil {
 				}
 
 				updateDataSourceEntry(
-					dataSourceId, tableName, id, searchTerms,
-					entityJSONObject);
+					dataSourceId, tableName, id, searchTerms, entityJSONObject);
 			}
 		}
 	}
@@ -353,8 +301,89 @@ public class UserProfileUtil {
 		return keys;
 	}
 
+	protected static JSONArray getAssociatedJSONArray(
+			String dataSourceId, String tableName, JSONArray idFieldsJSONArray)
+		throws Exception {
+
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+		JSONObject searchJSONObject = JSONFactoryUtil.createJSONObject();
+
+		searchJSONObject.put("dataSourceId", dataSourceId);
+		searchJSONObject.put("tableName", tableName);
+
+		for (int i = 0; i < idFieldsJSONArray.length(); i++) {
+			JSONObject associatedJSONObject =
+				JSONFactoryUtil.createJSONObject();
+
+			String idField = idFieldsJSONArray.getString(i);
+
+			searchJSONObject.put("id", idField);
+
+			List<DataSourceEntry> dataSourceEntries =
+				_userProfileCommandUtil.search(
+					searchJSONObject,
+					UserProfileConstants.DOCUMENT_TYPE_ASSOCIATION);
+
+			if (dataSourceEntries.isEmpty()) {
+				continue;
+			}
+
+			DataSourceEntry dataSourceEntry = dataSourceEntries.get(0);
+
+			JSONObject sourceJSONObject = JSONFactoryUtil.createJSONObject(
+				dataSourceEntry.getSource());
+
+			Iterator<String> keys = sourceJSONObject.keys();
+
+			while (keys.hasNext()) {
+				String key = keys.next();
+
+				if (key.endsWith("_timestamp")) {
+					continue;
+				}
+
+				associatedJSONObject.put(key, sourceJSONObject.get(key));
+			}
+
+			jsonArray.put(associatedJSONObject);
+		}
+
+		return jsonArray;
+	}
+
 	protected static String getMergeRule(String key) {
 		return "modifiedDate";
+	}
+
+	protected static String getSCVUserProfileId(List<String> searchTerms)
+		throws Exception {
+
+		for (String searchTerm : searchTerms) {
+			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+			jsonObject.put("searchTerms", searchTerm);
+
+			List<DataSourceEntry> dataSourceEntries =
+				_userProfileCommandUtil.search(
+					jsonObject,
+					UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE);
+
+			if (dataSourceEntries.isEmpty()) {
+				continue;
+			}
+
+			DataSourceEntry dataSourceEntry = dataSourceEntries.get(0);
+
+			String scvUserProfileId = (String)dataSourceEntry.getProperty(
+				"scvUserProfileId");
+
+			if (Validator.isNotNull(scvUserProfileId)) {
+				return scvUserProfileId;
+			}
+		}
+
+		return String.valueOf(CounterLocalServiceUtil.increment());
 	}
 
 	protected static VersionedDataSourceEntry getVersionedDataSourceEntry(
@@ -393,36 +422,6 @@ public class UserProfileUtil {
 		}
 
 		return new VersionedDataSourceEntry(dataSourceEntry);
-	}
-
-	protected static String getSCVUserProfileId(List<String> searchTerms)
-		throws Exception {
-
-		for (String searchTerm : searchTerms) {
-			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
-
-			jsonObject.put("searchTerms", searchTerm);
-
-			List<DataSourceEntry> dataSourceEntries =
-				_userProfileCommandUtil.search(
-					jsonObject,
-					UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE);
-
-			if (dataSourceEntries.isEmpty()) {
-				continue;
-			}
-
-			DataSourceEntry dataSourceEntry = dataSourceEntries.get(0);
-
-			String scvUserProfileId = (String)dataSourceEntry.getProperty(
-				"scvUserProfileId");
-
-			if (Validator.isNotNull(scvUserProfileId)) {
-				return scvUserProfileId;
-			}
-		}
-
-		return String.valueOf(CounterLocalServiceUtil.increment());
 	}
 
 	@Reference(unbind = "-")
