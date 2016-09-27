@@ -16,6 +16,7 @@ package com.liferay.osb.scv.user.profile.model;
 
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.util.GetterUtil;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -50,12 +51,12 @@ public class DataSourceEntry {
 		while (iterator.hasNext()) {
 			String key = iterator.next();
 
-			addProperty(key, jsonObject.get(key));
+			addProperty(key, jsonObject.getString(key));
 		}
 	}
 
 	public void addProperty(String key, Object value) {
-		sourceJSONObject.put(key, value);
+		sourceJSONObject.put(key, GetterUtil.getString(value));
 	}
 
 	public String getDataSourceEntryId() {
