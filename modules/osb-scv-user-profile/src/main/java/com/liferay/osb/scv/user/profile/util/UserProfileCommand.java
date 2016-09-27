@@ -38,7 +38,7 @@ public interface UserProfileCommand {
 	public List<DataSourceEntry> search(
 		JSONObject jsonObject, String documentType);
 
-	public List<String> search(String field, String documentType);
+	public List<Long> search(String field, String documentType);
 
 	public void update(DataSourceEntry dataSourceEntry, String documentType);
 

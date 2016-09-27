@@ -54,7 +54,7 @@ public class UserProfileUtil {
 		_userProfileCommandUtil.deleteAll();
 	}
 
-	public static JSONObject getSCVUserProfile(String scvUserProfileId)
+	public static JSONObject getSCVUserProfile(long scvUserProfileId)
 		throws Exception {
 
 		List<DataSourceEntry> dataSourceEntries =
@@ -126,20 +126,21 @@ public class UserProfileUtil {
 	public static JSONObject getSCVUserProfiles() throws Exception {
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
-		List<String> scvUserProfileIds = _userProfileCommandUtil.search(
+		List<Long> scvUserProfileIds = _userProfileCommandUtil.search(
 			"scvUserProfileId",
 			UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE);
 
-		for (String scvUserProfileId : scvUserProfileIds) {
+		for (long scvUserProfileId : scvUserProfileIds) {
 			jsonObject.put(
-				scvUserProfileId, getSCVUserProfile(scvUserProfileId));
+				String.valueOf(scvUserProfileId),
+				getSCVUserProfile(scvUserProfileId));
 		}
 
 		return jsonObject;
 	}
 
 	public static JSONObject getSCVVersioning(
-			String scvUserProfileId, String field)
+			long scvUserProfileId, String field)
 		throws Exception {
 
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
@@ -251,7 +252,7 @@ public class UserProfileUtil {
 			getVersionedDataSourceEntry(
 				dataSourceId, tableName, id, searchTerms, documentType);
 
-		String scvUserProfileId = null;
+		long scvUserProfileId = 0;
 
 		if (documentType == UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE) {
 			scvUserProfileId = getSCVUserProfileId(searchTerms);
@@ -360,7 +361,7 @@ public class UserProfileUtil {
 		return "modifiedDate";
 	}
 
-	protected static String getSCVUserProfileId(List<String> searchTerms)
+	protected static long getSCVUserProfileId(List<String> searchTerms)
 		throws Exception {
 
 		for (String searchTerm : searchTerms) {
@@ -379,7 +380,7 @@ public class UserProfileUtil {
 
 			DataSourceEntry dataSourceEntry = dataSourceEntries.get(0);
 
-			String scvUserProfileId = (String)dataSourceEntry.getProperty(
+			long scvUserProfileId = (long)dataSourceEntry.getProperty(
 				"scvUserProfileId");
 
 			if (Validator.isNotNull(scvUserProfileId)) {
@@ -387,7 +388,7 @@ public class UserProfileUtil {
 			}
 		}
 
-		return String.valueOf(CounterLocalServiceUtil.increment());
+		return CounterLocalServiceUtil.increment();
 	}
 
 	protected static VersionedDataSourceEntry getVersionedDataSourceEntry(

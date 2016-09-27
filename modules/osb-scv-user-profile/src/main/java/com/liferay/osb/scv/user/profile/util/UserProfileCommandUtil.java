@@ -60,7 +60,7 @@ public class UserProfileCommandUtil {
 		return _userProfileCommand.search(jsonObject, documentType);
 	}
 
-	public static List<String> search(String field, String documentType) {
+	public static List<Long> search(String field, String documentType) {
 		return _userProfileCommand.search(field, documentType);
 	}
 
@@ -77,7 +77,7 @@ public class UserProfileCommandUtil {
 	}
 
 	public List<DataSourceEntry> search(
-		String key, String value, String documentType) {
+		String key, long value, String documentType) {
 
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 

@@ -331,8 +331,8 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 		return dataSourceEntries;
 	}
 
-	public List<String> search(String field, String documentType) {
-		List<String> searchResults = new ArrayList<>();
+	public List<Long> search(String field, String documentType) {
+		List<Long> searchResults = new ArrayList<>();
 
 		SearchRequestBuilder searchRequestBuilder = _client.prepareSearch();
 
@@ -359,7 +359,7 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 		for (int i = 0; i < buckets.size(); i++) {
 			Terms.Bucket bucket = buckets.get(i);
 
-			searchResults.add((String)bucket.getKey());
+			searchResults.add((Long)bucket.getKey());
 		}
 
 		return searchResults;
