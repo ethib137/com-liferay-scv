@@ -1,5 +1,7 @@
 buildService {
 	apiDir = "../osb-scv-user-mapper-api/src/main/java"
+	osgiModule = true
+	propsUtil = "com.liferay.osb.scv.user.mapper.service.util.ServiceProps"
 }
 
 dependencies {
