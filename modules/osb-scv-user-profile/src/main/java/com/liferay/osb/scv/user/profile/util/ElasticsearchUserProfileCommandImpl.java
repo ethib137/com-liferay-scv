@@ -422,7 +422,7 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 		return searchHits.getHits();
 	}
 
-	private static final String _CLUSTER_NAME = "elasticsearch";
+	private static final String _CLUSTER_NAME = "elastictest";
 
 	private static final String[] _DOCUMENT_TYPES = new String[] {
 		UserProfileConstants.DOCUMENT_TYPE_ASSOCIATION,
@@ -435,7 +435,8 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 	private static final TimeValue _SEARCH_SCROLL_KEEP_ALIVE_TIME_VALUE =
 		new TimeValue(1, TimeUnit.MINUTES);
 
-	private static final String _TRANSPORT_ADDRESS = "localhost";
+	private static final String _TRANSPORT_ADDRESS =
+		"elastic-cluster-1.lax.liferay.com";
 
 	private static final int _TRANSPORT_ADDRESS_PORT = 9300;
 
