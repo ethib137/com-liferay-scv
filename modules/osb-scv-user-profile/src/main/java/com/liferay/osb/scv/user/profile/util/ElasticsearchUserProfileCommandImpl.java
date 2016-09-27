@@ -19,6 +19,8 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetAddress;
 
 import java.util.ArrayList;
@@ -27,6 +29,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import com.liferay.portal.kernel.util.StringUtil;
+import org.elasticsearch.action.admin.indices.create.CreateIndexRequestBuilder;
+import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsRequestBuilder;
+import org.elasticsearch.action.admin.indices.exists.indices.IndicesExistsResponse;
+import org.elasticsearch.action.admin.indices.mapping.put.PutMappingRequestBuilder;
 import org.elasticsearch.action.bulk.BulkRequestBuilder;
 import org.elasticsearch.action.bulk.BulkResponse;
 import org.elasticsearch.action.delete.DeleteRequestBuilder;
@@ -41,7 +48,9 @@ import org.elasticsearch.action.search.SearchScrollRequestBuilder;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.action.update.UpdateRequestBuilder;
 import org.elasticsearch.action.update.UpdateResponse;
+import org.elasticsearch.client.AdminClient;
 import org.elasticsearch.client.Client;
+import org.elasticsearch.client.IndicesAdminClient;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
@@ -93,16 +102,81 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 
 		_client = transportClient;
 
+		if (!hasIndex(_INDEX_NAME)) {
+			addIndex();
+		}
+
 		deleteAll();
+	}
+
+	protected static boolean hasIndex(String indexName) {
+		AdminClient adminClient = _client.admin();
+
+		IndicesAdminClient indicesAdminClient = adminClient.indices();
+
+		IndicesExistsRequestBuilder indicesExistsRequestBuilder =
+			indicesAdminClient.prepareExists(indexName);
+
+		IndicesExistsResponse indicesExistsResponse =
+			indicesExistsRequestBuilder.get();
+
+		return indicesExistsResponse.isExists();
+	}
+
+	public static String getResourceAsString(
+		Class<?> clazz, String resourceName) {
+
+		try (InputStream inputStream = clazz.getResourceAsStream(
+				resourceName)) {
+
+			return StringUtil.read(inputStream);
+		}
+		catch (IOException ioe) {
+			throw new RuntimeException(
+				"Unable to load resource: " + resourceName, ioe);
+		}
+	}
+
+	public void addIndex() {
+		String[] documentTypes =
+			new String[] {
+				UserProfileConstants.DOCUMENT_TYPE_ASSOCIATION,
+				UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE,
+				UserProfileConstants.DOCUMENT_TYPE_VERSIONING
+			};
+
+		AdminClient adminClient = _client.admin();
+
+		IndicesAdminClient indicesAdminClient = adminClient.indices();
+
+		CreateIndexRequestBuilder createIndexRequestBuilder =
+			indicesAdminClient.prepareCreate(_INDEX_NAME);
+
+		String mappings = getResourceAsString(
+			getClass(), "/META-INF/mappings/mappings.json");
+
+		for (String documentType : documentTypes) {
+			String currentMappings = StringUtil.replace(
+				mappings, "$DOCUMENT_TYPE$", documentType);
+
+			createIndexRequestBuilder.addMapping(documentType, currentMappings);
+		}
+
+		createIndexRequestBuilder.get();
 	}
 
 	@Modified
 	protected synchronized void modified() {
-		if (_client != null) {
-			deactivate();
-
-			activate();
+		if (_client == null) {
+			System.out.println("------------------- client is null----------");
 		}
+		else {
+			System.out.println("------------------- client is NOT null----------");
+		}
+
+		deactivate();
+
+		activate();
 	}
 
 	@Override
@@ -359,9 +433,11 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 
 	@Deactivate
 	protected void deactivate() {
-		_client.close();
+		if (_client != null) {
+			_client.close();
 
-		_client = null;
+			_client = null;
+		}
 	}
 
 	protected SearchHit[] getSearchHitArray(SearchResponse searchResponse) {
@@ -370,7 +446,7 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 		return searchHits.getHits();
 	}
 
-	private static final String _CLUSTER_NAME = "elastictest";
+	private static final String _CLUSTER_NAME = "elasticsearch";
 
 	private static final String _INDEX_NAME = "scv";
 
@@ -378,13 +454,13 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 		new TimeValue(1, TimeUnit.MINUTES);
 
 	private static final String _TRANSPORT_ADDRESS =
-		"elastic-cluster-1.lax.liferay.com";
+		"localhost";
 
 	private static final int _TRANSPORT_ADDRESS_PORT = 9300;
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		ElasticsearchUserProfileCommandImpl.class);
 
-	private Client _client;
+	private static Client _client;
 
 }

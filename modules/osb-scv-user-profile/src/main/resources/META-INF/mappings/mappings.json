@@ -1,0 +1,71 @@
+{
+	"$DOCUMENT_TYPE$": {
+		"dynamic_templates": [
+			{
+				"template_boolean": {
+					"mapping": {
+						"type": "boolean"
+					},
+					"match": "*_boolean"
+				}
+			},
+			{
+				"template_double": {
+					"mapping": {
+						"type": "double"
+					},
+					"match": "*_double"
+				}
+			},
+			{
+				"template_integer": {
+					"mapping": {
+						"type": "long"
+					},
+					"match": "*_integer"
+				}
+			},
+			{
+				"template_long": {
+					"mapping": {
+						"type": "long"
+					},
+					"match": "*_long"
+				}
+			},
+			{
+				"template_string": {
+					"mapping": {
+						"type": "string"
+					},
+					"match": "*_string"
+				}
+			},
+			{
+				"template_timestamp": {
+					"mapping": {
+						"type": "long"
+					},
+					"match": "*_timestamp"
+				}
+			}
+		],
+		"properties": {
+			"dataSourceId": {
+				"type": "long"
+			},
+			"id": {
+				"type": "string"
+			},
+			"scvUserProfileId": {
+				"type": "long"
+			},
+			"searchTerms": {
+				"type": "string"
+			},
+			"timestamp" : {
+				"type": "long"
+			}
+		}
+	}
+}

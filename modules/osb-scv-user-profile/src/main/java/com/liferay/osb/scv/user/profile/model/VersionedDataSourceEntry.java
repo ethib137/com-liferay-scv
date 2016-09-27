@@ -60,7 +60,7 @@ public class VersionedDataSourceEntry extends DataSourceEntry {
 		Object currentValue = getProperty(key);
 
 		if (!Objects.equals(value, currentValue)) {
-			sourceJSONObject.put(key + "_timestamp", _timestamp);
+			super.addProperty(key + "_timestamp", _timestamp);
 
 			_versioningDataSourceEntry.addProperty(key, value);
 		}
