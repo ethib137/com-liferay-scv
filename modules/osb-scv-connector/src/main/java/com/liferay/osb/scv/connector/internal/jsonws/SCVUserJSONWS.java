@@ -15,6 +15,7 @@
 package com.liferay.osb.scv.connector.internal.jsonws;
 
 import com.liferay.expando.kernel.model.ExpandoBridge;
+import com.liferay.expando.kernel.model.ExpandoColumnConstants;
 import com.liferay.expando.kernel.util.ExpandoBridgeFactoryUtil;
 import com.liferay.portal.kernel.bean.BeanPropertiesUtil;
 import com.liferay.portal.kernel.json.JSONArray;
@@ -115,24 +116,26 @@ public class SCVUserJSONWS {
 	}
 
 	public JSONArray getFields() throws Exception {
-		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+		System.out.println(SCVExpandoColumnConstants.LONG_LABEL);
+
+		JSONArray fieldsJSONArray = JSONFactoryUtil.createJSONArray();
 
 		for (Class<?> clazz : _MODEL_CLASSES) {
 			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
-			List<String> fields = getFields(clazz);
+			JSONArray modelFieldsJSONArray = getFields(clazz);
 
-			if (fields.isEmpty()) {
+			if (modelFieldsJSONArray.length() == 0) {
 				continue;
 			}
 
 			jsonObject.put("className", clazz.getSimpleName());
-			jsonObject.put("columns", fields);
+			jsonObject.put("fields", modelFieldsJSONArray);
 
-			jsonArray.put(jsonObject);
+			fieldsJSONArray.put(jsonObject);
 		}
 
-		return jsonArray;
+		return fieldsJSONArray;
 	}
 
 	protected void addUser(
@@ -448,10 +451,10 @@ public class SCVUserJSONWS {
 		return _userLocalService.getUsersCount();
 	}
 
-	protected List<String> getFields(Class<?> clazz) {
-		try {
-			List<String> fields = new ArrayList<>();
+	protected JSONArray getFields(Class<?> clazz) {
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
+		try {
 			BeanInfo beanInfo = Introspector.getBeanInfo(
 				clazz.getInterfaces()[0]);
 
@@ -462,7 +465,16 @@ public class SCVUserJSONWS {
 				String name = propertyDescriptor.getName();
 
 				if (!_ignoredFields.contains(name)) {
-					fields.add(name);
+					JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+					jsonObject.put("field", name);
+
+					Class<?> propertyTypeClass =
+						propertyDescriptor.getPropertyType();
+
+					jsonObject.put("type", propertyTypeClass.getSimpleName());
+
+					jsonArray.put(jsonObject);
 				}
 			}
 
@@ -474,19 +486,30 @@ public class SCVUserJSONWS {
 				expandoBridge.getAttributeNames();
 
 			while (attributeNames.hasMoreElements()) {
+				JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
 				String attributeName = attributeNames.nextElement();
 
-				fields.add(_CUSTOM_FIELD.concat(attributeName));
+				jsonObject.put("field", _CUSTOM_FIELD.concat(attributeName));
+
+				int attributeType = expandoBridge.getAttributeType(
+					attributeName);
+
+				jsonObject.put(
+					"type",
+					SCVExpandoColumnConstants.getSCVTypeLabel(attributeType));
+
+				jsonArray.put(jsonObject);
 			}
 
-			return fields;
+			return jsonArray;
 		}
 		catch (Exception e) {
 			if (_log.isDebugEnabled()) {
 				_log.debug(e.getMessage(), e);
 			}
 
-			return Collections.emptyList();
+			return jsonArray;
 		}
 	}
 

@@ -66,7 +66,7 @@ public class UserMappingRuleCacheModel implements CacheModel<UserMappingRule>,
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(27);
 
 		sb.append("{userMappingRuleId=");
 		sb.append(userMappingRuleId);
@@ -90,6 +90,8 @@ public class UserMappingRuleCacheModel implements CacheModel<UserMappingRule>,
 		sb.append(sourceField);
 		sb.append(", destinationField=");
 		sb.append(destinationField);
+		sb.append(", fieldType=");
+		sb.append(fieldType);
 		sb.append(", frequency=");
 		sb.append(frequency);
 		sb.append("}");
@@ -150,6 +152,13 @@ public class UserMappingRuleCacheModel implements CacheModel<UserMappingRule>,
 			userMappingRuleImpl.setDestinationField(destinationField);
 		}
 
+		if (fieldType == null) {
+			userMappingRuleImpl.setFieldType(StringPool.BLANK);
+		}
+		else {
+			userMappingRuleImpl.setFieldType(fieldType);
+		}
+
 		userMappingRuleImpl.setFrequency(frequency);
 
 		userMappingRuleImpl.resetOriginalValues();
@@ -174,6 +183,7 @@ public class UserMappingRuleCacheModel implements CacheModel<UserMappingRule>,
 		modelName = objectInput.readUTF();
 		sourceField = objectInput.readUTF();
 		destinationField = objectInput.readUTF();
+		fieldType = objectInput.readUTF();
 
 		frequency = objectInput.readInt();
 	}
@@ -222,6 +232,13 @@ public class UserMappingRuleCacheModel implements CacheModel<UserMappingRule>,
 			objectOutput.writeUTF(destinationField);
 		}
 
+		if (fieldType == null) {
+			objectOutput.writeUTF(StringPool.BLANK);
+		}
+		else {
+			objectOutput.writeUTF(fieldType);
+		}
+
 		objectOutput.writeInt(frequency);
 	}
 
@@ -236,5 +253,6 @@ public class UserMappingRuleCacheModel implements CacheModel<UserMappingRule>,
 	public String modelName;
 	public String sourceField;
 	public String destinationField;
+	public String fieldType;
 	public int frequency;
 }

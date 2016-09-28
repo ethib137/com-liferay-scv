@@ -73,7 +73,7 @@ public interface UserMappingRuleLocalService extends BaseLocalService,
 	public UserMappingRule addUserMappingRule(long companyId, long userId,
 		long dataSourceId, java.lang.String modelName, long fieldSetId,
 		java.lang.String sourceField, java.lang.String destinationField,
-		int frequency);
+		java.lang.String fieldType, int frequency);
 
 	/**
 	* Creates a new user mapping rule with the primary key. Does not add the user mapping rule to the database.
@@ -129,8 +129,9 @@ public interface UserMappingRuleLocalService extends BaseLocalService,
 		UserMappingRule userMappingRule);
 
 	public UserMappingRule updateUserMappingRules(long userMappingRuleId,
-		long dataSourceId, long fieldSetId, java.lang.String sourceField,
-		java.lang.String destinationField, int frequency);
+		long dataSourceId, long fieldSetId, java.lang.String modelName,
+		java.lang.String sourceField, java.lang.String destinationField,
+		java.lang.String fieldType, int frequency);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public ActionableDynamicQuery getActionableDynamicQuery();

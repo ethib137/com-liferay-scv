@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -99,9 +100,12 @@ public class UpdateUsersEvent extends BaseEvent {
 
 			DataSource dataSource = DataSourceUtil.getDataSource(_dataSourceId);
 
-			Map<String, List<String>> idFields = dataSource.getIdFields();
+			Map<String, Map<String, String>> idFields =
+				dataSource.getIdFields();
 
-			for (Map.Entry<String, List<String>> entry : idFields.entrySet()) {
+			for (Map.Entry<String, Map<String, String>> entry :
+					idFields.entrySet()) {
+
 				String key = entry.getKey();
 
 				List<String> fields = fieldsMap.get(key);
@@ -116,15 +120,17 @@ public class UpdateUsersEvent extends BaseEvent {
 					fieldsMap.put(key, fields);
 				}
 
-				for (String field : entry.getValue()) {
+				Map<String, String> values = entry.getValue();
+
+				for (String field : values.keySet()) {
 					fields.add(field);
 				}
 			}
 
-			Map<String, List<String>> requiredFields =
+			Map<String, Map<String, String>> requiredFields =
 				dataSource.getRequiredFields();
 
-			for (Map.Entry<String, List<String>> entry :
+			for (Map.Entry<String, Map<String, String>> entry :
 					requiredFields.entrySet()) {
 
 				String key = entry.getKey();
@@ -132,7 +138,9 @@ public class UpdateUsersEvent extends BaseEvent {
 				List<String> fields = fieldsMap.get(key);
 
 				if ((fields != null)) {
-					for (String field : entry.getValue()) {
+					Map<String, String> values = entry.getValue();
+
+					for (String field : values.keySet()) {
 						fields.add(field);
 					}
 				}
@@ -156,13 +164,49 @@ public class UpdateUsersEvent extends BaseEvent {
 
 		DataSource dataSource = DataSourceUtil.getDataSource(_dataSourceId);
 
-		Map<String, List<String>> idFields = dataSource.getIdFields();
-		Map<String, List<String>> requiredFields =
+		Map<String, Map<String, String>> idFields = dataSource.getIdFields();
+		Map<String, Map<String, String>> requiredFields =
 			dataSource.getRequiredFields();
 
 		if (!_userMappingRulesMap.containsKey("User")) {
-			destinationJSONObject.put(
-				"User", sourceJSONObject.getJSONArray("User"));
+			Map<String, String> userIdFields = idFields.get("User");
+			Map<String, String> userRequiredFields = requiredFields.get("User");
+
+			JSONArray sourceUserJSONArray = sourceJSONObject.getJSONArray(
+				"User");
+			JSONArray destinationUserJSONArray =
+				JSONFactoryUtil.createJSONArray();
+
+			for (int i = 0; i < sourceUserJSONArray.length(); i++) {
+				JSONObject sourceUserJSONObject =
+					sourceUserJSONArray.getJSONObject(i);
+				JSONObject destinationUserJSONObject =
+					JSONFactoryUtil.createJSONObject();
+
+				Iterator<String> keys = sourceUserJSONObject.keys();
+
+				while (keys.hasNext()) {
+					String key = keys.next();
+
+					String type = userIdFields.get(key);
+
+					if (type == null) {
+						type = userRequiredFields.get(key);
+					}
+
+					if (type == null) {
+						type = long[].class.getSimpleName();
+					}
+
+					destinationUserJSONObject.put(
+						key.concat("_").concat(type),
+						sourceUserJSONObject.getString(key));
+				}
+
+				destinationUserJSONArray.put(destinationUserJSONObject);
+			}
+
+			destinationJSONObject.put("User", destinationUserJSONArray);
 		}
 
 		Iterator<String> keys = sourceJSONObject.keys();
@@ -174,7 +218,7 @@ public class UpdateUsersEvent extends BaseEvent {
 				key);
 
 			if (ListUtil.isNotNull(userMappingRules)) {
-				Set<String> processKeys = new HashSet<>();
+				Set<String> processedKeys = new HashSet<>();
 
 				JSONArray sourceModelJSONArray =
 					sourceJSONObject.getJSONArray(key);
@@ -189,53 +233,73 @@ public class UpdateUsersEvent extends BaseEvent {
 						JSONFactoryUtil.createJSONObject();
 
 					for (UserMappingRule userMappingRule : userMappingRules) {
-						processKeys.add(userMappingRule.getSourceField());
+						processedKeys.add(userMappingRule.getSourceField());
 
 						destinationModelJSONObject.put(
-							userMappingRule.getDestinationField(),
+							userMappingRule.getDestinationField() + "_" +
+								userMappingRule.getFieldType(),
 							sourceModelJSONObject.getString(
 								userMappingRule.getSourceField()));
 
-						List<String> idFieldsList = idFields.get(
+						Map<String, String> idFieldsMap = idFields.get(
 							key);
 
-						if (!ListUtil.isEmpty(idFieldsList)) {
-							for (String idField : idFields.get(key)) {
+						if (!MapUtil.isEmpty(idFieldsMap)) {
+							for (Map.Entry<String, String> entrySet :
+									idFieldsMap.entrySet()) {
+
+								processedKeys.add(entrySet.getKey());
+
 								destinationModelJSONObject.put(
-									idField,
-									sourceModelJSONObject.getString(idField));
+									entrySet.getKey() + "_" +
+										entrySet.getValue(),
+									sourceModelJSONObject.getString(
+										entrySet.getKey()));
 							}
 						}
 
-						List<String> requiredFieldsList = requiredFields.get(
+						Map<String, String> requiredFieldsMap = idFields.get(
 							key);
 
-						if (!ListUtil.isEmpty(requiredFieldsList)) {
-							for (String requiredField :
-									requiredFields.get(key)) {
+						if (!MapUtil.isEmpty(requiredFieldsMap)) {
+							for (Map.Entry<String, String> entrySet :
+									requiredFieldsMap.entrySet()) {
+
+								processedKeys.add(entrySet.getKey());
 
 								destinationModelJSONObject.put(
-									requiredField,
+									entrySet.getKey() + "_" +
+										entrySet.getValue(),
 									sourceModelJSONObject.getString(
-										requiredField));
+										entrySet.getKey()));
 							}
 						}
 					}
+
+					Map<String, String> modelIdFields = idFields.get(key);
 
 					Iterator<String> allKeys = sourceModelJSONObject.keys();
 
 					while (allKeys.hasNext()) {
 						String curKey = allKeys.next();
 
-						if (processKeys.contains(curKey)) {
+						if (processedKeys.contains(curKey)) {
 							continue;
 						}
 
+						String type = modelIdFields.get(key);
+
+						if (type == null) {
+							type = long[].class.getSimpleName();
+						}
+
 						destinationModelJSONObject.put(
-							curKey, sourceModelJSONObject.getString(curKey));
+							curKey.concat("_").concat(type),
+							sourceModelJSONObject.getString(curKey));
 					}
 
-					destinationModelJSONArray.put(destinationModelJSONObject);
+					destinationModelJSONArray.put(
+						destinationModelJSONObject);
 				}
 
 				destinationJSONObject.put(key, destinationModelJSONArray);
@@ -243,8 +307,24 @@ public class UpdateUsersEvent extends BaseEvent {
 		}
 
 		UserProfileUtil.updateDataSourceEntries(
-			_dataSourceId, dataSource.getRequiredFields(),
+			_dataSourceId,
+			getRequiredFieldsWithoutTypes(requiredFields),
 			destinationJSONObject);
+	}
+
+	protected Map<String, List<String>> getRequiredFieldsWithoutTypes(
+		Map<String, Map<String, String>> map) {
+
+		Map<String, List<String>> newMap = new HashMap<>();
+
+		for (String key : map.keySet()) {
+			List<String> requiredFields = new ArrayList<>(
+				map.get(key).keySet());
+
+			newMap.put(key, requiredFields);
+		}
+
+		return newMap;
 	}
 
 	private final long _dataSourceId;

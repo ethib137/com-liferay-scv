@@ -81,6 +81,7 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 			{ "modelName", Types.VARCHAR },
 			{ "sourceField", Types.VARCHAR },
 			{ "destinationField", Types.VARCHAR },
+			{ "fieldType", Types.VARCHAR },
 			{ "frequency", Types.INTEGER }
 		};
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP = new HashMap<String, Integer>();
@@ -97,10 +98,11 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 		TABLE_COLUMNS_MAP.put("modelName", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("sourceField", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("destinationField", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("fieldType", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("frequency", Types.INTEGER);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table OSB_SCV_UserMappingRule (userMappingRuleId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,dataSourceId LONG,fieldSetId LONG,modelName VARCHAR(75) null,sourceField VARCHAR(75) null,destinationField VARCHAR(75) null,frequency INTEGER)";
+	public static final String TABLE_SQL_CREATE = "create table OSB_SCV_UserMappingRule (userMappingRuleId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,dataSourceId LONG,fieldSetId LONG,modelName VARCHAR(75) null,sourceField VARCHAR(75) null,destinationField VARCHAR(75) null,fieldType VARCHAR(75) null,frequency INTEGER)";
 	public static final String TABLE_SQL_DROP = "drop table OSB_SCV_UserMappingRule";
 	public static final String ORDER_BY_JPQL = " ORDER BY userMappingRule.userMappingRuleId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY OSB_SCV_UserMappingRule.userMappingRuleId ASC";
@@ -145,6 +147,7 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 		model.setModelName(soapModel.getModelName());
 		model.setSourceField(soapModel.getSourceField());
 		model.setDestinationField(soapModel.getDestinationField());
+		model.setFieldType(soapModel.getFieldType());
 		model.setFrequency(soapModel.getFrequency());
 
 		return model;
@@ -222,6 +225,7 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 		attributes.put("modelName", getModelName());
 		attributes.put("sourceField", getSourceField());
 		attributes.put("destinationField", getDestinationField());
+		attributes.put("fieldType", getFieldType());
 		attributes.put("frequency", getFrequency());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
@@ -296,6 +300,12 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 
 		if (destinationField != null) {
 			setDestinationField(destinationField);
+		}
+
+		String fieldType = (String)attributes.get("fieldType");
+
+		if (fieldType != null) {
+			setFieldType(fieldType);
 		}
 
 		Integer frequency = (Integer)attributes.get("frequency");
@@ -494,6 +504,22 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 
 	@JSON
 	@Override
+	public String getFieldType() {
+		if (_fieldType == null) {
+			return StringPool.BLANK;
+		}
+		else {
+			return _fieldType;
+		}
+	}
+
+	@Override
+	public void setFieldType(String fieldType) {
+		_fieldType = fieldType;
+	}
+
+	@JSON
+	@Override
 	public int getFrequency() {
 		return _frequency;
 	}
@@ -557,6 +583,7 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 		userMappingRuleImpl.setModelName(getModelName());
 		userMappingRuleImpl.setSourceField(getSourceField());
 		userMappingRuleImpl.setDestinationField(getDestinationField());
+		userMappingRuleImpl.setFieldType(getFieldType());
 		userMappingRuleImpl.setFrequency(getFrequency());
 
 		userMappingRuleImpl.resetOriginalValues();
@@ -701,6 +728,14 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 			userMappingRuleCacheModel.destinationField = null;
 		}
 
+		userMappingRuleCacheModel.fieldType = getFieldType();
+
+		String fieldType = userMappingRuleCacheModel.fieldType;
+
+		if ((fieldType != null) && (fieldType.length() == 0)) {
+			userMappingRuleCacheModel.fieldType = null;
+		}
+
 		userMappingRuleCacheModel.frequency = getFrequency();
 
 		return userMappingRuleCacheModel;
@@ -708,7 +743,7 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(27);
 
 		sb.append("{userMappingRuleId=");
 		sb.append(getUserMappingRuleId());
@@ -732,6 +767,8 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 		sb.append(getSourceField());
 		sb.append(", destinationField=");
 		sb.append(getDestinationField());
+		sb.append(", fieldType=");
+		sb.append(getFieldType());
 		sb.append(", frequency=");
 		sb.append(getFrequency());
 		sb.append("}");
@@ -741,7 +778,7 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(40);
+		StringBundler sb = new StringBundler(43);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.osb.scv.user.mapper.model.UserMappingRule");
@@ -792,6 +829,10 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 		sb.append(getDestinationField());
 		sb.append("]]></column-value></column>");
 		sb.append(
+			"<column><column-name>fieldType</column-name><column-value><![CDATA[");
+		sb.append(getFieldType());
+		sb.append("]]></column-value></column>");
+		sb.append(
 			"<column><column-name>frequency</column-name><column-value><![CDATA[");
 		sb.append(getFrequency());
 		sb.append("]]></column-value></column>");
@@ -821,6 +862,7 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 	private String _modelName;
 	private String _sourceField;
 	private String _destinationField;
+	private String _fieldType;
 	private int _frequency;
 	private int _originalFrequency;
 	private boolean _setOriginalFrequency;

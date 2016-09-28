@@ -22,7 +22,7 @@ import java.util.Map;
  */
 public interface DataSource {
 
-	public List<String> getAvailableFields(String tableName);
+	public Map<String, String> getAvailableFields(String tableName);
 
 	public long getDataSourceId();
 
@@ -32,9 +32,9 @@ public interface DataSource {
 
 	public String getIdField();
 
-	public Map<String, List<String>> getIdFields();
+	public Map<String, Map<String, String>> getIdFields();
 
-	public Map<String, List<String>> getRequiredFields();
+	public Map<String, Map<String, String>> getRequiredFields();
 
 	public List<String> getTableNames();
 

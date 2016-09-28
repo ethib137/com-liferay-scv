@@ -17,6 +17,7 @@
 		<property name="modelName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="sourceField" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="destinationField" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="fieldType" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="frequency" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
 	</class>
 </hibernate-mapping>

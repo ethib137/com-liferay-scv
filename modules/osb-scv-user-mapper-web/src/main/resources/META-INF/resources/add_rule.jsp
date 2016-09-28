@@ -24,6 +24,8 @@ long dataSourceId = ParamUtil.getLong(request, "dataSourceId");
 DataSource dataSource = DataSourceUtil.getDataSource(dataSourceId);
 
 String tableName = ParamUtil.getString(request, "tableName");
+
+String fieldType = null;
 %>
 
 <liferay-ui:header
@@ -60,7 +62,7 @@ String tableName = ParamUtil.getString(request, "tableName");
 		for (String curTableName : dataSource.getTableNames()) {
 		%>
 
-		<aui:option localizeLabel="<%= false %>" label="<%= curTableName %>" value="<%= curTableName %>" />
+			<aui:option localizeLabel="<%= false %>" label="<%= curTableName %>" value="<%= curTableName %>" />
 
 		<%
 		}
@@ -71,16 +73,21 @@ String tableName = ParamUtil.getString(request, "tableName");
 	<aui:select label="source-field" name="sourceField">
 
 		<%
-		for (String availableField : dataSource.getAvailableFields(tableName)) {
+		Map<String, String> map = dataSource.getAvailableFields(tableName);
+
+		for (Map.Entry<String, String> entry : map.entrySet()) {
 		%>
 
-				<aui:option localizeLabel="<%= false %>" label="<%= availableField %>" value="<%= availableField %>" />
+			<aui:option localizeLabel="<%= false %>" label="<%= entry.getKey() %>" value="<%= entry.getKey() %>" />
 
 		<%
-			}
+		fieldType = entry.getValue();
+		}
 		%>
 
 	</aui:select>
+
+	<aui:input name="fieldType" type="hidden" value="<%= fieldType %>" />
 
 	<aui:select label="frequency" name="frequency">
 
@@ -88,9 +95,9 @@ String tableName = ParamUtil.getString(request, "tableName");
 		for (Frequency frequency : FrequencyUtil.getFrequencies()) {
 		%>
 
-		<aui:option label="<%= frequency.getName() %>" value="<%= frequency.getFrequencyId() %>" />
+			<aui:option label="<%= frequency.getName() %>" value="<%= frequency.getFrequencyId() %>" />
 
-			<%
+		<%
 		}
 		%>
 
@@ -98,13 +105,13 @@ String tableName = ParamUtil.getString(request, "tableName");
 
 	<aui:select label="field-set" name="fieldSet">
 
-			<%
+		<%
 		for (FieldSet fieldSet : FieldSetUtil.getFieldSets()) {
 		%>
 
-		<aui:option label="<%= fieldSet.getName() %>" value="<%= fieldSet.getFieldSetId() %>" />
+			<aui:option label="<%= fieldSet.getName() %>" value="<%= fieldSet.getFieldSetId() %>" />
 
-			<%
+		<%
 		}
 		%>
 

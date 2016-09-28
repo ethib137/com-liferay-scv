@@ -45,6 +45,7 @@ public class UserMappingRuleSoap implements Serializable {
 		soapModel.setModelName(model.getModelName());
 		soapModel.setSourceField(model.getSourceField());
 		soapModel.setDestinationField(model.getDestinationField());
+		soapModel.setFieldType(model.getFieldType());
 		soapModel.setFrequency(model.getFrequency());
 
 		return soapModel;
@@ -188,6 +189,14 @@ public class UserMappingRuleSoap implements Serializable {
 		_destinationField = destinationField;
 	}
 
+	public String getFieldType() {
+		return _fieldType;
+	}
+
+	public void setFieldType(String fieldType) {
+		_fieldType = fieldType;
+	}
+
 	public int getFrequency() {
 		return _frequency;
 	}
@@ -207,5 +216,6 @@ public class UserMappingRuleSoap implements Serializable {
 	private String _modelName;
 	private String _sourceField;
 	private String _destinationField;
+	private String _fieldType;
 	private int _frequency;
 }

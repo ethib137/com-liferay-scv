@@ -250,6 +250,21 @@ public interface UserMappingRuleModel extends AuditedModel,
 	public void setDestinationField(String destinationField);
 
 	/**
+	 * Returns the field type of this user mapping rule.
+	 *
+	 * @return the field type of this user mapping rule
+	 */
+	@AutoEscape
+	public String getFieldType();
+
+	/**
+	 * Sets the field type of this user mapping rule.
+	 *
+	 * @param fieldType the field type of this user mapping rule
+	 */
+	public void setFieldType(String fieldType);
+
+	/**
 	 * Returns the frequency of this user mapping rule.
 	 *
 	 * @return the frequency of this user mapping rule

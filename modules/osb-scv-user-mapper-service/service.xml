@@ -24,6 +24,7 @@
 		<column name="modelName" type="String" />
 		<column name="sourceField" type="String" />
 		<column name="destinationField" type="String" />
+		<column name="fieldType" type="String" />
 		<column name="frequency" type="int" />
 
 		<!-- Finder methods -->

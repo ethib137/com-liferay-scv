@@ -51,7 +51,7 @@ public class GetFieldsEvent extends BaseEvent {
 	}
 
 	public void handleResponse(Message message) throws Exception {
-		Map<String, List<String>> map = new HashMap<>();
+		Map<String, Map<String, String>> map = new HashMap<>();
 
 		JSONArray sourceJSONArray = JSONFactoryUtil.createJSONArray(
 			String.valueOf(message.getPayload()));
@@ -61,19 +61,27 @@ public class GetFieldsEvent extends BaseEvent {
 
 			String className = sourceJSONObject.getString("className");
 
-			Iterator iterator =
-				sourceJSONObject.getJSONArray("columns").iterator();
+			JSONArray fieldsJSONArray = sourceJSONObject.getJSONArray(
+				"fields");
 
-			List<String> columns = new ArrayList<>();
-
-			while (iterator.hasNext()) {
-				columns.add(String.valueOf(iterator.next()));
-			}
-
-			map.put(className, columns);
+			map.put(className, getFields(fieldsJSONArray));
 		}
 
 		DataSourceUtil.setAvailableFields(_dataSourceId, map);
+	}
+
+	protected Map<String, String> getFields(JSONArray jsonArray) {
+		Map<String, String> map = new HashMap<>();
+
+		for (int i = 0; i < jsonArray.length(); i++) {
+			JSONObject sourceJSONObject = jsonArray.getJSONObject(i);
+
+			map.put(
+				sourceJSONObject.getString("field"),
+				sourceJSONObject.getString("type"));
+		}
+
+		return map;
 	}
 
 	private final long _dataSourceId;

@@ -10,5 +10,6 @@ create table OSB_SCV_UserMappingRule (
 	modelName VARCHAR(75) null,
 	sourceField VARCHAR(75) null,
 	destinationField VARCHAR(75) null,
+	fieldType VARCHAR(75) null,
 	frequency INTEGER
 );

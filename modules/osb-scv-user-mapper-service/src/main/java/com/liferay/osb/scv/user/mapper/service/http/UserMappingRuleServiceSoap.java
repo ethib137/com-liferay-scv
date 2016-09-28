@@ -68,11 +68,11 @@ public class UserMappingRuleServiceSoap {
 	public static com.liferay.osb.scv.user.mapper.model.UserMappingRuleSoap addUserMappingRule(
 		long dataSourceId, long fieldSetId, java.lang.String modelName,
 		java.lang.String sourceField, java.lang.String destinationField,
-		int frequency) throws RemoteException {
+		java.lang.String fieldType, int frequency) throws RemoteException {
 		try {
 			com.liferay.osb.scv.user.mapper.model.UserMappingRule returnValue = UserMappingRuleServiceUtil.addUserMappingRule(dataSourceId,
 					fieldSetId, modelName, sourceField, destinationField,
-					frequency);
+					fieldType, frequency);
 
 			return com.liferay.osb.scv.user.mapper.model.UserMappingRuleSoap.toSoapModel(returnValue);
 		}

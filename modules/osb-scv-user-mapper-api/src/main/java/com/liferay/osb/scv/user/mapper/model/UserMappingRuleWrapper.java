@@ -69,6 +69,7 @@ public class UserMappingRuleWrapper implements UserMappingRule,
 		attributes.put("modelName", getModelName());
 		attributes.put("sourceField", getSourceField());
 		attributes.put("destinationField", getDestinationField());
+		attributes.put("fieldType", getFieldType());
 		attributes.put("frequency", getFrequency());
 
 		return attributes;
@@ -140,6 +141,12 @@ public class UserMappingRuleWrapper implements UserMappingRule,
 
 		if (destinationField != null) {
 			setDestinationField(destinationField);
+		}
+
+		String fieldType = (String)attributes.get("fieldType");
+
+		if (fieldType != null) {
+			setFieldType(fieldType);
 		}
 
 		Integer frequency = (Integer)attributes.get("frequency");
@@ -222,6 +229,16 @@ public class UserMappingRuleWrapper implements UserMappingRule,
 	@Override
 	public java.lang.String getDestinationField() {
 		return _userMappingRule.getDestinationField();
+	}
+
+	/**
+	* Returns the field type of this user mapping rule.
+	*
+	* @return the field type of this user mapping rule
+	*/
+	@Override
+	public java.lang.String getFieldType() {
+		return _userMappingRule.getFieldType();
 	}
 
 	/**
@@ -428,6 +445,16 @@ public class UserMappingRuleWrapper implements UserMappingRule,
 	@Override
 	public void setFieldSetId(long fieldSetId) {
 		_userMappingRule.setFieldSetId(fieldSetId);
+	}
+
+	/**
+	* Sets the field type of this user mapping rule.
+	*
+	* @param fieldType the field type of this user mapping rule
+	*/
+	@Override
+	public void setFieldType(java.lang.String fieldType) {
+		_userMappingRule.setFieldType(fieldType);
 	}
 
 	/**

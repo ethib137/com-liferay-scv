@@ -37,10 +37,11 @@ public class UserMappingRuleServiceWrapper implements UserMappingRuleService,
 	public com.liferay.osb.scv.user.mapper.model.UserMappingRule addUserMappingRule(
 		long dataSourceId, long fieldSetId, java.lang.String modelName,
 		java.lang.String sourceField, java.lang.String destinationField,
-		int frequency)
+		java.lang.String fieldType, int frequency)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _userMappingRuleService.addUserMappingRule(dataSourceId,
-			fieldSetId, modelName, sourceField, destinationField, frequency);
+			fieldSetId, modelName, sourceField, destinationField, fieldType,
+			frequency);
 	}
 
 	@Override

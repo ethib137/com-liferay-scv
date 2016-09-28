@@ -47,6 +47,7 @@ page import="com.liferay.portal.kernel.util.WebKeys" %>
 
 <%@ page import="java.util.ArrayList" %><%@
 page import="java.util.LinkedHashMap" %><%@
+page import="java.util.Map" %><%@
 page import="java.util.List" %>
 
 <%@ page import="com.liferay.portal.kernel.portlet.LiferayWindowState" %><%@

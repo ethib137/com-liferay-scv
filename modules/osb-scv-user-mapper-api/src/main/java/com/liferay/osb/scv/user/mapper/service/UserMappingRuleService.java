@@ -57,7 +57,7 @@ public interface UserMappingRuleService extends BaseService {
 	public UserMappingRule addUserMappingRule(long dataSourceId,
 		long fieldSetId, java.lang.String modelName,
 		java.lang.String sourceField, java.lang.String destinationField,
-		int frequency) throws PortalException;
+		java.lang.String fieldType, int frequency) throws PortalException;
 
 	public UserMappingRule deleteUserMappingRule(long userMappingRuleId)
 		throws PortalException;

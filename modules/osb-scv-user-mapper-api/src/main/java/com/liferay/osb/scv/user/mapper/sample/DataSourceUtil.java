@@ -51,7 +51,7 @@ public class DataSourceUtil {
 	}
 
 	public static void setAvailableFields(
-		long dataSourceId, Map<String, List<String>> availableFields) {
+		long dataSourceId, Map<String, Map<String, String>> availableFields) {
 
 		_availableFields.put(dataSourceId, availableFields);
 	}
@@ -83,24 +83,27 @@ public class DataSourceUtil {
 
 			DataSource dataSource = new DataSource() {
 
-				public List<String> getAvailableFields(String tableName) {
+				public Map<String, String> getAvailableFields(
+					String tableName) {
+
 					if (Validator.isBlank(tableName)) {
-						return Collections.emptyList();
+						return Collections.emptyMap();
 					}
 
-					Map<String, List<String>> availableFields =
-						_availableFields.get(
-							jsonObject.getLong("dataSourceId"));
+					Map<String, Map<String, String>>
+						availableFields =
+							_availableFields.get(
+								jsonObject.getLong("dataSourceId"));
 
 					if (availableFields == null) {
-						return Collections.emptyList();
+						return Collections.emptyMap();
 					}
 
 					return availableFields.get(tableName);
 				}
 
 				public List<String> getTableNames() {
-					Map<String, List<String>> availableFields =
+					Map<String, Map<String, String>> availableFields =
 						_availableFields.get(getDataSourceId());
 
 					if (availableFields == null) {
@@ -126,46 +129,44 @@ public class DataSourceUtil {
 					return jsonObject.getString("idField");
 				}
 
-				public Map<String, List<String>> getIdFields() {
+				public Map<String, Map<String, String>> getIdFields() {
 					JSONObject idFields = jsonObject.getJSONObject("idFields");
 
 					Iterator<String> keys = idFields.keys();
 
-					Map<String, List<String>> idFieldsMap = new HashMap<>();
-
-					while (keys.hasNext()) {
-						String key = keys.next();
-
-						idFieldsMap.put(
-							key,
-							Arrays.asList(
-								StringUtil.split(
-									idFields.getString(key))));
-					}
-
-					return idFieldsMap;
-				}
-
-				public Map<String, List<String>> getRequiredFields() {
-					JSONObject requiredFields = jsonObject.getJSONObject(
-						"requiredFields");
-
-					Iterator<String> keys = requiredFields.keys();
-
-					Map<String, List<String>> requiredFieldsMap =
+					Map<String, Map<String, String>> idFieldsMap =
 						new HashMap<>();
 
 					while (keys.hasNext()) {
 						String key = keys.next();
 
-						requiredFieldsMap.put(
-							key,
-							Arrays.asList(
-								StringUtil.split(
-									requiredFields.getString(key))));
+						JSONArray fieldsJSONArray = idFields.getJSONArray(key);
+
+						idFieldsMap.put(key, jsonArrayToMap(fieldsJSONArray));
 					}
 
-					return requiredFieldsMap;
+					return idFieldsMap;
+				}
+
+				public Map<String, Map<String, String>> getRequiredFields() {
+					JSONObject requiredFields = jsonObject.getJSONObject(
+						"requiredFields");
+
+					Iterator<String> keys = requiredFields.keys();
+
+					Map<String, Map<String, String>> idFieldsMap =
+						new HashMap<>();
+
+					while (keys.hasNext()) {
+						String key = keys.next();
+
+						JSONArray fieldsJSONArray = requiredFields.getJSONArray(
+							key);
+
+						idFieldsMap.put(key, jsonArrayToMap(fieldsJSONArray));
+					}
+
+					return idFieldsMap;
 				}
 
 				public String getType() {
@@ -180,6 +181,22 @@ public class DataSourceUtil {
 					return jsonObject.getString("userName");
 				}
 
+				protected Map<String, String> jsonArrayToMap(
+					JSONArray jsonArray) {
+
+					Map<String, String> map = new HashMap<>();
+
+					for (int i = 0; i < jsonArray.length(); i++) {
+						JSONObject jsonObject = jsonArray.getJSONObject(i);
+
+						map.put(
+							jsonObject.getString("field"),
+							jsonObject.getString("type"));
+					}
+
+					return map;
+				}
+
 			};
 
 			if (!_dataSources.contains(dataSource)) {
@@ -190,8 +207,8 @@ public class DataSourceUtil {
 		return _dataSources;
 	}
 
-	private static final Map<Long, Map<String, List<String>>> _availableFields =
-		new HashMap<>();
+	private static final Map<Long, Map<String, Map<String, String>>>
+		_availableFields = new HashMap<>();
 	private static final List<DataSource> _dataSources = new ArrayList<>();
 
 }

@@ -38,7 +38,7 @@ public class UserMappingRuleLocalServiceImpl
 	public UserMappingRule addUserMappingRule(
 		long companyId, long userId, long dataSourceId, String modelName,
 		long fieldSetId, String sourceField, String destinationField,
-		int frequency) {
+		String fieldType, int frequency) {
 
 		long userMappingRuleId = counterLocalService.increment();
 
@@ -53,6 +53,7 @@ public class UserMappingRuleLocalServiceImpl
 		userMappingRule.setModelName(modelName);
 		userMappingRule.setSourceField(sourceField);
 		userMappingRule.setDestinationField(destinationField);
+		userMappingRule.setFieldType(fieldType);
 		userMappingRule.setFrequency(frequency);
 
 		userMappingRulePersistence.update(userMappingRule);
@@ -95,15 +96,18 @@ public class UserMappingRuleLocalServiceImpl
 	@Override
 	public UserMappingRule updateUserMappingRules(
 		long userMappingRuleId, long dataSourceId, long fieldSetId,
-		String sourceField, String destinationField, int frequency) {
+		String modelName, String sourceField, String destinationField,
+		String fieldType, int frequency) {
 
 		UserMappingRule userMappingRule =
 			userMappingRulePersistence.fetchByPrimaryKey(userMappingRuleId);
 
 		userMappingRule.setDataSourceId(dataSourceId);
 		userMappingRule.setFieldSetId(fieldSetId);
+		userMappingRule.setModelName(modelName);
 		userMappingRule.setSourceField(sourceField);
 		userMappingRule.setDestinationField(destinationField);
+		userMappingRule.setFieldType(fieldType);
 		userMappingRule.setFrequency(frequency);
 
 		userMappingRulePersistence.update(userMappingRule);

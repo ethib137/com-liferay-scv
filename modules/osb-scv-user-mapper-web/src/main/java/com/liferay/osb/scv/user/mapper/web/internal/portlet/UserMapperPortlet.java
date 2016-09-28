@@ -66,13 +66,14 @@ public class UserMapperPortlet extends MVCPortlet {
 		long fieldSetId = ParamUtil.getLong(actionRequest, "fieldSetId");
 		String tableName = ParamUtil.getString(actionRequest, "tableName");
 		String sourceField = ParamUtil.getString(actionRequest, "sourceField");
+		String fieldType = ParamUtil.getString(actionRequest, "fieldType");
 		String destinationField = ParamUtil.getString(
 			actionRequest, "destinationField");
 		int frequency = ParamUtil.getInteger(actionRequest, "frequency");
 
 		_userMappingRuleService.addUserMappingRule(
 			dataSourceId, fieldSetId, tableName, sourceField, destinationField,
-			frequency);
+			fieldType, frequency);
 	}
 
 	public void deleteUserMappingRule(

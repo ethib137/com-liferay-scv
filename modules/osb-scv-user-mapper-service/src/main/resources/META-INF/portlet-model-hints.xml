@@ -13,6 +13,7 @@
 		<field name="modelName" type="String" />
 		<field name="sourceField" type="String" />
 		<field name="destinationField" type="String" />
+		<field name="fieldType" type="String" />
 		<field name="frequency" type="int" />
 	</model>
 </model-hints>

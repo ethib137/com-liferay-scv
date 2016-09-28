@@ -57,10 +57,11 @@ public class UserMappingRuleLocalServiceUtil {
 		long companyId, long userId, long dataSourceId,
 		java.lang.String modelName, long fieldSetId,
 		java.lang.String sourceField, java.lang.String destinationField,
-		int frequency) {
+		java.lang.String fieldType, int frequency) {
 		return getService()
 				   .addUserMappingRule(companyId, userId, dataSourceId,
-			modelName, fieldSetId, sourceField, destinationField, frequency);
+			modelName, fieldSetId, sourceField, destinationField, fieldType,
+			frequency);
 	}
 
 	/**
@@ -129,11 +130,13 @@ public class UserMappingRuleLocalServiceUtil {
 
 	public static com.liferay.osb.scv.user.mapper.model.UserMappingRule updateUserMappingRules(
 		long userMappingRuleId, long dataSourceId, long fieldSetId,
-		java.lang.String sourceField, java.lang.String destinationField,
+		java.lang.String modelName, java.lang.String sourceField,
+		java.lang.String destinationField, java.lang.String fieldType,
 		int frequency) {
 		return getService()
 				   .updateUserMappingRules(userMappingRuleId, dataSourceId,
-			fieldSetId, sourceField, destinationField, frequency);
+			fieldSetId, modelName, sourceField, destinationField, fieldType,
+			frequency);
 	}
 
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery getActionableDynamicQuery() {

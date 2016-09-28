@@ -1455,6 +1455,7 @@ public class UserMappingRulePersistenceImpl extends BasePersistenceImpl<UserMapp
 		userMappingRuleImpl.setModelName(userMappingRule.getModelName());
 		userMappingRuleImpl.setSourceField(userMappingRule.getSourceField());
 		userMappingRuleImpl.setDestinationField(userMappingRule.getDestinationField());
+		userMappingRuleImpl.setFieldType(userMappingRule.getFieldType());
 		userMappingRuleImpl.setFrequency(userMappingRule.getFrequency());
 
 		return userMappingRuleImpl;

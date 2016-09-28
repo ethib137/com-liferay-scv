@@ -44,11 +44,11 @@ public class UserMappingRuleServiceUtil {
 	public static com.liferay.osb.scv.user.mapper.model.UserMappingRule addUserMappingRule(
 		long dataSourceId, long fieldSetId, java.lang.String modelName,
 		java.lang.String sourceField, java.lang.String destinationField,
-		int frequency)
+		java.lang.String fieldType, int frequency)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
 				   .addUserMappingRule(dataSourceId, fieldSetId, modelName,
-			sourceField, destinationField, frequency);
+			sourceField, destinationField, fieldType, frequency);
 	}
 
 	public static com.liferay.osb.scv.user.mapper.model.UserMappingRule deleteUserMappingRule(
