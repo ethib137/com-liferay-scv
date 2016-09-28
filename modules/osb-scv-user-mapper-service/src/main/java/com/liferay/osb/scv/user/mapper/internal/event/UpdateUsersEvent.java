@@ -307,25 +307,23 @@ public class UpdateUsersEvent extends BaseEvent {
 		}
 
 		UserProfileUtil.updateDataSourceEntries(
-			_dataSourceId,
-			getRequiredFieldsWithoutTypes(requiredFields),
-			destinationJSONObject);
+			_dataSourceId, requiredFields, destinationJSONObject);
 	}
 
-	protected Map<String, List<String>> getRequiredFieldsWithoutTypes(
-		Map<String, Map<String, String>> map) {
-
-		Map<String, List<String>> newMap = new HashMap<>();
-
-		for (String key : map.keySet()) {
-			List<String> requiredFields = new ArrayList<>(
-				map.get(key).keySet());
-
-			newMap.put(key, requiredFields);
-		}
-
-		return newMap;
-	}
+//	protected Map<String, List<String>> getRequiredFieldsWithoutTypes(
+//		Map<String, Map<String, String>> map) {
+//
+//		Map<String, List<String>> newMap = new HashMap<>();
+//
+//		for (String key : map.keySet()) {
+//			List<String> requiredFields = new ArrayList<>(
+//				map.get(key).keySet());
+//
+//			newMap.put(key, requiredFields);
+//		}
+//
+//		return newMap;
+//	}
 
 	private final long _dataSourceId;
 	private final Map<String, List<UserMappingRule>> _userMappingRulesMap =
