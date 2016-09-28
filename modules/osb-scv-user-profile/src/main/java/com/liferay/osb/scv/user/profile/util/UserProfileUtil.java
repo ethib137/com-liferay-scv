@@ -140,11 +140,11 @@ public class UserProfileUtil {
 		return jsonObject;
 	}
 
-	public static JSONObject getSCVVersioning(
+	public static JSONArray getSCVVersioning(
 			long scvUserProfileId, String field)
 		throws Exception {
 
-		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
 		List<DataSourceEntry> dataSourceEntries =
 			_userProfileCommandUtil.search(
@@ -159,23 +159,24 @@ public class UserProfileUtil {
 
 			for (String key : keys) {
 				if (key.equals(field)) {
-					JSONObject jsonVersionObject =
+					JSONObject jsonObject =
 						JSONFactoryUtil.createJSONObject();
 
-					jsonVersionObject.put(
+					jsonObject.put(
 						field, dataSourceEntry.getProperty(field));
-					jsonVersionObject.put(
+					jsonObject.put(
 						"dataSourceId",
 						dataSourceEntry.getProperty("dataSourceId"));
-
 					jsonObject.put(
-						dataSourceEntry.getProperty("timestamp").toString(),
-						jsonVersionObject);
+						"timestamp",
+						dataSourceEntry.getProperty("timestamp"));
+
+					jsonArray.put(jsonObject);
 				}
 			}
 		}
 
-		return jsonObject;
+		return jsonArray;
 	}
 
 	public static void updateDataSourceEntries(
