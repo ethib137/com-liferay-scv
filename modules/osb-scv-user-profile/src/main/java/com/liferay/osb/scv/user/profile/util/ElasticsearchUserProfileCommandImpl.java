@@ -65,6 +65,7 @@ import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.terms.Terms;
 import org.elasticsearch.search.aggregations.bucket.terms.TermsBuilder;
 
+import org.elasticsearch.search.sort.SortOrder;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
@@ -298,6 +299,8 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 
 		SearchRequestBuilder searchRequestBuilder = _client.prepareSearch(
 			_INDEX_NAME);
+
+		searchRequestBuilder.addSort("timestamp", SortOrder.DESC);
 
 		BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery();
 
