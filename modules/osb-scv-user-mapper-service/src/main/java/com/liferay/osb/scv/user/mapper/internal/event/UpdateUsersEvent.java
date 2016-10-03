@@ -199,8 +199,7 @@ public class UpdateUsersEvent extends BaseEvent {
 					}
 
 					destinationUserJSONObject.put(
-						key.concat("_").concat(type),
-						sourceUserJSONObject.getString(key));
+						key, sourceUserJSONObject.getString(key));
 				}
 
 				destinationUserJSONArray.put(destinationUserJSONObject);
@@ -294,8 +293,7 @@ public class UpdateUsersEvent extends BaseEvent {
 						}
 
 						destinationModelJSONObject.put(
-							curKey.concat("_").concat(type),
-							sourceModelJSONObject.getString(curKey));
+							curKey, sourceModelJSONObject.getString(curKey));
 					}
 
 					destinationModelJSONArray.put(
@@ -307,23 +305,24 @@ public class UpdateUsersEvent extends BaseEvent {
 		}
 
 		UserProfileUtil.updateDataSourceEntries(
-			_dataSourceId, requiredFields, destinationJSONObject);
+			_dataSourceId, getRequiredFieldsWithoutTypes(requiredFields),
+			destinationJSONObject);
 	}
 
-//	protected Map<String, List<String>> getRequiredFieldsWithoutTypes(
-//		Map<String, Map<String, String>> map) {
-//
-//		Map<String, List<String>> newMap = new HashMap<>();
-//
-//		for (String key : map.keySet()) {
-//			List<String> requiredFields = new ArrayList<>(
-//				map.get(key).keySet());
-//
-//			newMap.put(key, requiredFields);
-//		}
-//
-//		return newMap;
-//	}
+	protected Map<String, List<String>> getRequiredFieldsWithoutTypes(
+		Map<String, Map<String, String>> map) {
+
+		Map<String, List<String>> newMap = new HashMap<>();
+
+		for (String key : map.keySet()) {
+			List<String> requiredFields = new ArrayList<>(
+				map.get(key).keySet());
+
+			newMap.put(key, requiredFields);
+		}
+
+		return newMap;
+	}
 
 	private final long _dataSourceId;
 	private final Map<String, List<UserMappingRule>> _userMappingRulesMap =
