@@ -250,8 +250,7 @@ public class UpdateUsersEvent extends BaseEvent {
 								processedKeys.add(entrySet.getKey());
 
 								destinationModelJSONObject.put(
-									entrySet.getKey() + "_" +
-										entrySet.getValue(),
+									entrySet.getKey(),
 									sourceModelJSONObject.getString(
 										entrySet.getKey()));
 							}
@@ -267,8 +266,7 @@ public class UpdateUsersEvent extends BaseEvent {
 								processedKeys.add(entrySet.getKey());
 
 								destinationModelJSONObject.put(
-									entrySet.getKey() + "_" +
-										entrySet.getValue(),
+									entrySet.getKey(),
 									sourceModelJSONObject.getString(
 										entrySet.getKey()));
 							}
@@ -296,8 +294,7 @@ public class UpdateUsersEvent extends BaseEvent {
 							curKey, sourceModelJSONObject.getString(curKey));
 					}
 
-					destinationModelJSONArray.put(
-						destinationModelJSONObject);
+					destinationModelJSONArray.put(destinationModelJSONObject);
 				}
 
 				destinationJSONObject.put(key, destinationModelJSONArray);
