@@ -235,8 +235,7 @@ public class UpdateUsersEvent extends BaseEvent {
 						processedKeys.add(userMappingRule.getSourceField());
 
 						destinationModelJSONObject.put(
-							userMappingRule.getDestinationField() + "_" +
-								userMappingRule.getFieldType(),
+							userMappingRule.getDestinationField(),
 							sourceModelJSONObject.getString(
 								userMappingRule.getSourceField()));
 
