@@ -36,6 +36,12 @@
 			keyProperty="userMappingRuleId"
 			modelVar="userMappingRule"
 		>
+
+			<liferay-ui:search-container-column-text
+				name="destination-field"
+				property="destinationField"
+			/>
+
 			<liferay-ui:search-container-column-text
 				cssClass="content-column name-column title-column"
 				name="source-field"
@@ -49,11 +55,6 @@
 			<liferay-ui:search-container-column-text
 				name="data-source"
 				value="<%= dataSource.getName() %>"
-			/>
-
-			<liferay-ui:search-container-column-text
-				name="destination-field"
-				property="destinationField"
 			/>
 
 			<%

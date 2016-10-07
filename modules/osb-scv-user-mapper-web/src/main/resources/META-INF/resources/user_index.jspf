@@ -20,36 +20,41 @@
 	</div>
 	<div class="col-md-8">
 		<div class="scv-user-profile" id="scvUserProfile">Please select a user.</div>
+		<div class="scv-versioning hide" id="scvVersioning"></div>
 	</div>
 </div>
 
 <aui:script use="aui-base,aui-loading-mask-deprecated">
 	var scvUserList = A.one("#scvUserList");
+	var scvUserProfile = A.one("#scvUserProfile");
+	var scvVersioning = A.one("#scvVersioning");
 	var result;
 
-	var loadingMask = new A.LoadingMask(
+	var loadingMask1 = new A.LoadingMask(
 		{
 			target: scvUserList
 		}
 	);
 
-	loadingMask.show();
+	loadingMask1.show();
 
 	Liferay.Service(
 		'/SCVUserProfileUtil.userprofileutil/get-scv-user-profiles',
 		function(obj) {
 			result = obj
+
 			for (var key in result) {
 				var userData = result[key];
 
-				var emailAddress = userData["emailAddress"];
+				var firstName = userData["First Name"];
+				var lastName = userData["Last Name"]
 
-				var userListHTML = '<li class="user" id="' + key + '">' + emailAddress + '</li>';
+				var userListHTML = '<li class="user" id="' + key + '">' + firstName + ' ' + lastName + '</li>';
 
 				scvUserList.appendChild(userListHTML);
 			}
 
-			loadingMask.hide();
+			loadingMask1.hide();
 		}
 	);
 
@@ -60,18 +65,100 @@
 
 			var scvUserProfileId = target.getAttribute('id');
 
-			var userData = result[scvUserProfileId];
-
-			var scvUserProfile = A.one("#scvUserProfile");
-
 			scvUserProfile.html("");
 
-			for (var key in userData) {
-				var profileHTML = '<div class="row"><div class="col-md-3 field-name">' + key + '</div><div class="col-md-6">' + userData[key] + '</div></div>';
+			scvUserProfile.setAttribute("id", scvUserProfileId);
 
-				scvUserProfile.appendChild(profileHTML);
-			}
+			var loadingMask2 = new A.LoadingMask(
+				{
+					target: scvUserProfile
+				}
+			);
+
+			loadingMask2.show();
+			scvVersioning.hide();
+
+			Liferay.Service(
+				'/SCVUserProfileUtil.userprofileutil/get-scv-user-profile',
+				{
+					scvUserProfileId: scvUserProfileId
+				},
+				function(userData) {
+					for (var key in userData) {
+						var userField = userData[key];
+
+						if (Array.isArray(userField)) {
+							scvUserProfile.appendChild('<div class="row"><div class="col-md-3 field-name">' + key.replace("$ASSOCIATED$", "Associated ") + '</div></div>');
+
+							for (i = 0; i < userField.length; i++) {
+								var data = userField[i];
+
+								for (var key1 in data) {
+									if (key1.includes("Id") || key1.includes("id") || key1.includes("tableName")) {
+
+									}
+									else {
+										var dataHTML = '<div class="row"><div class="col-md-1"></div><div class="col-md-3 field-name">' + key1 +
+										'</div><div class="col-md-7 field-data" id="' + key1 + '">' + data[key1] +
+										'</div>';
+
+										scvUserProfile.appendChild(dataHTML);
+									}
+
+								}
+
+							}
+						}
+						else {
+							var profileHTML = '<div class="row"><div class="col-md-3 field-name">' + key +
+							'</div><div class="col-md-7 field-data" id="' + key + '">' + userData[key] +
+							'</div><a class="col-md-2 field-versions" id="' + key + '">versions</a>';
+
+							scvUserProfile.appendChild(profileHTML);
+						}
+					}
+
+					loadingMask2.hide();
+				}
+			);
 		},
 		'li, .user'
 	);
+
+	scvUserProfile.delegate(
+		'click',
+		function(event) {
+			var scvUserProfileId = scvUserProfile.getAttribute('id');
+
+			var target = event.currentTarget;
+			var field = target.getAttribute('id');
+
+			scvVersioning.html("");
+
+			Liferay.Service(
+				'/SCVUserProfileUtil.userprofileutil/get-scv-versioning',
+				{
+					scvUserProfileId: scvUserProfileId,
+					field: field
+				},
+				function(obj) {
+					for (i = 0; i < obj.length; i++) {
+						var versionData = obj[i];
+
+						var date = new Date(versionData["timestamp"]);
+
+						versioningHTML = '<div class="row"><span class="value">' + versionData[field] +
+						'</span> modified at ' + date.toUTCString().replace( / GMT$/, "" ) +
+						' from data source ' + versionData["dataSourceId"] +
+						'</div>'
+
+						scvVersioning.appendChild(versioningHTML);
+					}
+
+					scvVersioning.show();
+				}
+			);
+		},
+		'.row .field-versions'
+	)
 </aui:script>
