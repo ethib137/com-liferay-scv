@@ -1,4 +1,4 @@
-# com-liferay-scv
+# Liferay SCV
 
 This is the repo for SCV proof of concept.
 
