@@ -86,6 +86,8 @@ public class UpdateUsersEvent extends BaseEvent {
 
 		Iterator<String> keys = sourceJSONObject.keys();
 
+		Map<String, List<String>> map = new HashMap<>();
+
 		while (keys.hasNext()) {
 			String key = keys.next();
 
@@ -117,19 +119,27 @@ public class UpdateUsersEvent extends BaseEvent {
 							destinationModelJSONObject.put(
 								userMappingRule.getDestinationField(), value);
 						}
+
+						if (userMappingRule.getSourceField().startsWith("email") || userMappingRule.getDestinationField().startsWith("email")) {
+							map.put(userMappingRule.getModelName(), Arrays.asList(userMappingRule.getDestinationField()));
+						}
 					}
 
 					Iterator<String> allKeys = sourceModelJSONObject.keys();
 
-					while (allKeys.hasNext()) {
-						String curKey = allKeys.next();
+					if (mappingDataSource.getType() !=
+							MappingDataSourceConstants.CUSTOM) {
 
-						if (processedKeys.contains(curKey)) {
-							continue;
+						while (allKeys.hasNext()) {
+							String curKey = allKeys.next();
+
+							if (processedKeys.contains(curKey)) {
+								continue;
+							}
+
+							destinationModelJSONObject.put(
+								curKey, sourceModelJSONObject.getString(curKey));
 						}
-
-						destinationModelJSONObject.put(
-							curKey, sourceModelJSONObject.getString(curKey));
 					}
 
 					destinationModelJSONArray.put(destinationModelJSONObject);
@@ -173,14 +183,6 @@ public class UpdateUsersEvent extends BaseEvent {
 
 			destinationJSONObject.put("User", destinationUserJSONArray);
 		}
-
-		// START: TEMP CODE //
-
-		Map<String, List<String>> map = new HashMap<>();
-
-		map.put("User", Arrays.asList("emailAddress"));
-
-		// END: TEMP CODE //
 
 		UserProfileUtil.updateDataSourceEntries(
 			_mappingDataSourceId, map, destinationJSONObject);

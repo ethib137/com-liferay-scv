@@ -77,9 +77,31 @@ public class MappingDataSourceLocalServiceImpl
 	}
 
 	private static final Object[][] _LIFERAY_FIELDS = {
+		{"User", "screenName", "Screen Name", false},
+		{"User", "emailAddress", "Email Address", true},
+//		{"User", "portraitId", "Portrait Id", true},
 		{"User", "firstName", "First Name", true},
+		{"User", "firstName", "Middle Name", false},
 		{"User", "lastName", "Last Name", true},
-		{"User", "emailAddress", "Email", true}
+		{"User", "jobTitle", "Job Title", false},
+
+		{"Contact", "male", "Is Male?", false},
+		{"Contact", "birthday", "Date of Birth", false},
+		{"Contact", "facebookSn", "Facebook SN", false},
+		{"Contact", "twitterSn", "Twitter SN", false},
+		{"Contact", "googleSn", "Google SN", false},
+		{"Contact", "skypeSn", "Skype SN", false},
+		{"Contact", "openId", "Open ID", false},
+
+		{"Phone", "number", "Number", false},
+		{"Phone", "extension", "Extension", false},
+		{"Phone", "primary", "Primary", false},
+
+		{"Address", "street", "Street", false},
+		{"Address", "city", "City", false},
+		{"Address", "state", "State", false},
+		{"Address", "zip", "Zip", false},
+		{"Address", "country", "Country", false},
 	};
 
 }

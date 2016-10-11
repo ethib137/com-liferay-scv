@@ -18,7 +18,9 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.ByteBuffer;
 import java.nio.file.Files;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.sql.Connection;
@@ -65,9 +67,25 @@ public class Test {
 	public static void main(String[] args) throws Exception {
 		setup();
 
-		long mappingDataSourceId = addDataSource();
+		String path = System.getProperty("user.home") + "/scv.txt";
 
-		addUserMappingRules(mappingDataSourceId);
+		long mappingDataSourceId = 0;
+
+		if (Files.exists(Paths.get(path))) {
+			List<String> strings = Files.readAllLines(Paths.get(path));
+
+			mappingDataSourceId = Long.valueOf(strings.get(0));
+		}
+		else {
+			mappingDataSourceId = addDataSource();
+
+			Path path1 = Paths.get(path);
+			FileWriter fw = new FileWriter(path1.toFile().getAbsoluteFile());
+			BufferedWriter bw = new BufferedWriter(fw);
+			bw.write(String.valueOf(mappingDataSourceId));
+			bw.close();
+			addUserMappingRules(mappingDataSourceId);
+		}
 
 		addData(mappingDataSourceId);
 	}
@@ -87,9 +105,22 @@ public class Test {
 				}
 
 				addUserMappingRule(
-					mappingDataSourceId, tableName, field, "mapped_" + field);
+					mappingDataSourceId, tableName, field, splitCamelCase(field));
 			}
 		}
+	}
+
+	protected static String splitCamelCase(String s) {
+		s = s.replaceAll(
+				String.format("%s|%s|%s",
+						"(?<=[A-Z])(?=[A-Z][a-z])",
+						"(?<=[^A-Z])(?=[A-Z])",
+						"(?<=[A-Za-z])(?=[^A-Za-z])"
+				),
+				" "
+			);
+
+		return s.substring(0, 1).toUpperCase() + s.substring(1);
 	}
 
 	protected static void addUserMappingRule(
@@ -127,6 +158,8 @@ public class Test {
 		Statement statement = _connection.createStatement();
 
 		Map<String, List<Map<String, String>>> fieldMap = new HashMap<>();
+
+		getAvailableFields();
 
 		for (Map.Entry<String, Map<String, String>> entry :
 				_tableMap.entrySet()) {
@@ -346,6 +379,6 @@ public class Test {
 	private static HttpClient _httpClient;
 	private static Connection _connection;
 
-	protected static List<String> syncFields = Arrays.asList("emailAddress", "salary");
+	protected static List<String> syncFields = Arrays.asList("emailAddress", "companyName", "jobTitle", "salary");
 
 }

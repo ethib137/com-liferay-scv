@@ -1,4 +1,4 @@
-insert into people (firstName, lastName, emailAddress, gender, salary, companyName, jobTitle, expertise) values ('Doris', 'Nguyen', 'dnguyen0@comcast.net', 'Female', '609771.56', 'Voomm', 'Quality Control Specialist', 'HR Policy Formulation');
+insert into people (firstName, lastName, emailAddress, gender, salary, companyName, jobTitle, expertise) values ('Doris', 'Nguyen', 'dnguyen0@comcast.net', 'Female', '509771.56', 'Voomm', 'Quality Control Specialist', 'HR Policy Formulation');
 insert into people (firstName, lastName, emailAddress, gender, salary, companyName, jobTitle, expertise) values ('Helen', 'Myers', 'hmyers1@usda.gov', 'Female', '165503.96', 'Zoonoodle', 'Internal Auditor', 'GLP');
 insert into people (firstName, lastName, emailAddress, gender, salary, companyName, jobTitle, expertise) values ('Stephanie', 'Bradley', 'sbradley2@oakley.com', 'Female', '510063.95', 'Skyvu', 'Senior Quality Engineer', 'GS1');
 insert into people (firstName, lastName, emailAddress, gender, salary, companyName, jobTitle, expertise) values ('Eric', 'Payne', 'epayne3@unesco.org', 'Male', '370192.88', 'Youbridge', 'Media Manager IV', 'CCNP Security');

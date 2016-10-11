@@ -90,7 +90,7 @@ public class UserMapperMessageListener extends BaseMessageListener {
 
 			long type = MappingDataSourceConstants.CUSTOM;
 
-			if (!Validator.isBlank(url)) {
+			if (!url.equals("null") && !Validator.isBlank(url)) {
 				type = MappingDataSourceConstants.LIFERAY;
 			}
 
