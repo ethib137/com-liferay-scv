@@ -2,7 +2,24 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping auto-import="false" default-lazy="false">
+	<import class="com.liferay.osb.scv.user.mapper.model.MappingDataSource" />
 	<import class="com.liferay.osb.scv.user.mapper.model.UserMappingRule" />
+	<class name="com.liferay.osb.scv.user.mapper.model.impl.MappingDataSourceImpl" table="OSB_SCV_MappingDataSource">
+		<id name="mappingDataSourceId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property name="companyId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="userName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="createDate" type="org.hibernate.type.TimestampType" />
+		<property name="modifiedDate" type="org.hibernate.type.TimestampType" />
+		<property name="name" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="url" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="login" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property column="password_" name="password" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property column="type_" name="type" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="availableFields" type="com.liferay.portal.dao.orm.hibernate.StringClobType" />
+	</class>
 	<class name="com.liferay.osb.scv.user.mapper.model.impl.UserMappingRuleImpl" table="OSB_SCV_UserMappingRule">
 		<id name="userMappingRuleId" type="long">
 			<generator class="assigned" />
@@ -12,12 +29,13 @@
 		<property name="userName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="createDate" type="org.hibernate.type.TimestampType" />
 		<property name="modifiedDate" type="org.hibernate.type.TimestampType" />
-		<property name="dataSourceId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="mappingDataSourceId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="fieldSetId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="modelName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="sourceField" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="destinationField" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="fieldType" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="frequency" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property name="required" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 	</class>
 </hibernate-mapping>

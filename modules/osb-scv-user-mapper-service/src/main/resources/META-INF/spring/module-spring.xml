@@ -1,6 +1,9 @@
 <?xml version="1.0"?>
 
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" default-destroy-method="destroy" default-init-method="afterPropertiesSet" xsi:schemaLocation=" http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean class="com.liferay.osb.scv.user.mapper.service.impl.MappingDataSourceLocalServiceImpl" id="com.liferay.osb.scv.user.mapper.service.MappingDataSourceLocalService" />
+	<bean class="com.liferay.osb.scv.user.mapper.service.impl.MappingDataSourceServiceImpl" id="com.liferay.osb.scv.user.mapper.service.MappingDataSourceService" />
+	<bean class="com.liferay.osb.scv.user.mapper.service.persistence.impl.MappingDataSourcePersistenceImpl" id="com.liferay.osb.scv.user.mapper.service.persistence.MappingDataSourcePersistence" parent="basePersistence" />
 	<bean class="com.liferay.osb.scv.user.mapper.service.impl.UserMappingRuleLocalServiceImpl" id="com.liferay.osb.scv.user.mapper.service.UserMappingRuleLocalService" />
 	<bean class="com.liferay.osb.scv.user.mapper.service.impl.UserMappingRuleServiceImpl" id="com.liferay.osb.scv.user.mapper.service.UserMappingRuleService" />
 	<bean class="com.liferay.osb.scv.user.mapper.service.persistence.impl.UserMappingRulePersistenceImpl" id="com.liferay.osb.scv.user.mapper.service.persistence.UserMappingRulePersistence" parent="basePersistence" />

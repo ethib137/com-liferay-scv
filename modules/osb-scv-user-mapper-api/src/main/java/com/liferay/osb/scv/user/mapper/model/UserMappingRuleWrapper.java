@@ -64,13 +64,14 @@ public class UserMappingRuleWrapper implements UserMappingRule,
 		attributes.put("userName", getUserName());
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
-		attributes.put("dataSourceId", getDataSourceId());
+		attributes.put("mappingDataSourceId", getMappingDataSourceId());
 		attributes.put("fieldSetId", getFieldSetId());
 		attributes.put("modelName", getModelName());
 		attributes.put("sourceField", getSourceField());
 		attributes.put("destinationField", getDestinationField());
 		attributes.put("fieldType", getFieldType());
 		attributes.put("frequency", getFrequency());
+		attributes.put("required", getRequired());
 
 		return attributes;
 	}
@@ -113,10 +114,10 @@ public class UserMappingRuleWrapper implements UserMappingRule,
 			setModifiedDate(modifiedDate);
 		}
 
-		Long dataSourceId = (Long)attributes.get("dataSourceId");
+		Long mappingDataSourceId = (Long)attributes.get("mappingDataSourceId");
 
-		if (dataSourceId != null) {
-			setDataSourceId(dataSourceId);
+		if (mappingDataSourceId != null) {
+			setMappingDataSourceId(mappingDataSourceId);
 		}
 
 		Long fieldSetId = (Long)attributes.get("fieldSetId");
@@ -154,6 +155,12 @@ public class UserMappingRuleWrapper implements UserMappingRule,
 		if (frequency != null) {
 			setFrequency(frequency);
 		}
+
+		Boolean required = (Boolean)attributes.get("required");
+
+		if (required != null) {
+			setRequired(required);
+		}
 	}
 
 	@Override
@@ -164,6 +171,16 @@ public class UserMappingRuleWrapper implements UserMappingRule,
 	@Override
 	public UserMappingRule toUnescapedModel() {
 		return new UserMappingRuleWrapper(_userMappingRule.toUnescapedModel());
+	}
+
+	/**
+	* Returns the required of this user mapping rule.
+	*
+	* @return the required of this user mapping rule
+	*/
+	@Override
+	public boolean getRequired() {
+		return _userMappingRule.getRequired();
 	}
 
 	@Override
@@ -179,6 +196,16 @@ public class UserMappingRuleWrapper implements UserMappingRule,
 	@Override
 	public boolean isNew() {
 		return _userMappingRule.isNew();
+	}
+
+	/**
+	* Returns <code>true</code> if this user mapping rule is required.
+	*
+	* @return <code>true</code> if this user mapping rule is required; <code>false</code> otherwise
+	*/
+	@Override
+	public boolean isRequired() {
+		return _userMappingRule.isRequired();
 	}
 
 	@Override
@@ -322,16 +349,6 @@ public class UserMappingRuleWrapper implements UserMappingRule,
 	}
 
 	/**
-	* Returns the data source ID of this user mapping rule.
-	*
-	* @return the data source ID of this user mapping rule
-	*/
-	@Override
-	public long getDataSourceId() {
-		return _userMappingRule.getDataSourceId();
-	}
-
-	/**
 	* Returns the field set ID of this user mapping rule.
 	*
 	* @return the field set ID of this user mapping rule
@@ -339,6 +356,16 @@ public class UserMappingRuleWrapper implements UserMappingRule,
 	@Override
 	public long getFieldSetId() {
 		return _userMappingRule.getFieldSetId();
+	}
+
+	/**
+	* Returns the mapping data source ID of this user mapping rule.
+	*
+	* @return the mapping data source ID of this user mapping rule
+	*/
+	@Override
+	public long getMappingDataSourceId() {
+		return _userMappingRule.getMappingDataSourceId();
 	}
 
 	/**
@@ -402,16 +429,6 @@ public class UserMappingRuleWrapper implements UserMappingRule,
 	}
 
 	/**
-	* Sets the data source ID of this user mapping rule.
-	*
-	* @param dataSourceId the data source ID of this user mapping rule
-	*/
-	@Override
-	public void setDataSourceId(long dataSourceId) {
-		_userMappingRule.setDataSourceId(dataSourceId);
-	}
-
-	/**
 	* Sets the destination field of this user mapping rule.
 	*
 	* @param destinationField the destination field of this user mapping rule
@@ -468,6 +485,16 @@ public class UserMappingRuleWrapper implements UserMappingRule,
 	}
 
 	/**
+	* Sets the mapping data source ID of this user mapping rule.
+	*
+	* @param mappingDataSourceId the mapping data source ID of this user mapping rule
+	*/
+	@Override
+	public void setMappingDataSourceId(long mappingDataSourceId) {
+		_userMappingRule.setMappingDataSourceId(mappingDataSourceId);
+	}
+
+	/**
 	* Sets the model name of this user mapping rule.
 	*
 	* @param modelName the model name of this user mapping rule
@@ -505,6 +532,16 @@ public class UserMappingRuleWrapper implements UserMappingRule,
 	@Override
 	public void setPrimaryKeyObj(Serializable primaryKeyObj) {
 		_userMappingRule.setPrimaryKeyObj(primaryKeyObj);
+	}
+
+	/**
+	* Sets whether this user mapping rule is required.
+	*
+	* @param required the required of this user mapping rule
+	*/
+	@Override
+	public void setRequired(boolean required) {
+		_userMappingRule.setRequired(required);
 	}
 
 	/**

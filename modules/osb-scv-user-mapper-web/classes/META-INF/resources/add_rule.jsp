@@ -19,9 +19,9 @@
 <%
 String redirect = ParamUtil.getString(request, "redirect");
 
-long dataSourceId = ParamUtil.getLong(request, "dataSourceId");
+long mappingDataSourceId = ParamUtil.getLong(request, "mappingDataSourceId");
 
-DataSource dataSource = DataSourceUtil.getDataSource(dataSourceId);
+DataSource dataSource = DataSourceUtil.getDataSource(mappingDataSourceId);
 
 String tableName = ParamUtil.getString(request, "tableName");
 %>
@@ -35,13 +35,13 @@ String tableName = ParamUtil.getString(request, "tableName");
 		<aui:validator name="required" />
 	</aui:input>
 
-	<aui:select label="data-source" name="dataSourceId">
+	<aui:select label="data-source" name="mappingDataSourceId">
 
 		<%
 		for (DataSource curDataSource : DataSourceUtil.getDataSources()) {
 		%>
 
-			<aui:option localizeLabel="<%= false %>" label="<%= curDataSource.getName() %>" selected="<%= curDataSource.getDataSourceId() == dataSourceId %>" value="<%= curDataSource.getDataSourceId() %>" />
+			<aui:option localizeLabel="<%= false %>" label="<%= curDataSource.getName() %>" selected="<%= curDataSource.getDataSourceId() == mappingDataSourceId %>" value="<%= curDataSource.getDataSourceId() %>" />
 
 		<%
 		}
@@ -114,18 +114,18 @@ String tableName = ParamUtil.getString(request, "tableName");
 	var form = $('#<portlet:namespace />fm');
 
 	var sourceField = form.fm('sourceField');
-	var dataSourceId = form.fm('dataSourceId');
+	var mappingDataSourceId = form.fm('mappingDataSourceId');
 	var destinationField = form.fm('destinationField');
 	var frequency = form.fm('frequency');
 	var fieldSet = form.fm('fieldSet');
 	var tableName = form.fm('tableName');
 
-	dataSourceId.on(
+	mappingDataSourceId.on(
 		'change',
 		function() {
 		var data = {
 			sourceField: sourceField.val(),
-			dataSourceId: dataSourceId.val(),
+			mappingDataSourceId: mappingDataSourceId.val(),
 			destinationField: destinationField.val(),
 			frequency: frequency.val(),
 			tableName: tableName.val(),
@@ -140,7 +140,7 @@ String tableName = ParamUtil.getString(request, "tableName");
 	function() {
 	var data = {
 	sourceField: sourceField.val(),
-	dataSourceId: dataSourceId.val(),
+	mappingDataSourceId: mappingDataSourceId.val(),
 	destinationField: destinationField.val(),
 	frequency: frequency.val(),
 	tableName: tableName.val(),

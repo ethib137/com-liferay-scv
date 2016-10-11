@@ -14,8 +14,10 @@
 
 package com.liferay.osb.scv.internal.util;
 
+import com.liferay.osb.scv.user.mapper.model.MappingDataSource;
 import com.liferay.osb.scv.user.mapper.sample.DataSource;
 import com.liferay.osb.scv.user.mapper.sample.DataSourceUtil;
+import com.liferay.osb.scv.user.mapper.service.MappingDataSourceLocalServiceUtil;
 import com.liferay.petra.json.web.service.client.JSONWebServiceClient;
 import com.liferay.petra.json.web.service.client.JSONWebServiceClientImpl;
 
@@ -30,44 +32,48 @@ import java.util.Map;
 public class JSONWebServiceClientUtil {
 
 	public static String doGet(
-			long dataSourceId, String method, Map<String, String> parameters)
+			long mappingDataSourceId, String method, Map<String, String> parameters)
 		throws Exception {
 
 //		DataSourceUtil.clearDataSources();
 
-		DataSource dataSource = DataSourceUtil.getDataSource(dataSourceId);
+		MappingDataSource mappingDataSource =
+			MappingDataSourceLocalServiceUtil.fetchMappingDataSource(
+				mappingDataSourceId);
 
 		JSONWebServiceClient jsonWebServiceClient = getJSONWebServiceClient(
-			dataSourceId);
+			mappingDataSourceId);
 
-		String url = dataSource.getURL();
+		String url = mappingDataSource.getUrl();
 
 		return jsonWebServiceClient.doGet(url.concat(method), parameters);
 	}
 
 	protected static JSONWebServiceClient getJSONWebServiceClient(
-			long dataSourceId)
+			long mappingDataSourceId)
 		throws Exception {
 
 		JSONWebServiceClient jsonWebServiceClient =
-			_jsonWebServiceClientMap.get(dataSourceId);
+			_jsonWebServiceClientMap.get(mappingDataSourceId);
 
 		if (jsonWebServiceClient != null) {
 			return jsonWebServiceClient;
 		}
 
-		DataSource dataSource = DataSourceUtil.getDataSource(dataSourceId);
+		MappingDataSource mappingDataSource =
+			MappingDataSourceLocalServiceUtil.fetchMappingDataSource(
+				mappingDataSourceId);
 
 		jsonWebServiceClient = new JSONWebServiceClientImpl();
 
-		URL url = new URL(dataSource.getURL());
+		URL url = new URL(mappingDataSource.getUrl());
 
 		jsonWebServiceClient.setHostName(url.getHost());
 		jsonWebServiceClient.setHostPort(url.getPort());
-		jsonWebServiceClient.setLogin(dataSource.getUserName());
-		jsonWebServiceClient.setPassword(dataSource.getPassword());
+		jsonWebServiceClient.setLogin(mappingDataSource.getLogin());
+		jsonWebServiceClient.setPassword(mappingDataSource.getPassword());
 
-		_jsonWebServiceClientMap.put(dataSourceId, jsonWebServiceClient);
+		_jsonWebServiceClientMap.put(mappingDataSourceId, jsonWebServiceClient);
 
 		return jsonWebServiceClient;
 	}

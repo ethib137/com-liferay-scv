@@ -23,55 +23,48 @@ import java.util.Date;
  */
 public class SCVExpandoColumnConstants extends ExpandoColumnConstants {
 
-	public static final String BOOLEAN_LABEL =
-		Boolean.class.getSimpleName();
-
 	public static final String BOOLEAN_ARRAY_LABEL =
 		Boolean[].class.getSimpleName();
 
-	public static final String DATE_LABEL =
-		Date.class.getSimpleName();
+	public static final String BOOLEAN_LABEL = Boolean.class.getSimpleName();
 
-	public static final String DATE_ARRAY_LABEL =
-		Date[].class.getSimpleName();
+	public static final String DATE_ARRAY_LABEL = Date[].class.getSimpleName();
 
-	public static final String DOUBLE_LABEL = Double.class.getSimpleName();
+	public static final String DATE_LABEL = Date.class.getSimpleName();
 
 	public static final String DOUBLE_ARRAY_LABEL =
 		Double[].class.getSimpleName();
 
-	public static final String FLOAT_LABEL = Float.class.getSimpleName();
+	public static final String DOUBLE_LABEL = Double.class.getSimpleName();
 
 	public static final String FLOAT_ARRAY_LABEL =
 		Float[].class.getSimpleName();
 
-	public static final String INTEGER_LABEL = Integer.class.getSimpleName();
+	public static final String FLOAT_LABEL = Float.class.getSimpleName();
 
 	public static final String INTEGER_ARRAY_LABEL =
 		Integer[].class.getSimpleName();
 
-	public static final String LONG_LABEL =
-		long.class.getSimpleName();
+	public static final String INTEGER_LABEL = Integer.class.getSimpleName();
 
-	public static final String LONG_ARRAY_LABEL =
-		long[].class.getSimpleName();
+	public static final String LONG_ARRAY_LABEL = long[].class.getSimpleName();
 
-	public static final String NUMBER_LABEL =
-		Number.class.getSimpleName();
+	public static final String LONG_LABEL = long.class.getSimpleName();
 
 	public static final String NUMBER_ARRAY_LABEL =
 		Number[].class.getSimpleName();
 
-	public static final String SHORT_LABEL =
-		Short.class.getSimpleName();
+	public static final String NUMBER_LABEL = Number.class.getSimpleName();
 
 	public static final String SHORT_ARRAY_LABEL =
 		Short[].class.getSimpleName();
 
-	public static final String STRING_LABEL = String.class.getSimpleName();
+	public static final String SHORT_LABEL = Short.class.getSimpleName();
 
 	public static final String STRING_ARRAY_LABEL =
 		String[].class.getSimpleName();
+
+	public static final String STRING_LABEL = String.class.getSimpleName();
 
 	public static final String getSCVTypeLabel(int type) {
 		if (type == BOOLEAN) {

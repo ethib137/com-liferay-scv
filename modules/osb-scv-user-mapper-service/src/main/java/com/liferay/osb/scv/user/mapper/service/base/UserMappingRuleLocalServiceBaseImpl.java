@@ -18,6 +18,7 @@ import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.osb.scv.user.mapper.model.UserMappingRule;
 import com.liferay.osb.scv.user.mapper.service.UserMappingRuleLocalService;
+import com.liferay.osb.scv.user.mapper.service.persistence.MappingDataSourcePersistence;
 import com.liferay.osb.scv.user.mapper.service.persistence.UserMappingRulePersistence;
 
 import com.liferay.portal.kernel.bean.BeanReference;
@@ -317,6 +318,44 @@ public abstract class UserMappingRuleLocalServiceBaseImpl
 	}
 
 	/**
+	 * Returns the mapping data source local service.
+	 *
+	 * @return the mapping data source local service
+	 */
+	public com.liferay.osb.scv.user.mapper.service.MappingDataSourceLocalService getMappingDataSourceLocalService() {
+		return mappingDataSourceLocalService;
+	}
+
+	/**
+	 * Sets the mapping data source local service.
+	 *
+	 * @param mappingDataSourceLocalService the mapping data source local service
+	 */
+	public void setMappingDataSourceLocalService(
+		com.liferay.osb.scv.user.mapper.service.MappingDataSourceLocalService mappingDataSourceLocalService) {
+		this.mappingDataSourceLocalService = mappingDataSourceLocalService;
+	}
+
+	/**
+	 * Returns the mapping data source persistence.
+	 *
+	 * @return the mapping data source persistence
+	 */
+	public MappingDataSourcePersistence getMappingDataSourcePersistence() {
+		return mappingDataSourcePersistence;
+	}
+
+	/**
+	 * Sets the mapping data source persistence.
+	 *
+	 * @param mappingDataSourcePersistence the mapping data source persistence
+	 */
+	public void setMappingDataSourcePersistence(
+		MappingDataSourcePersistence mappingDataSourcePersistence) {
+		this.mappingDataSourcePersistence = mappingDataSourcePersistence;
+	}
+
+	/**
 	 * Returns the user mapping rule local service.
 	 *
 	 * @return the user mapping rule local service
@@ -519,6 +558,10 @@ public abstract class UserMappingRuleLocalServiceBaseImpl
 		}
 	}
 
+	@BeanReference(type = com.liferay.osb.scv.user.mapper.service.MappingDataSourceLocalService.class)
+	protected com.liferay.osb.scv.user.mapper.service.MappingDataSourceLocalService mappingDataSourceLocalService;
+	@BeanReference(type = MappingDataSourcePersistence.class)
+	protected MappingDataSourcePersistence mappingDataSourcePersistence;
 	@BeanReference(type = UserMappingRuleLocalService.class)
 	protected UserMappingRuleLocalService userMappingRuleLocalService;
 	@BeanReference(type = UserMappingRulePersistence.class)

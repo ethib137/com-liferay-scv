@@ -16,6 +16,7 @@ package com.liferay.osb.scv.user.mapper.service.base;
 
 import com.liferay.osb.scv.user.mapper.model.UserMappingRule;
 import com.liferay.osb.scv.user.mapper.service.UserMappingRuleService;
+import com.liferay.osb.scv.user.mapper.service.persistence.MappingDataSourcePersistence;
 import com.liferay.osb.scv.user.mapper.service.persistence.UserMappingRulePersistence;
 
 import com.liferay.portal.kernel.bean.BeanReference;
@@ -52,6 +53,63 @@ public abstract class UserMappingRuleServiceBaseImpl extends BaseServiceImpl
 	 *
 	 * Never modify or reference this class directly. Always use {@link com.liferay.osb.scv.user.mapper.service.UserMappingRuleServiceUtil} to access the user mapping rule remote service.
 	 */
+
+	/**
+	 * Returns the mapping data source local service.
+	 *
+	 * @return the mapping data source local service
+	 */
+	public com.liferay.osb.scv.user.mapper.service.MappingDataSourceLocalService getMappingDataSourceLocalService() {
+		return mappingDataSourceLocalService;
+	}
+
+	/**
+	 * Sets the mapping data source local service.
+	 *
+	 * @param mappingDataSourceLocalService the mapping data source local service
+	 */
+	public void setMappingDataSourceLocalService(
+		com.liferay.osb.scv.user.mapper.service.MappingDataSourceLocalService mappingDataSourceLocalService) {
+		this.mappingDataSourceLocalService = mappingDataSourceLocalService;
+	}
+
+	/**
+	 * Returns the mapping data source remote service.
+	 *
+	 * @return the mapping data source remote service
+	 */
+	public com.liferay.osb.scv.user.mapper.service.MappingDataSourceService getMappingDataSourceService() {
+		return mappingDataSourceService;
+	}
+
+	/**
+	 * Sets the mapping data source remote service.
+	 *
+	 * @param mappingDataSourceService the mapping data source remote service
+	 */
+	public void setMappingDataSourceService(
+		com.liferay.osb.scv.user.mapper.service.MappingDataSourceService mappingDataSourceService) {
+		this.mappingDataSourceService = mappingDataSourceService;
+	}
+
+	/**
+	 * Returns the mapping data source persistence.
+	 *
+	 * @return the mapping data source persistence
+	 */
+	public MappingDataSourcePersistence getMappingDataSourcePersistence() {
+		return mappingDataSourcePersistence;
+	}
+
+	/**
+	 * Sets the mapping data source persistence.
+	 *
+	 * @param mappingDataSourcePersistence the mapping data source persistence
+	 */
+	public void setMappingDataSourcePersistence(
+		MappingDataSourcePersistence mappingDataSourcePersistence) {
+		this.mappingDataSourcePersistence = mappingDataSourcePersistence;
+	}
 
 	/**
 	 * Returns the user mapping rule local service.
@@ -309,6 +367,12 @@ public abstract class UserMappingRuleServiceBaseImpl extends BaseServiceImpl
 		}
 	}
 
+	@BeanReference(type = com.liferay.osb.scv.user.mapper.service.MappingDataSourceLocalService.class)
+	protected com.liferay.osb.scv.user.mapper.service.MappingDataSourceLocalService mappingDataSourceLocalService;
+	@BeanReference(type = com.liferay.osb.scv.user.mapper.service.MappingDataSourceService.class)
+	protected com.liferay.osb.scv.user.mapper.service.MappingDataSourceService mappingDataSourceService;
+	@BeanReference(type = MappingDataSourcePersistence.class)
+	protected MappingDataSourcePersistence mappingDataSourcePersistence;
 	@BeanReference(type = com.liferay.osb.scv.user.mapper.service.UserMappingRuleLocalService.class)
 	protected com.liferay.osb.scv.user.mapper.service.UserMappingRuleLocalService userMappingRuleLocalService;
 	@BeanReference(type = UserMappingRuleService.class)

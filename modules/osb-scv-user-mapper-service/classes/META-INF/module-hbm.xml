@@ -12,7 +12,7 @@
 		<property name="userName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="createDate" type="org.hibernate.type.TimestampType" />
 		<property name="modifiedDate" type="org.hibernate.type.TimestampType" />
-		<property name="dataSourceId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="mappingDataSourceId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="fieldSetId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="modelName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="sourceField" type="com.liferay.portal.dao.orm.hibernate.StringType" />

@@ -76,13 +76,14 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 			{ "userName", Types.VARCHAR },
 			{ "createDate", Types.TIMESTAMP },
 			{ "modifiedDate", Types.TIMESTAMP },
-			{ "dataSourceId", Types.BIGINT },
+			{ "mappingDataSourceId", Types.BIGINT },
 			{ "fieldSetId", Types.BIGINT },
 			{ "modelName", Types.VARCHAR },
 			{ "sourceField", Types.VARCHAR },
 			{ "destinationField", Types.VARCHAR },
 			{ "fieldType", Types.VARCHAR },
-			{ "frequency", Types.INTEGER }
+			{ "frequency", Types.INTEGER },
+			{ "required", Types.BOOLEAN }
 		};
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP = new HashMap<String, Integer>();
 
@@ -93,16 +94,17 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 		TABLE_COLUMNS_MAP.put("userName", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("createDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("modifiedDate", Types.TIMESTAMP);
-		TABLE_COLUMNS_MAP.put("dataSourceId", Types.BIGINT);
+		TABLE_COLUMNS_MAP.put("mappingDataSourceId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("fieldSetId", Types.BIGINT);
 		TABLE_COLUMNS_MAP.put("modelName", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("sourceField", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("destinationField", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("fieldType", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("frequency", Types.INTEGER);
+		TABLE_COLUMNS_MAP.put("required", Types.BOOLEAN);
 	}
 
-	public static final String TABLE_SQL_CREATE = "create table OSB_SCV_UserMappingRule (userMappingRuleId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,dataSourceId LONG,fieldSetId LONG,modelName VARCHAR(75) null,sourceField VARCHAR(75) null,destinationField VARCHAR(75) null,fieldType VARCHAR(75) null,frequency INTEGER)";
+	public static final String TABLE_SQL_CREATE = "create table OSB_SCV_UserMappingRule (userMappingRuleId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,mappingDataSourceId LONG,fieldSetId LONG,modelName VARCHAR(75) null,sourceField VARCHAR(75) null,destinationField VARCHAR(75) null,fieldType VARCHAR(75) null,frequency INTEGER,required BOOLEAN)";
 	public static final String TABLE_SQL_DROP = "drop table OSB_SCV_UserMappingRule";
 	public static final String ORDER_BY_JPQL = " ORDER BY userMappingRule.userMappingRuleId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY OSB_SCV_UserMappingRule.userMappingRuleId ASC";
@@ -119,8 +121,8 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 				"value.object.column.bitmask.enabled.com.liferay.osb.scv.user.mapper.model.UserMappingRule"),
 			true);
 	public static final long COMPANYID_COLUMN_BITMASK = 1L;
-	public static final long DATASOURCEID_COLUMN_BITMASK = 2L;
-	public static final long FREQUENCY_COLUMN_BITMASK = 4L;
+	public static final long FREQUENCY_COLUMN_BITMASK = 2L;
+	public static final long MAPPINGDATASOURCEID_COLUMN_BITMASK = 4L;
 	public static final long USERMAPPINGRULEID_COLUMN_BITMASK = 8L;
 
 	/**
@@ -142,13 +144,14 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 		model.setUserName(soapModel.getUserName());
 		model.setCreateDate(soapModel.getCreateDate());
 		model.setModifiedDate(soapModel.getModifiedDate());
-		model.setDataSourceId(soapModel.getDataSourceId());
+		model.setMappingDataSourceId(soapModel.getMappingDataSourceId());
 		model.setFieldSetId(soapModel.getFieldSetId());
 		model.setModelName(soapModel.getModelName());
 		model.setSourceField(soapModel.getSourceField());
 		model.setDestinationField(soapModel.getDestinationField());
 		model.setFieldType(soapModel.getFieldType());
 		model.setFrequency(soapModel.getFrequency());
+		model.setRequired(soapModel.getRequired());
 
 		return model;
 	}
@@ -220,13 +223,14 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 		attributes.put("userName", getUserName());
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
-		attributes.put("dataSourceId", getDataSourceId());
+		attributes.put("mappingDataSourceId", getMappingDataSourceId());
 		attributes.put("fieldSetId", getFieldSetId());
 		attributes.put("modelName", getModelName());
 		attributes.put("sourceField", getSourceField());
 		attributes.put("destinationField", getDestinationField());
 		attributes.put("fieldType", getFieldType());
 		attributes.put("frequency", getFrequency());
+		attributes.put("required", getRequired());
 
 		attributes.put("entityCacheEnabled", isEntityCacheEnabled());
 		attributes.put("finderCacheEnabled", isFinderCacheEnabled());
@@ -272,10 +276,10 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 			setModifiedDate(modifiedDate);
 		}
 
-		Long dataSourceId = (Long)attributes.get("dataSourceId");
+		Long mappingDataSourceId = (Long)attributes.get("mappingDataSourceId");
 
-		if (dataSourceId != null) {
-			setDataSourceId(dataSourceId);
+		if (mappingDataSourceId != null) {
+			setMappingDataSourceId(mappingDataSourceId);
 		}
 
 		Long fieldSetId = (Long)attributes.get("fieldSetId");
@@ -312,6 +316,12 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 
 		if (frequency != null) {
 			setFrequency(frequency);
+		}
+
+		Boolean required = (Boolean)attributes.get("required");
+
+		if (required != null) {
+			setRequired(required);
 		}
 	}
 
@@ -422,25 +432,25 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 
 	@JSON
 	@Override
-	public long getDataSourceId() {
-		return _dataSourceId;
+	public long getMappingDataSourceId() {
+		return _mappingDataSourceId;
 	}
 
 	@Override
-	public void setDataSourceId(long dataSourceId) {
-		_columnBitmask |= DATASOURCEID_COLUMN_BITMASK;
+	public void setMappingDataSourceId(long mappingDataSourceId) {
+		_columnBitmask |= MAPPINGDATASOURCEID_COLUMN_BITMASK;
 
-		if (!_setOriginalDataSourceId) {
-			_setOriginalDataSourceId = true;
+		if (!_setOriginalMappingDataSourceId) {
+			_setOriginalMappingDataSourceId = true;
 
-			_originalDataSourceId = _dataSourceId;
+			_originalMappingDataSourceId = _mappingDataSourceId;
 		}
 
-		_dataSourceId = dataSourceId;
+		_mappingDataSourceId = mappingDataSourceId;
 	}
 
-	public long getOriginalDataSourceId() {
-		return _originalDataSourceId;
+	public long getOriginalMappingDataSourceId() {
+		return _originalMappingDataSourceId;
 	}
 
 	@JSON
@@ -541,6 +551,23 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 		return _originalFrequency;
 	}
 
+	@JSON
+	@Override
+	public boolean getRequired() {
+		return _required;
+	}
+
+	@JSON
+	@Override
+	public boolean isRequired() {
+		return _required;
+	}
+
+	@Override
+	public void setRequired(boolean required) {
+		_required = required;
+	}
+
 	public long getColumnBitmask() {
 		return _columnBitmask;
 	}
@@ -578,13 +605,14 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 		userMappingRuleImpl.setUserName(getUserName());
 		userMappingRuleImpl.setCreateDate(getCreateDate());
 		userMappingRuleImpl.setModifiedDate(getModifiedDate());
-		userMappingRuleImpl.setDataSourceId(getDataSourceId());
+		userMappingRuleImpl.setMappingDataSourceId(getMappingDataSourceId());
 		userMappingRuleImpl.setFieldSetId(getFieldSetId());
 		userMappingRuleImpl.setModelName(getModelName());
 		userMappingRuleImpl.setSourceField(getSourceField());
 		userMappingRuleImpl.setDestinationField(getDestinationField());
 		userMappingRuleImpl.setFieldType(getFieldType());
 		userMappingRuleImpl.setFrequency(getFrequency());
+		userMappingRuleImpl.setRequired(getRequired());
 
 		userMappingRuleImpl.resetOriginalValues();
 
@@ -653,9 +681,9 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 
 		userMappingRuleModelImpl._setModifiedDate = false;
 
-		userMappingRuleModelImpl._originalDataSourceId = userMappingRuleModelImpl._dataSourceId;
+		userMappingRuleModelImpl._originalMappingDataSourceId = userMappingRuleModelImpl._mappingDataSourceId;
 
-		userMappingRuleModelImpl._setOriginalDataSourceId = false;
+		userMappingRuleModelImpl._setOriginalMappingDataSourceId = false;
 
 		userMappingRuleModelImpl._originalFrequency = userMappingRuleModelImpl._frequency;
 
@@ -700,7 +728,7 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 			userMappingRuleCacheModel.modifiedDate = Long.MIN_VALUE;
 		}
 
-		userMappingRuleCacheModel.dataSourceId = getDataSourceId();
+		userMappingRuleCacheModel.mappingDataSourceId = getMappingDataSourceId();
 
 		userMappingRuleCacheModel.fieldSetId = getFieldSetId();
 
@@ -738,12 +766,14 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 
 		userMappingRuleCacheModel.frequency = getFrequency();
 
+		userMappingRuleCacheModel.required = getRequired();
+
 		return userMappingRuleCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(27);
+		StringBundler sb = new StringBundler(29);
 
 		sb.append("{userMappingRuleId=");
 		sb.append(getUserMappingRuleId());
@@ -757,8 +787,8 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 		sb.append(getCreateDate());
 		sb.append(", modifiedDate=");
 		sb.append(getModifiedDate());
-		sb.append(", dataSourceId=");
-		sb.append(getDataSourceId());
+		sb.append(", mappingDataSourceId=");
+		sb.append(getMappingDataSourceId());
 		sb.append(", fieldSetId=");
 		sb.append(getFieldSetId());
 		sb.append(", modelName=");
@@ -771,6 +801,8 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 		sb.append(getFieldType());
 		sb.append(", frequency=");
 		sb.append(getFrequency());
+		sb.append(", required=");
+		sb.append(getRequired());
 		sb.append("}");
 
 		return sb.toString();
@@ -778,7 +810,7 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 
 	@Override
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(43);
+		StringBundler sb = new StringBundler(46);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.osb.scv.user.mapper.model.UserMappingRule");
@@ -809,8 +841,8 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 		sb.append(getModifiedDate());
 		sb.append("]]></column-value></column>");
 		sb.append(
-			"<column><column-name>dataSourceId</column-name><column-value><![CDATA[");
-		sb.append(getDataSourceId());
+			"<column><column-name>mappingDataSourceId</column-name><column-value><![CDATA[");
+		sb.append(getMappingDataSourceId());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>fieldSetId</column-name><column-value><![CDATA[");
@@ -836,6 +868,10 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 			"<column><column-name>frequency</column-name><column-value><![CDATA[");
 		sb.append(getFrequency());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>required</column-name><column-value><![CDATA[");
+		sb.append(getRequired());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -855,9 +891,9 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 	private Date _createDate;
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
-	private long _dataSourceId;
-	private long _originalDataSourceId;
-	private boolean _setOriginalDataSourceId;
+	private long _mappingDataSourceId;
+	private long _originalMappingDataSourceId;
+	private boolean _setOriginalMappingDataSourceId;
 	private long _fieldSetId;
 	private String _modelName;
 	private String _sourceField;
@@ -866,6 +902,7 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 	private int _frequency;
 	private int _originalFrequency;
 	private boolean _setOriginalFrequency;
+	private boolean _required;
 	private long _columnBitmask;
 	private UserMappingRule _escapedModel;
 }

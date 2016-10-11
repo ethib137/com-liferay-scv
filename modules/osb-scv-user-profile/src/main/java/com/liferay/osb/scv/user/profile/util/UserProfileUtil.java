@@ -96,7 +96,7 @@ public class UserProfileUtil {
 
 							value = getAssociatedJSONArray(
 								(String)dataSourceEntry.getProperty(
-									"dataSourceId"),
+									"mappingDataSourceId"),
 								tableName,
 								JSONFactoryUtil.createJSONArray(
 									currentValue.toString()));
@@ -165,8 +165,8 @@ public class UserProfileUtil {
 					jsonObject.put(
 						field, dataSourceEntry.getProperty(field));
 					jsonObject.put(
-						"dataSourceId",
-						dataSourceEntry.getProperty("dataSourceId"));
+						"mappingDataSourceId",
+						dataSourceEntry.getProperty("mappingDataSourceId"));
 					jsonObject.put(
 						"timestamp",
 						dataSourceEntry.getProperty("timestamp"));
@@ -180,7 +180,7 @@ public class UserProfileUtil {
 	}
 
 	public static void updateDataSourceEntries(
-			long dataSourceId, Map<String, List<String>> searchTermFieldNameMap,
+			long mappingDataSourceId, Map<String, List<String>> searchTermFieldNameMap,
 			JSONObject jsonObject)
 		throws Exception {
 
@@ -234,13 +234,13 @@ public class UserProfileUtil {
 				}
 
 				updateDataSourceEntry(
-					dataSourceId, tableName, id, searchTerms, entityJSONObject);
+					mappingDataSourceId, tableName, id, searchTerms, entityJSONObject);
 			}
 		}
 	}
 
 	public static void updateDataSourceEntry(
-			long dataSourceId, String tableName, String id,
+			long mappingDataSourceId, String tableName, String id,
 			List<String> searchTerms, JSONObject jsonObject)
 		throws Exception {
 
@@ -252,7 +252,7 @@ public class UserProfileUtil {
 
 		VersionedDataSourceEntry versionedDataSourceEntry =
 			getVersionedDataSourceEntry(
-				dataSourceId, tableName, id, searchTerms, documentType);
+				mappingDataSourceId, tableName, id, searchTerms, documentType);
 
 		long scvUserProfileId = 0;
 
@@ -284,7 +284,7 @@ public class UserProfileUtil {
 		DataSourceEntry versioningDataSourceEntry =
 			versionedDataSourceEntry.getVersioningDataSourceEntry();
 
-		versioningDataSourceEntry.addProperty("dataSourceId", dataSourceId);
+		versioningDataSourceEntry.addProperty("mappingDataSourceId", mappingDataSourceId);
 
 		if (documentType == UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE) {
 			versioningDataSourceEntry.addProperty(
@@ -309,14 +309,14 @@ public class UserProfileUtil {
 	}
 
 	protected static JSONArray getAssociatedJSONArray(
-			String dataSourceId, String tableName, JSONArray idFieldsJSONArray)
+			String mappingDataSourceId, String tableName, JSONArray idFieldsJSONArray)
 		throws Exception {
 
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
 		JSONObject searchJSONObject = JSONFactoryUtil.createJSONObject();
 
-		searchJSONObject.put("dataSourceId", dataSourceId);
+		searchJSONObject.put("mappingDataSourceId", mappingDataSourceId);
 		searchJSONObject.put("tableName", tableName);
 
 		for (int i = 0; i < idFieldsJSONArray.length(); i++) {
@@ -394,7 +394,7 @@ public class UserProfileUtil {
 	}
 
 	protected static VersionedDataSourceEntry getVersionedDataSourceEntry(
-			long dataSourceId, String tableName, String id,
+			long mappingDataSourceId, String tableName, String id,
 			List<String> searchTerms, String documentType)
 		throws Exception {
 
@@ -402,7 +402,7 @@ public class UserProfileUtil {
 
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
-		jsonObject.put("dataSourceId", dataSourceId);
+		jsonObject.put("mappingDataSourceId", mappingDataSourceId);
 		jsonObject.put("id", id);
 		jsonObject.put("tableName", StringUtil.lowerCase(tableName));
 

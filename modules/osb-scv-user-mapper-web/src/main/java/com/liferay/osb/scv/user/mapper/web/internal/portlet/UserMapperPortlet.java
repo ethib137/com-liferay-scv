@@ -61,19 +61,18 @@ public class UserMapperPortlet extends MVCPortlet {
 		ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		long dataSourceId = ParamUtil.getLong(
-			actionRequest, "dataSourceId");
+		long mappingDataSourceId = ParamUtil.getLong(
+			actionRequest, "mappingDataSourceId");
 		long fieldSetId = ParamUtil.getLong(actionRequest, "fieldSetId");
 		String tableName = ParamUtil.getString(actionRequest, "tableName");
 		String sourceField = ParamUtil.getString(actionRequest, "sourceField");
-		String fieldType = ParamUtil.getString(actionRequest, "fieldType");
 		String destinationField = ParamUtil.getString(
 			actionRequest, "destinationField");
 		int frequency = ParamUtil.getInteger(actionRequest, "frequency");
 
 		_userMappingRuleService.addUserMappingRule(
-			dataSourceId, fieldSetId, tableName, sourceField, destinationField,
-			fieldType, frequency);
+			mappingDataSourceId, fieldSetId, tableName, sourceField,
+			destinationField, frequency, false);
 	}
 
 	public void deleteUserMappingRule(

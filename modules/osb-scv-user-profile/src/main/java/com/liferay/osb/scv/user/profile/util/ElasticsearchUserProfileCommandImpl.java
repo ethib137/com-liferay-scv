@@ -18,6 +18,7 @@ import com.liferay.osb.scv.user.profile.model.DataSourceEntry;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.IOException;
@@ -362,7 +363,7 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 		for (int i = 0; i < buckets.size(); i++) {
 			Terms.Bucket bucket = buckets.get(i);
 
-			searchResults.add((Long)bucket.getKey());
+			searchResults.add(GetterUtil.getLong(bucket.getKey()));
 		}
 
 		return searchResults;

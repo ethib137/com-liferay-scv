@@ -42,13 +42,13 @@ public class UserMappingRuleServiceUtil {
 	 * Never modify this class directly. Add custom service methods to {@link com.liferay.osb.scv.user.mapper.service.impl.UserMappingRuleServiceImpl} and rerun ServiceBuilder to regenerate this class.
 	 */
 	public static com.liferay.osb.scv.user.mapper.model.UserMappingRule addUserMappingRule(
-		long dataSourceId, long fieldSetId, java.lang.String modelName,
+		long mappingDataSourceId, long fieldSetId, java.lang.String modelName,
 		java.lang.String sourceField, java.lang.String destinationField,
-		java.lang.String fieldType, int frequency)
+		int frequency, boolean required)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
-				   .addUserMappingRule(dataSourceId, fieldSetId, modelName,
-			sourceField, destinationField, fieldType, frequency);
+				   .addUserMappingRule(mappingDataSourceId, fieldSetId,
+			modelName, sourceField, destinationField, frequency, required);
 	}
 
 	public static com.liferay.osb.scv.user.mapper.model.UserMappingRule deleteUserMappingRule(

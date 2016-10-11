@@ -3,6 +3,39 @@
 
 <service-builder auto-namespace-tables="true" package-path="com.liferay.osb.scv.user.mapper">
 	<namespace>OSB_SCV</namespace>
+	<entity local-service="true" name="MappingDataSource" remote-service="true">
+
+		<!-- PK fields -->
+
+		<column name="mappingDataSourceId" primary="true" type="long" />
+
+		<!-- Audit fields -->
+
+		<column name="companyId" type="long" />
+		<column name="userId" type="long" />
+		<column name="userName" type="String" />
+		<column name="createDate" type="Date" />
+		<column name="modifiedDate" type="Date" />
+
+		<!-- Other fields -->
+
+		<column name="name" type="String" />
+		<column name="url" type="String" />
+		<column name="login" type="String" />
+		<column name="password" type="String" />
+		<column name="type" type="long" />
+		<column name="availableFields" type="String" />
+
+		<!-- Finder methods -->
+
+		<finder name="CompanyId" return-type="Collection">
+			<finder-column name="companyId" />
+		</finder>
+
+		<!-- References -->
+
+		<reference entity="UserMappingRule" package-path="com.liferay.osb.scv.user.mapper" />
+	</entity>
 	<entity local-service="true" name="UserMappingRule" remote-service="true">
 
 		<!-- PK fields -->
@@ -19,13 +52,14 @@
 
 		<!-- Other fields -->
 
-		<column name="dataSourceId" type="long" />
+		<column name="mappingDataSourceId" type="long" />
 		<column name="fieldSetId" type="long" />
 		<column name="modelName" type="String" />
 		<column name="sourceField" type="String" />
 		<column name="destinationField" type="String" />
 		<column name="fieldType" type="String" />
 		<column name="frequency" type="int" />
+		<column name="required" type="boolean" />
 
 		<!-- Finder methods -->
 
@@ -33,9 +67,17 @@
 			<finder-column name="companyId" />
 		</finder>
 
+		<finder name="MappingDataSourceId" return-type="Collection">
+			<finder-column name="mappingDataSourceId" />
+		</finder>
+
 		<finder name="D_F" return-type="Collection">
-			<finder-column name="dataSourceId" />
+			<finder-column name="mappingDataSourceId" />
 			<finder-column name="frequency" />
 		</finder>
+
+		<!-- References -->
+
+		<reference entity="MappingDataSource" package-path="com.liferay.osb.scv.user.mapper" />
 	</entity>
 </service-builder>

@@ -16,7 +16,6 @@ package com.liferay.osb.scv.user.mapper.internal.event;
 
 import com.liferay.portal.kernel.messaging.Message;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,8 +23,8 @@ import java.util.Map;
  */
 public interface Event extends Runnable {
 
-	public void run(Map<String, Object> parameters);
-
 	public void handleResponse(Message message) throws Exception;
+
+	public void run(Map<String, Object> parameters);
 
 }

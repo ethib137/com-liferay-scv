@@ -37,8 +37,8 @@ public class SourceUserMapperMessageListener extends BaseMessageListener {
 		try {
 			Map<String, Object> parameters = message.getValues();
 
-			long dataSourceId = GetterUtil.getLong(
-				parameters.get("dataSourceId"));
+			long mappingDataSourceId = GetterUtil.getLong(
+				parameters.get("mappingDataSourceId"));
 			String method = String.valueOf(parameters.get("method"));
 
 			Map<String, List<String>> fields = (Map)parameters.get("fields");
@@ -61,7 +61,7 @@ public class SourceUserMapperMessageListener extends BaseMessageListener {
 
 			sendResponse(
 				message.getResponseDestinationName(), message.getResponseId(),
-				dataSourceId, method, fieldsString);
+				mappingDataSourceId, method, fieldsString);
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -69,7 +69,7 @@ public class SourceUserMapperMessageListener extends BaseMessageListener {
 	}
 
 	protected void sendResponse(
-			String destinationName, String responseId, long dataSourceId,
+			String destinationName, String responseId, long mappingDataSourceId,
 			String method, String fields)
 		throws Exception {
 
@@ -78,7 +78,7 @@ public class SourceUserMapperMessageListener extends BaseMessageListener {
 		parameters.put("fields", fields);
 
 		String response = JSONWebServiceClientUtil.doGet(
-			dataSourceId, method, parameters);
+			mappingDataSourceId, method, parameters);
 
 		Message message = new Message();
 

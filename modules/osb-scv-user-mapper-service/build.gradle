@@ -12,6 +12,6 @@ dependencies {
 	compile group: "com.liferay.portal", name: "com.liferay.portal.kernel", version: "2.6.0"
 	compile group: "org.osgi", name: "org.osgi.core", version: "5.0.0"
 	compile group: "org.osgi", name: "org.osgi.service.component.annotations", version: "1.3.0"
-	compile project(":modules:osb-scv-user-profile")
 	compile project(":modules:osb-scv-user-mapper-api")
+	compile project(":modules:osb-scv-user-profile")
 }

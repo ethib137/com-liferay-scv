@@ -32,6 +32,8 @@ public class FrequencyUtil {
 
 	public static final int SECOND = 3;
 
+	public static final int INSTANT = 4;
+
 	public static List<Frequency> getFrequencies() {
 		List<Frequency> frequencies = new ArrayList<>();
 
@@ -68,7 +70,8 @@ public class FrequencyUtil {
 		{FrequencyUtil.DAILY, "daily", 60 * 60 * 24},
 		{FrequencyUtil.HOURLY, "hourly", 60 * 60},
 		{FrequencyUtil.ONCE, "once", 0},
-		{FrequencyUtil.SECOND, "every-five-seconds", 5}
+		{FrequencyUtil.SECOND, "every-five-seconds", 5},
+		{FrequencyUtil.INSTANT, "instant", -1}
 	};
 
 }

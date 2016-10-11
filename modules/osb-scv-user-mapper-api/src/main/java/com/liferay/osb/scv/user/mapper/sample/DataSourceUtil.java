@@ -14,6 +14,7 @@
 
 package com.liferay.osb.scv.user.mapper.sample;
 
+import com.liferay.osb.scv.user.mapper.service.MappingDataSourceLocalServiceUtil;
 import com.liferay.petra.json.web.service.client.JSONWebServiceClientImpl;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -44,16 +45,10 @@ public class DataSourceUtil {
 		_availableFields.clear();
 	}
 
-	public static DataSource getDataSource(Long dataSourceId) {
-		List<DataSource> dataSources = getDataSources();
-
-		return dataSources.get(dataSourceId.intValue());
-	}
-
 	public static void setAvailableFields(
-		long dataSourceId, Map<String, Map<String, String>> availableFields) {
+		long mappingDataSourceId, Map<String, Map<String, String>> availableFields) {
 
-		_availableFields.put(dataSourceId, availableFields);
+		_availableFields.put(mappingDataSourceId, availableFields);
 	}
 
 	public static List<DataSource> getDataSources() {
@@ -93,7 +88,7 @@ public class DataSourceUtil {
 					Map<String, Map<String, String>>
 						availableFields =
 							_availableFields.get(
-								jsonObject.getLong("dataSourceId"));
+								jsonObject.getLong("mappingDataSourceId"));
 
 					if (availableFields == null) {
 						return Collections.emptyMap();
@@ -114,7 +109,7 @@ public class DataSourceUtil {
 				}
 
 				public long getDataSourceId() {
-					return jsonObject.getLong("dataSourceId");
+					return jsonObject.getLong("mappingDataSourceId");
 				}
 
 				public String getName() {

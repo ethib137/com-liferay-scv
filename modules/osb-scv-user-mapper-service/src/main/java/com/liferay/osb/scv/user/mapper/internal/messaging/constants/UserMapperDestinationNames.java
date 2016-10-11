@@ -21,7 +21,6 @@ public class UserMapperDestinationNames {
 
 	public static final String SCV_SOURCE = "liferay/scv_source";
 
-	public static final String SCV_USER_MAPPER =
-		"liferay/scv_user_mapper";
+	public static final String SCV_USER_MAPPER = "liferay/scv_user_mapper";
 
 }

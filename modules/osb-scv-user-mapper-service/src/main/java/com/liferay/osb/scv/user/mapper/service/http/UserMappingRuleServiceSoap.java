@@ -66,13 +66,13 @@ import java.rmi.RemoteException;
 @ProviderType
 public class UserMappingRuleServiceSoap {
 	public static com.liferay.osb.scv.user.mapper.model.UserMappingRuleSoap addUserMappingRule(
-		long dataSourceId, long fieldSetId, java.lang.String modelName,
+		long mappingDataSourceId, long fieldSetId, java.lang.String modelName,
 		java.lang.String sourceField, java.lang.String destinationField,
-		java.lang.String fieldType, int frequency) throws RemoteException {
+		int frequency, boolean required) throws RemoteException {
 		try {
-			com.liferay.osb.scv.user.mapper.model.UserMappingRule returnValue = UserMappingRuleServiceUtil.addUserMappingRule(dataSourceId,
+			com.liferay.osb.scv.user.mapper.model.UserMappingRule returnValue = UserMappingRuleServiceUtil.addUserMappingRule(mappingDataSourceId,
 					fieldSetId, modelName, sourceField, destinationField,
-					fieldType, frequency);
+					frequency, required);
 
 			return com.liferay.osb.scv.user.mapper.model.UserMappingRuleSoap.toSoapModel(returnValue);
 		}

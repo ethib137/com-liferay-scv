@@ -40,13 +40,14 @@ public class UserMappingRuleSoap implements Serializable {
 		soapModel.setUserName(model.getUserName());
 		soapModel.setCreateDate(model.getCreateDate());
 		soapModel.setModifiedDate(model.getModifiedDate());
-		soapModel.setDataSourceId(model.getDataSourceId());
+		soapModel.setMappingDataSourceId(model.getMappingDataSourceId());
 		soapModel.setFieldSetId(model.getFieldSetId());
 		soapModel.setModelName(model.getModelName());
 		soapModel.setSourceField(model.getSourceField());
 		soapModel.setDestinationField(model.getDestinationField());
 		soapModel.setFieldType(model.getFieldType());
 		soapModel.setFrequency(model.getFrequency());
+		soapModel.setRequired(model.getRequired());
 
 		return soapModel;
 	}
@@ -149,12 +150,12 @@ public class UserMappingRuleSoap implements Serializable {
 		_modifiedDate = modifiedDate;
 	}
 
-	public long getDataSourceId() {
-		return _dataSourceId;
+	public long getMappingDataSourceId() {
+		return _mappingDataSourceId;
 	}
 
-	public void setDataSourceId(long dataSourceId) {
-		_dataSourceId = dataSourceId;
+	public void setMappingDataSourceId(long mappingDataSourceId) {
+		_mappingDataSourceId = mappingDataSourceId;
 	}
 
 	public long getFieldSetId() {
@@ -205,17 +206,30 @@ public class UserMappingRuleSoap implements Serializable {
 		_frequency = frequency;
 	}
 
+	public boolean getRequired() {
+		return _required;
+	}
+
+	public boolean isRequired() {
+		return _required;
+	}
+
+	public void setRequired(boolean required) {
+		_required = required;
+	}
+
 	private long _userMappingRuleId;
 	private long _companyId;
 	private long _userId;
 	private String _userName;
 	private Date _createDate;
 	private Date _modifiedDate;
-	private long _dataSourceId;
+	private long _mappingDataSourceId;
 	private long _fieldSetId;
 	private String _modelName;
 	private String _sourceField;
 	private String _destinationField;
 	private String _fieldType;
 	private int _frequency;
+	private boolean _required;
 }

@@ -71,9 +71,9 @@ public interface UserMappingRuleLocalService extends BaseLocalService,
 	public UserMappingRule addUserMappingRule(UserMappingRule userMappingRule);
 
 	public UserMappingRule addUserMappingRule(long companyId, long userId,
-		long dataSourceId, java.lang.String modelName, long fieldSetId,
+		long mappingDataSourceId, java.lang.String modelName, long fieldSetId,
 		java.lang.String sourceField, java.lang.String destinationField,
-		java.lang.String fieldType, int frequency);
+		int frequency, boolean required) throws PortalException;
 
 	/**
 	* Creates a new user mapping rule with the primary key. Does not add the user mapping rule to the database.
@@ -129,7 +129,7 @@ public interface UserMappingRuleLocalService extends BaseLocalService,
 		UserMappingRule userMappingRule);
 
 	public UserMappingRule updateUserMappingRules(long userMappingRuleId,
-		long dataSourceId, long fieldSetId, java.lang.String modelName,
+		long mappingDataSourceId, long fieldSetId, java.lang.String modelName,
 		java.lang.String sourceField, java.lang.String destinationField,
 		java.lang.String fieldType, int frequency);
 
@@ -226,7 +226,10 @@ public interface UserMappingRuleLocalService extends BaseLocalService,
 		int end);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<UserMappingRule> getUserMappingRules(long dataSourceId,
+	public List<UserMappingRule> getUserMappingRules(long mappingDataSourceId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<UserMappingRule> getUserMappingRules(long mappingDataSourceId,
 		int frequency);
 
 	/**

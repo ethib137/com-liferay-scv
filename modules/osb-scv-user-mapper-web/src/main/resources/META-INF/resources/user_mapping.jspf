@@ -49,12 +49,12 @@
 			/>
 
 			<%
-			DataSource dataSource = DataSourceUtil.getDataSource(userMappingRule.getDataSourceId());
+			MappingDataSource mappingDataSource = MappingDataSourceLocalServiceUtil.fetchMappingDataSource(userMappingRule.getMappingDataSourceId());
 			%>
 
 			<liferay-ui:search-container-column-text
 				name="data-source"
-				value="<%= dataSource.getName() %>"
+				value="<%= mappingDataSource.getName() %>"
 			/>
 
 			<%

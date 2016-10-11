@@ -19,6 +19,7 @@ import aQute.bnd.annotation.ProviderType;
 import com.liferay.osb.scv.user.mapper.model.UserMappingRule;
 import com.liferay.osb.scv.user.mapper.service.base.UserMappingRuleServiceBaseImpl;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 
@@ -32,27 +33,20 @@ public class UserMappingRuleServiceImpl extends UserMappingRuleServiceBaseImpl {
 
 	@Override
 	public UserMappingRule addUserMappingRule(
-			long dataSourceId, long fieldSetId, String modelName,
-			String sourceField, String destinationField, String fieldType,
-			int frequency)
+			long mappingDataSourceId, long fieldSetId, String modelName,
+			String sourceField, String destinationField, int frequency,
+			boolean required)
 		throws PortalException {
 
 		return userMappingRuleLocalService.addUserMappingRule(
-			CompanyThreadLocal.getCompanyId(), getUserId(), dataSourceId,
-			modelName, fieldSetId, sourceField, destinationField, fieldType,
-			frequency);
+			CompanyThreadLocal.getCompanyId(), getUserId(), mappingDataSourceId,
+			modelName, fieldSetId, sourceField, destinationField,
+			frequency, required);
 	}
 
 	@Override
 	public UserMappingRule deleteUserMappingRule(long userMappingRuleId)
 		throws PortalException {
-
-		UserMappingRule userMappingRule =
-			userMappingRulePersistence.fetchByPrimaryKey(userMappingRuleId);
-
-		if (userMappingRule.getUserId() != getUserId()) {
-			throw new PrincipalException();
-		}
 
 		return userMappingRuleLocalService.deleteUserMappingRule(
 			userMappingRuleId);

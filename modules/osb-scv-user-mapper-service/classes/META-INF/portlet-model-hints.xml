@@ -8,7 +8,7 @@
 		<field name="userName" type="String" />
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
-		<field name="dataSourceId" type="long" />
+		<field name="mappingDataSourceId" type="long" />
 		<field name="fieldSetId" type="long" />
 		<field name="modelName" type="String" />
 		<field name="sourceField" type="String" />

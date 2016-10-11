@@ -1,68 +1,10 @@
 [
 	{
-		"dataSourceId": 0,
+		"mappingDataSourceId": 0,
 		"name": "Liferay One",
 		"type": "biographical",
-		"URL": "http://cloud-10-50-0-232.lax.liferay.com/api/jsonws/SCVUser.scvuserjsonws/",
-		"userName": "test@liferay.com",
-		"password": "test",
-		"idFields":
-			{
-				"Address": [{
-					"field": "addressId",
-					"type": "long"
-				}],
-				"Contact": [{
-					"field": "contactId",
-					"type": "long"
-				}],
-				"EmailAddress": [{
-					"field": "emailAddressId",
-					"type": "long"
-				}],
-				"Group": [{
-					"field": "groupId",
-					"type": "long"
-				}],
-				"Organization": [{
-					"field": "organizationId",
-					"type": "long"
-				}],
-				"Phone": [{
-					"field": "phoneId",
-					"type": "long"
-				}],
-				"Role": [{
-					"field": "roleId",
-					"type": "long"
-				}],
-				"Team": [{
-					"field": "teamId",
-					"type": "long"
-				}],
-				"User": [{
-					"field": "userId",
-					"type": "long"
-				}],
-				"Website": [{
-					"field": "websiteId",
-					"type": "long"
-				}]
-			}
-		,
-		"requiredFields": {
-			"User": [{
-				"field": "emailAddress",
-				"type": "String"
-			}]
-		}
-	},
-	{
-		"dataSourceId": 1,
-		"name": "Liferay Two",
-		"type": "biographical",
-		"URL": "http://cloud-10-50-0-233.lax.liferay.com/api/jsonws/SCVUser.scvuserjsonws/",
-		"userName": "test@liferay.com",
+		"URL": "http://shinn.com:8080/api/jsonws/SCVUser.scvuserjsonws/",
+		"userName": "test@shinn.com",
 		"password": "test",
 		"idFields":
 			{

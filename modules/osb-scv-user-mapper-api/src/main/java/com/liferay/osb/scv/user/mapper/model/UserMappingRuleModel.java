@@ -177,18 +177,18 @@ public interface UserMappingRuleModel extends AuditedModel,
 	public void setModifiedDate(Date modifiedDate);
 
 	/**
-	 * Returns the data source ID of this user mapping rule.
+	 * Returns the mapping data source ID of this user mapping rule.
 	 *
-	 * @return the data source ID of this user mapping rule
+	 * @return the mapping data source ID of this user mapping rule
 	 */
-	public long getDataSourceId();
+	public long getMappingDataSourceId();
 
 	/**
-	 * Sets the data source ID of this user mapping rule.
+	 * Sets the mapping data source ID of this user mapping rule.
 	 *
-	 * @param dataSourceId the data source ID of this user mapping rule
+	 * @param mappingDataSourceId the mapping data source ID of this user mapping rule
 	 */
-	public void setDataSourceId(long dataSourceId);
+	public void setMappingDataSourceId(long mappingDataSourceId);
 
 	/**
 	 * Returns the field set ID of this user mapping rule.
@@ -277,6 +277,27 @@ public interface UserMappingRuleModel extends AuditedModel,
 	 * @param frequency the frequency of this user mapping rule
 	 */
 	public void setFrequency(int frequency);
+
+	/**
+	 * Returns the required of this user mapping rule.
+	 *
+	 * @return the required of this user mapping rule
+	 */
+	public boolean getRequired();
+
+	/**
+	 * Returns <code>true</code> if this user mapping rule is required.
+	 *
+	 * @return <code>true</code> if this user mapping rule is required; <code>false</code> otherwise
+	 */
+	public boolean isRequired();
+
+	/**
+	 * Sets whether this user mapping rule is required.
+	 *
+	 * @param required the required of this user mapping rule
+	 */
+	public void setRequired(boolean required);
 
 	@Override
 	public boolean isNew();

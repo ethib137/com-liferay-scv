@@ -597,6 +597,531 @@ public class UserMappingRulePersistenceImpl extends BasePersistenceImpl<UserMapp
 	}
 
 	private static final String _FINDER_COLUMN_COMPANYID_COMPANYID_2 = "userMappingRule.companyId = ?";
+	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_MAPPINGDATASOURCEID =
+		new FinderPath(UserMappingRuleModelImpl.ENTITY_CACHE_ENABLED,
+			UserMappingRuleModelImpl.FINDER_CACHE_ENABLED,
+			UserMappingRuleImpl.class, FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
+			"findByMappingDataSourceId",
+			new String[] {
+				Long.class.getName(),
+				
+			Integer.class.getName(), Integer.class.getName(),
+				OrderByComparator.class.getName()
+			});
+	public static final FinderPath FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_MAPPINGDATASOURCEID =
+		new FinderPath(UserMappingRuleModelImpl.ENTITY_CACHE_ENABLED,
+			UserMappingRuleModelImpl.FINDER_CACHE_ENABLED,
+			UserMappingRuleImpl.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+			"findByMappingDataSourceId", new String[] { Long.class.getName() },
+			UserMappingRuleModelImpl.MAPPINGDATASOURCEID_COLUMN_BITMASK);
+	public static final FinderPath FINDER_PATH_COUNT_BY_MAPPINGDATASOURCEID = new FinderPath(UserMappingRuleModelImpl.ENTITY_CACHE_ENABLED,
+			UserMappingRuleModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+			"countByMappingDataSourceId", new String[] { Long.class.getName() });
+
+	/**
+	 * Returns all the user mapping rules where mappingDataSourceId = &#63;.
+	 *
+	 * @param mappingDataSourceId the mapping data source ID
+	 * @return the matching user mapping rules
+	 */
+	@Override
+	public List<UserMappingRule> findByMappingDataSourceId(
+		long mappingDataSourceId) {
+		return findByMappingDataSourceId(mappingDataSourceId,
+			QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the user mapping rules where mappingDataSourceId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link UserMappingRuleModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param mappingDataSourceId the mapping data source ID
+	 * @param start the lower bound of the range of user mapping rules
+	 * @param end the upper bound of the range of user mapping rules (not inclusive)
+	 * @return the range of matching user mapping rules
+	 */
+	@Override
+	public List<UserMappingRule> findByMappingDataSourceId(
+		long mappingDataSourceId, int start, int end) {
+		return findByMappingDataSourceId(mappingDataSourceId, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the user mapping rules where mappingDataSourceId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link UserMappingRuleModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param mappingDataSourceId the mapping data source ID
+	 * @param start the lower bound of the range of user mapping rules
+	 * @param end the upper bound of the range of user mapping rules (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching user mapping rules
+	 */
+	@Override
+	public List<UserMappingRule> findByMappingDataSourceId(
+		long mappingDataSourceId, int start, int end,
+		OrderByComparator<UserMappingRule> orderByComparator) {
+		return findByMappingDataSourceId(mappingDataSourceId, start, end,
+			orderByComparator, true);
+	}
+
+	/**
+	 * Returns an ordered range of all the user mapping rules where mappingDataSourceId = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link UserMappingRuleModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param mappingDataSourceId the mapping data source ID
+	 * @param start the lower bound of the range of user mapping rules
+	 * @param end the upper bound of the range of user mapping rules (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param retrieveFromCache whether to retrieve from the finder cache
+	 * @return the ordered range of matching user mapping rules
+	 */
+	@Override
+	public List<UserMappingRule> findByMappingDataSourceId(
+		long mappingDataSourceId, int start, int end,
+		OrderByComparator<UserMappingRule> orderByComparator,
+		boolean retrieveFromCache) {
+		boolean pagination = true;
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+				(orderByComparator == null)) {
+			pagination = false;
+			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_MAPPINGDATASOURCEID;
+			finderArgs = new Object[] { mappingDataSourceId };
+		}
+		else {
+			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_MAPPINGDATASOURCEID;
+			finderArgs = new Object[] {
+					mappingDataSourceId,
+					
+					start, end, orderByComparator
+				};
+		}
+
+		List<UserMappingRule> list = null;
+
+		if (retrieveFromCache) {
+			list = (List<UserMappingRule>)finderCache.getResult(finderPath,
+					finderArgs, this);
+
+			if ((list != null) && !list.isEmpty()) {
+				for (UserMappingRule userMappingRule : list) {
+					if ((mappingDataSourceId != userMappingRule.getMappingDataSourceId())) {
+						list = null;
+
+						break;
+					}
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler query = null;
+
+			if (orderByComparator != null) {
+				query = new StringBundler(3 +
+						(orderByComparator.getOrderByFields().length * 2));
+			}
+			else {
+				query = new StringBundler(3);
+			}
+
+			query.append(_SQL_SELECT_USERMAPPINGRULE_WHERE);
+
+			query.append(_FINDER_COLUMN_MAPPINGDATASOURCEID_MAPPINGDATASOURCEID_2);
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator);
+			}
+			else
+			 if (pagination) {
+				query.append(UserMappingRuleModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(mappingDataSourceId);
+
+				if (!pagination) {
+					list = (List<UserMappingRule>)QueryUtil.list(q,
+							getDialect(), start, end, false);
+
+					Collections.sort(list);
+
+					list = Collections.unmodifiableList(list);
+				}
+				else {
+					list = (List<UserMappingRule>)QueryUtil.list(q,
+							getDialect(), start, end);
+				}
+
+				cacheResult(list);
+
+				finderCache.putResult(finderPath, finderArgs, list);
+			}
+			catch (Exception e) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first user mapping rule in the ordered set where mappingDataSourceId = &#63;.
+	 *
+	 * @param mappingDataSourceId the mapping data source ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching user mapping rule
+	 * @throws NoSuchUserMappingRuleException if a matching user mapping rule could not be found
+	 */
+	@Override
+	public UserMappingRule findByMappingDataSourceId_First(
+		long mappingDataSourceId,
+		OrderByComparator<UserMappingRule> orderByComparator)
+		throws NoSuchUserMappingRuleException {
+		UserMappingRule userMappingRule = fetchByMappingDataSourceId_First(mappingDataSourceId,
+				orderByComparator);
+
+		if (userMappingRule != null) {
+			return userMappingRule;
+		}
+
+		StringBundler msg = new StringBundler(4);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("mappingDataSourceId=");
+		msg.append(mappingDataSourceId);
+
+		msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+		throw new NoSuchUserMappingRuleException(msg.toString());
+	}
+
+	/**
+	 * Returns the first user mapping rule in the ordered set where mappingDataSourceId = &#63;.
+	 *
+	 * @param mappingDataSourceId the mapping data source ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching user mapping rule, or <code>null</code> if a matching user mapping rule could not be found
+	 */
+	@Override
+	public UserMappingRule fetchByMappingDataSourceId_First(
+		long mappingDataSourceId,
+		OrderByComparator<UserMappingRule> orderByComparator) {
+		List<UserMappingRule> list = findByMappingDataSourceId(mappingDataSourceId,
+				0, 1, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last user mapping rule in the ordered set where mappingDataSourceId = &#63;.
+	 *
+	 * @param mappingDataSourceId the mapping data source ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching user mapping rule
+	 * @throws NoSuchUserMappingRuleException if a matching user mapping rule could not be found
+	 */
+	@Override
+	public UserMappingRule findByMappingDataSourceId_Last(
+		long mappingDataSourceId,
+		OrderByComparator<UserMappingRule> orderByComparator)
+		throws NoSuchUserMappingRuleException {
+		UserMappingRule userMappingRule = fetchByMappingDataSourceId_Last(mappingDataSourceId,
+				orderByComparator);
+
+		if (userMappingRule != null) {
+			return userMappingRule;
+		}
+
+		StringBundler msg = new StringBundler(4);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("mappingDataSourceId=");
+		msg.append(mappingDataSourceId);
+
+		msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+		throw new NoSuchUserMappingRuleException(msg.toString());
+	}
+
+	/**
+	 * Returns the last user mapping rule in the ordered set where mappingDataSourceId = &#63;.
+	 *
+	 * @param mappingDataSourceId the mapping data source ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching user mapping rule, or <code>null</code> if a matching user mapping rule could not be found
+	 */
+	@Override
+	public UserMappingRule fetchByMappingDataSourceId_Last(
+		long mappingDataSourceId,
+		OrderByComparator<UserMappingRule> orderByComparator) {
+		int count = countByMappingDataSourceId(mappingDataSourceId);
+
+		if (count == 0) {
+			return null;
+		}
+
+		List<UserMappingRule> list = findByMappingDataSourceId(mappingDataSourceId,
+				count - 1, count, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the user mapping rules before and after the current user mapping rule in the ordered set where mappingDataSourceId = &#63;.
+	 *
+	 * @param userMappingRuleId the primary key of the current user mapping rule
+	 * @param mappingDataSourceId the mapping data source ID
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next user mapping rule
+	 * @throws NoSuchUserMappingRuleException if a user mapping rule with the primary key could not be found
+	 */
+	@Override
+	public UserMappingRule[] findByMappingDataSourceId_PrevAndNext(
+		long userMappingRuleId, long mappingDataSourceId,
+		OrderByComparator<UserMappingRule> orderByComparator)
+		throws NoSuchUserMappingRuleException {
+		UserMappingRule userMappingRule = findByPrimaryKey(userMappingRuleId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			UserMappingRule[] array = new UserMappingRuleImpl[3];
+
+			array[0] = getByMappingDataSourceId_PrevAndNext(session,
+					userMappingRule, mappingDataSourceId, orderByComparator,
+					true);
+
+			array[1] = userMappingRule;
+
+			array[2] = getByMappingDataSourceId_PrevAndNext(session,
+					userMappingRule, mappingDataSourceId, orderByComparator,
+					false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected UserMappingRule getByMappingDataSourceId_PrevAndNext(
+		Session session, UserMappingRule userMappingRule,
+		long mappingDataSourceId,
+		OrderByComparator<UserMappingRule> orderByComparator, boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(4 +
+					(orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			query = new StringBundler(3);
+		}
+
+		query.append(_SQL_SELECT_USERMAPPINGRULE_WHERE);
+
+		query.append(_FINDER_COLUMN_MAPPINGDATASOURCEID_MAPPINGDATASOURCEID_2);
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			query.append(UserMappingRuleModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = query.toString();
+
+		Query q = session.createQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(mappingDataSourceId);
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByConditionValues(userMappingRule);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<UserMappingRule> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Removes all the user mapping rules where mappingDataSourceId = &#63; from the database.
+	 *
+	 * @param mappingDataSourceId the mapping data source ID
+	 */
+	@Override
+	public void removeByMappingDataSourceId(long mappingDataSourceId) {
+		for (UserMappingRule userMappingRule : findByMappingDataSourceId(
+				mappingDataSourceId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
+			remove(userMappingRule);
+		}
+	}
+
+	/**
+	 * Returns the number of user mapping rules where mappingDataSourceId = &#63;.
+	 *
+	 * @param mappingDataSourceId the mapping data source ID
+	 * @return the number of matching user mapping rules
+	 */
+	@Override
+	public int countByMappingDataSourceId(long mappingDataSourceId) {
+		FinderPath finderPath = FINDER_PATH_COUNT_BY_MAPPINGDATASOURCEID;
+
+		Object[] finderArgs = new Object[] { mappingDataSourceId };
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(2);
+
+			query.append(_SQL_COUNT_USERMAPPINGRULE_WHERE);
+
+			query.append(_FINDER_COLUMN_MAPPINGDATASOURCEID_MAPPINGDATASOURCEID_2);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(mappingDataSourceId);
+
+				count = (Long)q.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception e) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	private static final String _FINDER_COLUMN_MAPPINGDATASOURCEID_MAPPINGDATASOURCEID_2 =
+		"userMappingRule.mappingDataSourceId = ?";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_D_F = new FinderPath(UserMappingRuleModelImpl.ENTITY_CACHE_ENABLED,
 			UserMappingRuleModelImpl.FINDER_CACHE_ENABLED,
 			UserMappingRuleImpl.class, FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
@@ -612,7 +1137,7 @@ public class UserMappingRulePersistenceImpl extends BasePersistenceImpl<UserMapp
 			UserMappingRuleImpl.class,
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByD_F",
 			new String[] { Long.class.getName(), Integer.class.getName() },
-			UserMappingRuleModelImpl.DATASOURCEID_COLUMN_BITMASK |
+			UserMappingRuleModelImpl.MAPPINGDATASOURCEID_COLUMN_BITMASK |
 			UserMappingRuleModelImpl.FREQUENCY_COLUMN_BITMASK);
 	public static final FinderPath FINDER_PATH_COUNT_BY_D_F = new FinderPath(UserMappingRuleModelImpl.ENTITY_CACHE_ENABLED,
 			UserMappingRuleModelImpl.FINDER_CACHE_ENABLED, Long.class,
@@ -620,45 +1145,46 @@ public class UserMappingRulePersistenceImpl extends BasePersistenceImpl<UserMapp
 			new String[] { Long.class.getName(), Integer.class.getName() });
 
 	/**
-	 * Returns all the user mapping rules where dataSourceId = &#63; and frequency = &#63;.
+	 * Returns all the user mapping rules where mappingDataSourceId = &#63; and frequency = &#63;.
 	 *
-	 * @param dataSourceId the data source ID
+	 * @param mappingDataSourceId the mapping data source ID
 	 * @param frequency the frequency
 	 * @return the matching user mapping rules
 	 */
 	@Override
-	public List<UserMappingRule> findByD_F(long dataSourceId, int frequency) {
-		return findByD_F(dataSourceId, frequency, QueryUtil.ALL_POS,
+	public List<UserMappingRule> findByD_F(long mappingDataSourceId,
+		int frequency) {
+		return findByD_F(mappingDataSourceId, frequency, QueryUtil.ALL_POS,
 			QueryUtil.ALL_POS, null);
 	}
 
 	/**
-	 * Returns a range of all the user mapping rules where dataSourceId = &#63; and frequency = &#63;.
+	 * Returns a range of all the user mapping rules where mappingDataSourceId = &#63; and frequency = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link UserMappingRuleModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
-	 * @param dataSourceId the data source ID
+	 * @param mappingDataSourceId the mapping data source ID
 	 * @param frequency the frequency
 	 * @param start the lower bound of the range of user mapping rules
 	 * @param end the upper bound of the range of user mapping rules (not inclusive)
 	 * @return the range of matching user mapping rules
 	 */
 	@Override
-	public List<UserMappingRule> findByD_F(long dataSourceId, int frequency,
-		int start, int end) {
-		return findByD_F(dataSourceId, frequency, start, end, null);
+	public List<UserMappingRule> findByD_F(long mappingDataSourceId,
+		int frequency, int start, int end) {
+		return findByD_F(mappingDataSourceId, frequency, start, end, null);
 	}
 
 	/**
-	 * Returns an ordered range of all the user mapping rules where dataSourceId = &#63; and frequency = &#63;.
+	 * Returns an ordered range of all the user mapping rules where mappingDataSourceId = &#63; and frequency = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link UserMappingRuleModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
-	 * @param dataSourceId the data source ID
+	 * @param mappingDataSourceId the mapping data source ID
 	 * @param frequency the frequency
 	 * @param start the lower bound of the range of user mapping rules
 	 * @param end the upper bound of the range of user mapping rules (not inclusive)
@@ -666,20 +1192,21 @@ public class UserMappingRulePersistenceImpl extends BasePersistenceImpl<UserMapp
 	 * @return the ordered range of matching user mapping rules
 	 */
 	@Override
-	public List<UserMappingRule> findByD_F(long dataSourceId, int frequency,
-		int start, int end, OrderByComparator<UserMappingRule> orderByComparator) {
-		return findByD_F(dataSourceId, frequency, start, end,
+	public List<UserMappingRule> findByD_F(long mappingDataSourceId,
+		int frequency, int start, int end,
+		OrderByComparator<UserMappingRule> orderByComparator) {
+		return findByD_F(mappingDataSourceId, frequency, start, end,
 			orderByComparator, true);
 	}
 
 	/**
-	 * Returns an ordered range of all the user mapping rules where dataSourceId = &#63; and frequency = &#63;.
+	 * Returns an ordered range of all the user mapping rules where mappingDataSourceId = &#63; and frequency = &#63;.
 	 *
 	 * <p>
 	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link UserMappingRuleModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
 	 * </p>
 	 *
-	 * @param dataSourceId the data source ID
+	 * @param mappingDataSourceId the mapping data source ID
 	 * @param frequency the frequency
 	 * @param start the lower bound of the range of user mapping rules
 	 * @param end the upper bound of the range of user mapping rules (not inclusive)
@@ -688,8 +1215,8 @@ public class UserMappingRulePersistenceImpl extends BasePersistenceImpl<UserMapp
 	 * @return the ordered range of matching user mapping rules
 	 */
 	@Override
-	public List<UserMappingRule> findByD_F(long dataSourceId, int frequency,
-		int start, int end,
+	public List<UserMappingRule> findByD_F(long mappingDataSourceId,
+		int frequency, int start, int end,
 		OrderByComparator<UserMappingRule> orderByComparator,
 		boolean retrieveFromCache) {
 		boolean pagination = true;
@@ -700,12 +1227,12 @@ public class UserMappingRulePersistenceImpl extends BasePersistenceImpl<UserMapp
 				(orderByComparator == null)) {
 			pagination = false;
 			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_D_F;
-			finderArgs = new Object[] { dataSourceId, frequency };
+			finderArgs = new Object[] { mappingDataSourceId, frequency };
 		}
 		else {
 			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_D_F;
 			finderArgs = new Object[] {
-					dataSourceId, frequency,
+					mappingDataSourceId, frequency,
 					
 					start, end, orderByComparator
 				};
@@ -719,7 +1246,7 @@ public class UserMappingRulePersistenceImpl extends BasePersistenceImpl<UserMapp
 
 			if ((list != null) && !list.isEmpty()) {
 				for (UserMappingRule userMappingRule : list) {
-					if ((dataSourceId != userMappingRule.getDataSourceId()) ||
+					if ((mappingDataSourceId != userMappingRule.getMappingDataSourceId()) ||
 							(frequency != userMappingRule.getFrequency())) {
 						list = null;
 
@@ -742,7 +1269,7 @@ public class UserMappingRulePersistenceImpl extends BasePersistenceImpl<UserMapp
 
 			query.append(_SQL_SELECT_USERMAPPINGRULE_WHERE);
 
-			query.append(_FINDER_COLUMN_D_F_DATASOURCEID_2);
+			query.append(_FINDER_COLUMN_D_F_MAPPINGDATASOURCEID_2);
 
 			query.append(_FINDER_COLUMN_D_F_FREQUENCY_2);
 
@@ -766,7 +1293,7 @@ public class UserMappingRulePersistenceImpl extends BasePersistenceImpl<UserMapp
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				qPos.add(dataSourceId);
+				qPos.add(mappingDataSourceId);
 
 				qPos.add(frequency);
 
@@ -801,19 +1328,19 @@ public class UserMappingRulePersistenceImpl extends BasePersistenceImpl<UserMapp
 	}
 
 	/**
-	 * Returns the first user mapping rule in the ordered set where dataSourceId = &#63; and frequency = &#63;.
+	 * Returns the first user mapping rule in the ordered set where mappingDataSourceId = &#63; and frequency = &#63;.
 	 *
-	 * @param dataSourceId the data source ID
+	 * @param mappingDataSourceId the mapping data source ID
 	 * @param frequency the frequency
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching user mapping rule
 	 * @throws NoSuchUserMappingRuleException if a matching user mapping rule could not be found
 	 */
 	@Override
-	public UserMappingRule findByD_F_First(long dataSourceId, int frequency,
-		OrderByComparator<UserMappingRule> orderByComparator)
+	public UserMappingRule findByD_F_First(long mappingDataSourceId,
+		int frequency, OrderByComparator<UserMappingRule> orderByComparator)
 		throws NoSuchUserMappingRuleException {
-		UserMappingRule userMappingRule = fetchByD_F_First(dataSourceId,
+		UserMappingRule userMappingRule = fetchByD_F_First(mappingDataSourceId,
 				frequency, orderByComparator);
 
 		if (userMappingRule != null) {
@@ -824,8 +1351,8 @@ public class UserMappingRulePersistenceImpl extends BasePersistenceImpl<UserMapp
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("dataSourceId=");
-		msg.append(dataSourceId);
+		msg.append("mappingDataSourceId=");
+		msg.append(mappingDataSourceId);
 
 		msg.append(", frequency=");
 		msg.append(frequency);
@@ -836,18 +1363,18 @@ public class UserMappingRulePersistenceImpl extends BasePersistenceImpl<UserMapp
 	}
 
 	/**
-	 * Returns the first user mapping rule in the ordered set where dataSourceId = &#63; and frequency = &#63;.
+	 * Returns the first user mapping rule in the ordered set where mappingDataSourceId = &#63; and frequency = &#63;.
 	 *
-	 * @param dataSourceId the data source ID
+	 * @param mappingDataSourceId the mapping data source ID
 	 * @param frequency the frequency
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the first matching user mapping rule, or <code>null</code> if a matching user mapping rule could not be found
 	 */
 	@Override
-	public UserMappingRule fetchByD_F_First(long dataSourceId, int frequency,
-		OrderByComparator<UserMappingRule> orderByComparator) {
-		List<UserMappingRule> list = findByD_F(dataSourceId, frequency, 0, 1,
-				orderByComparator);
+	public UserMappingRule fetchByD_F_First(long mappingDataSourceId,
+		int frequency, OrderByComparator<UserMappingRule> orderByComparator) {
+		List<UserMappingRule> list = findByD_F(mappingDataSourceId, frequency,
+				0, 1, orderByComparator);
 
 		if (!list.isEmpty()) {
 			return list.get(0);
@@ -857,19 +1384,19 @@ public class UserMappingRulePersistenceImpl extends BasePersistenceImpl<UserMapp
 	}
 
 	/**
-	 * Returns the last user mapping rule in the ordered set where dataSourceId = &#63; and frequency = &#63;.
+	 * Returns the last user mapping rule in the ordered set where mappingDataSourceId = &#63; and frequency = &#63;.
 	 *
-	 * @param dataSourceId the data source ID
+	 * @param mappingDataSourceId the mapping data source ID
 	 * @param frequency the frequency
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching user mapping rule
 	 * @throws NoSuchUserMappingRuleException if a matching user mapping rule could not be found
 	 */
 	@Override
-	public UserMappingRule findByD_F_Last(long dataSourceId, int frequency,
-		OrderByComparator<UserMappingRule> orderByComparator)
+	public UserMappingRule findByD_F_Last(long mappingDataSourceId,
+		int frequency, OrderByComparator<UserMappingRule> orderByComparator)
 		throws NoSuchUserMappingRuleException {
-		UserMappingRule userMappingRule = fetchByD_F_Last(dataSourceId,
+		UserMappingRule userMappingRule = fetchByD_F_Last(mappingDataSourceId,
 				frequency, orderByComparator);
 
 		if (userMappingRule != null) {
@@ -880,8 +1407,8 @@ public class UserMappingRulePersistenceImpl extends BasePersistenceImpl<UserMapp
 
 		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
 
-		msg.append("dataSourceId=");
-		msg.append(dataSourceId);
+		msg.append("mappingDataSourceId=");
+		msg.append(mappingDataSourceId);
 
 		msg.append(", frequency=");
 		msg.append(frequency);
@@ -892,23 +1419,23 @@ public class UserMappingRulePersistenceImpl extends BasePersistenceImpl<UserMapp
 	}
 
 	/**
-	 * Returns the last user mapping rule in the ordered set where dataSourceId = &#63; and frequency = &#63;.
+	 * Returns the last user mapping rule in the ordered set where mappingDataSourceId = &#63; and frequency = &#63;.
 	 *
-	 * @param dataSourceId the data source ID
+	 * @param mappingDataSourceId the mapping data source ID
 	 * @param frequency the frequency
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the last matching user mapping rule, or <code>null</code> if a matching user mapping rule could not be found
 	 */
 	@Override
-	public UserMappingRule fetchByD_F_Last(long dataSourceId, int frequency,
-		OrderByComparator<UserMappingRule> orderByComparator) {
-		int count = countByD_F(dataSourceId, frequency);
+	public UserMappingRule fetchByD_F_Last(long mappingDataSourceId,
+		int frequency, OrderByComparator<UserMappingRule> orderByComparator) {
+		int count = countByD_F(mappingDataSourceId, frequency);
 
 		if (count == 0) {
 			return null;
 		}
 
-		List<UserMappingRule> list = findByD_F(dataSourceId, frequency,
+		List<UserMappingRule> list = findByD_F(mappingDataSourceId, frequency,
 				count - 1, count, orderByComparator);
 
 		if (!list.isEmpty()) {
@@ -919,10 +1446,10 @@ public class UserMappingRulePersistenceImpl extends BasePersistenceImpl<UserMapp
 	}
 
 	/**
-	 * Returns the user mapping rules before and after the current user mapping rule in the ordered set where dataSourceId = &#63; and frequency = &#63;.
+	 * Returns the user mapping rules before and after the current user mapping rule in the ordered set where mappingDataSourceId = &#63; and frequency = &#63;.
 	 *
 	 * @param userMappingRuleId the primary key of the current user mapping rule
-	 * @param dataSourceId the data source ID
+	 * @param mappingDataSourceId the mapping data source ID
 	 * @param frequency the frequency
 	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
 	 * @return the previous, current, and next user mapping rule
@@ -930,7 +1457,7 @@ public class UserMappingRulePersistenceImpl extends BasePersistenceImpl<UserMapp
 	 */
 	@Override
 	public UserMappingRule[] findByD_F_PrevAndNext(long userMappingRuleId,
-		long dataSourceId, int frequency,
+		long mappingDataSourceId, int frequency,
 		OrderByComparator<UserMappingRule> orderByComparator)
 		throws NoSuchUserMappingRuleException {
 		UserMappingRule userMappingRule = findByPrimaryKey(userMappingRuleId);
@@ -943,12 +1470,12 @@ public class UserMappingRulePersistenceImpl extends BasePersistenceImpl<UserMapp
 			UserMappingRule[] array = new UserMappingRuleImpl[3];
 
 			array[0] = getByD_F_PrevAndNext(session, userMappingRule,
-					dataSourceId, frequency, orderByComparator, true);
+					mappingDataSourceId, frequency, orderByComparator, true);
 
 			array[1] = userMappingRule;
 
 			array[2] = getByD_F_PrevAndNext(session, userMappingRule,
-					dataSourceId, frequency, orderByComparator, false);
+					mappingDataSourceId, frequency, orderByComparator, false);
 
 			return array;
 		}
@@ -961,8 +1488,9 @@ public class UserMappingRulePersistenceImpl extends BasePersistenceImpl<UserMapp
 	}
 
 	protected UserMappingRule getByD_F_PrevAndNext(Session session,
-		UserMappingRule userMappingRule, long dataSourceId, int frequency,
-		OrderByComparator<UserMappingRule> orderByComparator, boolean previous) {
+		UserMappingRule userMappingRule, long mappingDataSourceId,
+		int frequency, OrderByComparator<UserMappingRule> orderByComparator,
+		boolean previous) {
 		StringBundler query = null;
 
 		if (orderByComparator != null) {
@@ -976,7 +1504,7 @@ public class UserMappingRulePersistenceImpl extends BasePersistenceImpl<UserMapp
 
 		query.append(_SQL_SELECT_USERMAPPINGRULE_WHERE);
 
-		query.append(_FINDER_COLUMN_D_F_DATASOURCEID_2);
+		query.append(_FINDER_COLUMN_D_F_MAPPINGDATASOURCEID_2);
 
 		query.append(_FINDER_COLUMN_D_F_FREQUENCY_2);
 
@@ -1048,7 +1576,7 @@ public class UserMappingRulePersistenceImpl extends BasePersistenceImpl<UserMapp
 
 		QueryPos qPos = QueryPos.getInstance(q);
 
-		qPos.add(dataSourceId);
+		qPos.add(mappingDataSourceId);
 
 		qPos.add(frequency);
 
@@ -1071,31 +1599,31 @@ public class UserMappingRulePersistenceImpl extends BasePersistenceImpl<UserMapp
 	}
 
 	/**
-	 * Removes all the user mapping rules where dataSourceId = &#63; and frequency = &#63; from the database.
+	 * Removes all the user mapping rules where mappingDataSourceId = &#63; and frequency = &#63; from the database.
 	 *
-	 * @param dataSourceId the data source ID
+	 * @param mappingDataSourceId the mapping data source ID
 	 * @param frequency the frequency
 	 */
 	@Override
-	public void removeByD_F(long dataSourceId, int frequency) {
-		for (UserMappingRule userMappingRule : findByD_F(dataSourceId,
+	public void removeByD_F(long mappingDataSourceId, int frequency) {
+		for (UserMappingRule userMappingRule : findByD_F(mappingDataSourceId,
 				frequency, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
 			remove(userMappingRule);
 		}
 	}
 
 	/**
-	 * Returns the number of user mapping rules where dataSourceId = &#63; and frequency = &#63;.
+	 * Returns the number of user mapping rules where mappingDataSourceId = &#63; and frequency = &#63;.
 	 *
-	 * @param dataSourceId the data source ID
+	 * @param mappingDataSourceId the mapping data source ID
 	 * @param frequency the frequency
 	 * @return the number of matching user mapping rules
 	 */
 	@Override
-	public int countByD_F(long dataSourceId, int frequency) {
+	public int countByD_F(long mappingDataSourceId, int frequency) {
 		FinderPath finderPath = FINDER_PATH_COUNT_BY_D_F;
 
-		Object[] finderArgs = new Object[] { dataSourceId, frequency };
+		Object[] finderArgs = new Object[] { mappingDataSourceId, frequency };
 
 		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
 
@@ -1104,7 +1632,7 @@ public class UserMappingRulePersistenceImpl extends BasePersistenceImpl<UserMapp
 
 			query.append(_SQL_COUNT_USERMAPPINGRULE_WHERE);
 
-			query.append(_FINDER_COLUMN_D_F_DATASOURCEID_2);
+			query.append(_FINDER_COLUMN_D_F_MAPPINGDATASOURCEID_2);
 
 			query.append(_FINDER_COLUMN_D_F_FREQUENCY_2);
 
@@ -1119,7 +1647,7 @@ public class UserMappingRulePersistenceImpl extends BasePersistenceImpl<UserMapp
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
-				qPos.add(dataSourceId);
+				qPos.add(mappingDataSourceId);
 
 				qPos.add(frequency);
 
@@ -1140,7 +1668,7 @@ public class UserMappingRulePersistenceImpl extends BasePersistenceImpl<UserMapp
 		return count.intValue();
 	}
 
-	private static final String _FINDER_COLUMN_D_F_DATASOURCEID_2 = "userMappingRule.dataSourceId = ? AND ";
+	private static final String _FINDER_COLUMN_D_F_MAPPINGDATASOURCEID_2 = "userMappingRule.mappingDataSourceId = ? AND ";
 	private static final String _FINDER_COLUMN_D_F_FREQUENCY_2 = "userMappingRule.frequency = ?";
 
 	public UserMappingRulePersistenceImpl() {
@@ -1404,9 +1932,30 @@ public class UserMappingRulePersistenceImpl extends BasePersistenceImpl<UserMapp
 			}
 
 			if ((userMappingRuleModelImpl.getColumnBitmask() &
+					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_MAPPINGDATASOURCEID.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						userMappingRuleModelImpl.getOriginalMappingDataSourceId()
+					};
+
+				finderCache.removeResult(FINDER_PATH_COUNT_BY_MAPPINGDATASOURCEID,
+					args);
+				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_MAPPINGDATASOURCEID,
+					args);
+
+				args = new Object[] {
+						userMappingRuleModelImpl.getMappingDataSourceId()
+					};
+
+				finderCache.removeResult(FINDER_PATH_COUNT_BY_MAPPINGDATASOURCEID,
+					args);
+				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_MAPPINGDATASOURCEID,
+					args);
+			}
+
+			if ((userMappingRuleModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_D_F.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
-						userMappingRuleModelImpl.getOriginalDataSourceId(),
+						userMappingRuleModelImpl.getOriginalMappingDataSourceId(),
 						userMappingRuleModelImpl.getOriginalFrequency()
 					};
 
@@ -1415,7 +1964,7 @@ public class UserMappingRulePersistenceImpl extends BasePersistenceImpl<UserMapp
 					args);
 
 				args = new Object[] {
-						userMappingRuleModelImpl.getDataSourceId(),
+						userMappingRuleModelImpl.getMappingDataSourceId(),
 						userMappingRuleModelImpl.getFrequency()
 					};
 
@@ -1450,13 +1999,14 @@ public class UserMappingRulePersistenceImpl extends BasePersistenceImpl<UserMapp
 		userMappingRuleImpl.setUserName(userMappingRule.getUserName());
 		userMappingRuleImpl.setCreateDate(userMappingRule.getCreateDate());
 		userMappingRuleImpl.setModifiedDate(userMappingRule.getModifiedDate());
-		userMappingRuleImpl.setDataSourceId(userMappingRule.getDataSourceId());
+		userMappingRuleImpl.setMappingDataSourceId(userMappingRule.getMappingDataSourceId());
 		userMappingRuleImpl.setFieldSetId(userMappingRule.getFieldSetId());
 		userMappingRuleImpl.setModelName(userMappingRule.getModelName());
 		userMappingRuleImpl.setSourceField(userMappingRule.getSourceField());
 		userMappingRuleImpl.setDestinationField(userMappingRule.getDestinationField());
 		userMappingRuleImpl.setFieldType(userMappingRule.getFieldType());
 		userMappingRuleImpl.setFrequency(userMappingRule.getFrequency());
+		userMappingRuleImpl.setRequired(userMappingRule.isRequired());
 
 		return userMappingRuleImpl;
 	}

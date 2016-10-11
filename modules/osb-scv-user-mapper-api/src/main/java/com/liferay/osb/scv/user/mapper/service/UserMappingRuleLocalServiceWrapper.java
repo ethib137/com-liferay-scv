@@ -48,13 +48,14 @@ public class UserMappingRuleLocalServiceWrapper
 
 	@Override
 	public com.liferay.osb.scv.user.mapper.model.UserMappingRule addUserMappingRule(
-		long companyId, long userId, long dataSourceId,
+		long companyId, long userId, long mappingDataSourceId,
 		java.lang.String modelName, long fieldSetId,
 		java.lang.String sourceField, java.lang.String destinationField,
-		java.lang.String fieldType, int frequency) {
+		int frequency, boolean required)
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return _userMappingRuleLocalService.addUserMappingRule(companyId,
-			userId, dataSourceId, modelName, fieldSetId, sourceField,
-			destinationField, fieldType, frequency);
+			userId, mappingDataSourceId, modelName, fieldSetId, sourceField,
+			destinationField, frequency, required);
 	}
 
 	/**
@@ -129,13 +130,13 @@ public class UserMappingRuleLocalServiceWrapper
 
 	@Override
 	public com.liferay.osb.scv.user.mapper.model.UserMappingRule updateUserMappingRules(
-		long userMappingRuleId, long dataSourceId, long fieldSetId,
+		long userMappingRuleId, long mappingDataSourceId, long fieldSetId,
 		java.lang.String modelName, java.lang.String sourceField,
 		java.lang.String destinationField, java.lang.String fieldType,
 		int frequency) {
 		return _userMappingRuleLocalService.updateUserMappingRules(userMappingRuleId,
-			dataSourceId, fieldSetId, modelName, sourceField, destinationField,
-			fieldType, frequency);
+			mappingDataSourceId, fieldSetId, modelName, sourceField,
+			destinationField, fieldType, frequency);
 	}
 
 	@Override
@@ -270,8 +271,14 @@ public class UserMappingRuleLocalServiceWrapper
 
 	@Override
 	public java.util.List<com.liferay.osb.scv.user.mapper.model.UserMappingRule> getUserMappingRules(
-		long dataSourceId, int frequency) {
-		return _userMappingRuleLocalService.getUserMappingRules(dataSourceId,
+		long mappingDataSourceId) {
+		return _userMappingRuleLocalService.getUserMappingRules(mappingDataSourceId);
+	}
+
+	@Override
+	public java.util.List<com.liferay.osb.scv.user.mapper.model.UserMappingRule> getUserMappingRules(
+		long mappingDataSourceId, int frequency) {
+		return _userMappingRuleLocalService.getUserMappingRules(mappingDataSourceId,
 			frequency);
 	}
 

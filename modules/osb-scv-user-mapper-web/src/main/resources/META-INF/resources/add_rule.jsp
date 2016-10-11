@@ -19,11 +19,30 @@
 <%
 String redirect = ParamUtil.getString(request, "redirect");
 
-long dataSourceId = ParamUtil.getLong(request, "dataSourceId");
+long mappingDataSourceId = ParamUtil.getLong(request, "mappingDataSourceId");
 
-DataSource dataSource = DataSourceUtil.getDataSource(dataSourceId);
+List<MappingDataSource> mappingDataSources = MappingDataSourceServiceUtil.getMappingDataSources();
+
+MappingDataSource mappingDataSource = MappingDataSourceLocalServiceUtil.fetchMappingDataSource(mappingDataSourceId);
+
+if ((mappingDataSource == null) && !mappingDataSources.isEmpty()) {
+	mappingDataSource = mappingDataSources.get(0);
+}
+
+if (mappingDataSource == null) {
+%>
+	ADD DATA SOURCE!
+<%
+	return;
+}
 
 String tableName = ParamUtil.getString(request, "tableName");
+
+List<String> tableNames = mappingDataSource.getTableNames();
+
+if (Validator.isBlank(tableName) && !tableNames.isEmpty()) {
+	tableName = tableNames.get(0);
+}
 
 String fieldType = null;
 %>
@@ -42,13 +61,13 @@ String fieldType = null;
 		<aui:validator name="required" />
 	</aui:input>
 
-	<aui:select label="data-source" name="dataSourceId">
+	<aui:select label="data-source" name="mappingDataSourceId">
 
 		<%
-		for (DataSource curDataSource : DataSourceUtil.getDataSources()) {
+		for (MappingDataSource curDataSource : mappingDataSources) {
 		%>
 
-			<aui:option localizeLabel="<%= false %>" label="<%= curDataSource.getName() %>" selected="<%= curDataSource.getDataSourceId() == dataSourceId %>" value="<%= curDataSource.getDataSourceId() %>" />
+			<aui:option localizeLabel="<%= false %>" label="<%= curDataSource.getName() %>" selected="<%= curDataSource.getMappingDataSourceId() == mappingDataSourceId %>" value="<%= curDataSource.getMappingDataSourceId() %>" />
 
 		<%
 		}
@@ -59,10 +78,10 @@ String fieldType = null;
 	<aui:select label="table-name" name="tableName">
 
 		<%
-		for (String curTableName : dataSource.getTableNames()) {
+		for (String curTableName : mappingDataSource.getTableNames()) {
 		%>
 
-			<aui:option localizeLabel="<%= false %>" label="<%= curTableName %>" value="<%= curTableName %>" />
+			<aui:option localizeLabel="<%= false %>" label="<%= curTableName %>" selected="<%= curTableName == tableName %>" value="<%= curTableName %>" />
 
 		<%
 		}
@@ -73,7 +92,7 @@ String fieldType = null;
 	<aui:select label="source-field" name="sourceField">
 
 		<%
-		Map<String, String> map = dataSource.getAvailableFields(tableName);
+		Map<String, String> map = mappingDataSource.getAvailableFields(tableName);
 
 		for (Map.Entry<String, String> entry : map.entrySet()) {
 		%>
@@ -126,18 +145,18 @@ String fieldType = null;
 	var form = $('#<portlet:namespace />fm');
 
 	var sourceField = form.fm('sourceField');
-	var dataSourceId = form.fm('dataSourceId');
+	var mappingDataSourceId = form.fm('mappingDataSourceId');
 	var destinationField = form.fm('destinationField');
 	var frequency = form.fm('frequency');
 	var fieldSet = form.fm('fieldSet');
 	var tableName = form.fm('tableName');
 
-	dataSourceId.on(
+	mappingDataSourceId.on(
 		'change',
 		function() {
 			var data = {
 				sourceField: sourceField.val(),
-				dataSourceId: dataSourceId.val(),
+				mappingDataSourceId: mappingDataSourceId.val(),
 				destinationField: destinationField.val(),
 				frequency: frequency.val(),
 				tableName: tableName.val(),
@@ -153,7 +172,7 @@ String fieldType = null;
 		function() {
 			var data = {
 				sourceField: sourceField.val(),
-				dataSourceId: dataSourceId.val(),
+				mappingDataSourceId: mappingDataSourceId.val(),
 				destinationField: destinationField.val(),
 				frequency: frequency.val(),
 				tableName: tableName.val(),

@@ -17,24 +17,22 @@ package com.liferay.osb.scv.user.mapper.internal.util;
 import com.liferay.osb.scv.user.mapper.internal.event.Event;
 import com.liferay.osb.scv.user.mapper.internal.event.GetFieldsEvent;
 import com.liferay.osb.scv.user.mapper.internal.event.UpdateUsersEvent;
+import com.liferay.osb.scv.user.mapper.model.MappingDataSource;
 import com.liferay.osb.scv.user.mapper.model.UserMappingRule;
 import com.liferay.osb.scv.user.mapper.sample.DataSource;
 import com.liferay.osb.scv.user.mapper.sample.DataSourceUtil;
 import com.liferay.osb.scv.user.mapper.sample.Frequency;
 import com.liferay.osb.scv.user.mapper.sample.FrequencyUtil;
+import com.liferay.osb.scv.user.mapper.service.MappingDataSourceLocalServiceUtil;
 import com.liferay.osb.scv.user.mapper.service.UserMappingRuleLocalService;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import com.liferay.portal.kernel.exception.ModelListenerException;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.model.ModelListener;
-import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
@@ -55,40 +53,29 @@ public class SchedulerUtil {
 		_scheduledExecutorService = Executors.newScheduledThreadPool(
 			frequencies.size() - 1);
 
-		for (DataSource dataSource : DataSourceUtil.getDataSources()) {
-			List<String> tableNames = dataSource.getTableNames();
-
-			if (tableNames.isEmpty()) {
-				GetFieldsEvent getFieldsEvent = new GetFieldsEvent(
-					dataSource.getDataSourceId());
-
-				getFieldsEvent.run();
-			}
-		}
-
 		for (final Frequency frequency : frequencies) {
-			if (frequency.getFrequencyId() == FrequencyUtil.ONCE) {
+			if ((frequency.getFrequencyId() == FrequencyUtil.ONCE) ||
+				(frequency.getFrequencyId() == FrequencyUtil.INSTANT)) {
+
 				continue;
 			}
 
 			Runnable runnable = new Runnable() {
 
 				public void run() {
-					for (DataSource dataSource : DataSourceUtil.getDataSources()) {
-						String type = dataSource.getType();
-
-						if (!type.equals("biographical")) {
-							continue;
-						}
+					for (MappingDataSource mappingDataSource :
+							MappingDataSourceLocalServiceUtil.
+								getMappingDataSources(-1, -1)) {
 
 						try {
 							List<UserMappingRule> userMappingRules =
 								_userMappingRuleLocalService.getUserMappingRules(
-									dataSource.getDataSourceId(),
+									mappingDataSource.getMappingDataSourceId(),
 									frequency.getFrequencyId());
 
 							Event updateUsersEvent = new UpdateUsersEvent(
-								dataSource.getDataSourceId(), userMappingRules);
+								mappingDataSource.getMappingDataSourceId(),
+								userMappingRules);
 
 							updateUsersEvent.run();
 						}
@@ -110,10 +97,9 @@ public class SchedulerUtil {
 		_scheduledExecutorService.shutdown();
 	}
 
-	private ScheduledExecutorService _scheduledExecutorService;
+	private static final Log _log = LogFactoryUtil.getLog(SchedulerUtil.class);
 
-	private static final Log _log = LogFactoryUtil.getLog(
-		SchedulerUtil.class);
+	private ScheduledExecutorService _scheduledExecutorService;
 
 	@Reference
 	private UserMappingRuleLocalService _userMappingRuleLocalService;

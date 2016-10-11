@@ -14,8 +14,6 @@
 
 package com.liferay.osb.scv.user.mapper.internal.event;
 
-import java.nio.file.Paths;
-
 import java.util.HashMap;
 import java.util.Map;
 

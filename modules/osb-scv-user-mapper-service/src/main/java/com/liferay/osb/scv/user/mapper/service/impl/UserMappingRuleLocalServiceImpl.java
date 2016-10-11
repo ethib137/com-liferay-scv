@@ -18,10 +18,15 @@ import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.osb.scv.user.mapper.internal.event.Event;
 import com.liferay.osb.scv.user.mapper.internal.event.UpdateUsersEvent;
+import com.liferay.osb.scv.user.mapper.internal.event.constants.MappingDataSourceConstants;
+import com.liferay.osb.scv.user.mapper.model.MappingDataSource;
 import com.liferay.osb.scv.user.mapper.model.UserMappingRule;
 import com.liferay.osb.scv.user.mapper.service.base.UserMappingRuleLocalServiceBaseImpl;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.spring.extender.service.ServiceReference;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -36,9 +41,10 @@ public class UserMappingRuleLocalServiceImpl
 
 	@Override
 	public UserMappingRule addUserMappingRule(
-		long companyId, long userId, long dataSourceId, String modelName,
-		long fieldSetId, String sourceField, String destinationField,
-		String fieldType, int frequency) {
+			long companyId, long userId, long mappingDataSourceId,
+			String modelName, long fieldSetId, String sourceField,
+			String destinationField, int frequency, boolean required)
+		throws PortalException {
 
 		long userMappingRuleId = counterLocalService.increment();
 
@@ -48,12 +54,36 @@ public class UserMappingRuleLocalServiceImpl
 		userMappingRule.setCompanyId(companyId);
 		userMappingRule.setUserId(userId);
 		userMappingRule.setCreateDate(new Date());
-		userMappingRule.setDataSourceId(dataSourceId);
+		userMappingRule.setMappingDataSourceId(mappingDataSourceId);
 		userMappingRule.setFieldSetId(fieldSetId);
 		userMappingRule.setModelName(modelName);
 		userMappingRule.setSourceField(sourceField);
 		userMappingRule.setDestinationField(destinationField);
-		userMappingRule.setFieldType(fieldType);
+		userMappingRule.setRequired(required);
+
+		MappingDataSource mappingDataSource =
+			mappingDataSourceLocalService.fetchMappingDataSource(
+				mappingDataSourceId);
+
+		JSONObject fieldsJSONObject = JSONFactoryUtil.createJSONObject(
+			mappingDataSource.getAvailableFields());
+
+		// START TEMP FIX
+
+		if (fieldsJSONObject.length() == 0) {
+			userMappingRule.setFieldType("String");
+		}
+		else {
+
+		// END TEMP FIX
+
+			JSONObject modelFieldsJSONObject = fieldsJSONObject.getJSONObject(
+				modelName);
+
+			userMappingRule.setFieldType(
+				modelFieldsJSONObject.getString(sourceField));
+		}
+
 		userMappingRule.setFrequency(frequency);
 
 		userMappingRulePersistence.update(userMappingRule);
@@ -62,8 +92,12 @@ public class UserMappingRuleLocalServiceImpl
 
 		userMappingRules.add(userMappingRule);
 
+		if (mappingDataSource.getType() == MappingDataSourceConstants.CUSTOM) {
+			return userMappingRule;
+		}
+
 		Event updateUsersEvent = new UpdateUsersEvent(
-			dataSourceId, userMappingRules);
+			mappingDataSourceId, userMappingRules);
 
 		updateUsersEvent.run();
 
@@ -78,11 +112,17 @@ public class UserMappingRuleLocalServiceImpl
 	}
 
 	@Override
+	public List<UserMappingRule> getUserMappingRules(long mappingDataSourceId) {
+		return userMappingRulePersistence.findByMappingDataSourceId(
+			mappingDataSourceId);
+	}
+
+	@Override
 	public List<UserMappingRule> getUserMappingRules(
-		long dataSourceId, int frequency) {
+		long mappingDataSourceId, int frequency) {
 
 		return userMappingRulePersistence.findByD_F(
-			dataSourceId, frequency, -1, -1, null, false);
+			mappingDataSourceId, frequency, -1, -1, null, false);
 	}
 
 	@Override
@@ -95,14 +135,14 @@ public class UserMappingRuleLocalServiceImpl
 
 	@Override
 	public UserMappingRule updateUserMappingRules(
-		long userMappingRuleId, long dataSourceId, long fieldSetId,
+		long userMappingRuleId, long mappingDataSourceId, long fieldSetId,
 		String modelName, String sourceField, String destinationField,
 		String fieldType, int frequency) {
 
 		UserMappingRule userMappingRule =
 			userMappingRulePersistence.fetchByPrimaryKey(userMappingRuleId);
 
-		userMappingRule.setDataSourceId(dataSourceId);
+		userMappingRule.setMappingDataSourceId(mappingDataSourceId);
 		userMappingRule.setFieldSetId(fieldSetId);
 		userMappingRule.setModelName(modelName);
 		userMappingRule.setSourceField(sourceField);

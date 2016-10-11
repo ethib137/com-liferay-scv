@@ -1,6 +1,22 @@
 <?xml version="1.0"?>
 
 <model-hints>
+	<model name="com.liferay.osb.scv.user.mapper.model.MappingDataSource">
+		<field name="mappingDataSourceId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="userId" type="long" />
+		<field name="userName" type="String" />
+		<field name="createDate" type="Date" />
+		<field name="modifiedDate" type="Date" />
+		<field name="name" type="String" />
+		<field name="url" type="String" />
+		<field name="login" type="String" />
+		<field name="password" type="String" />
+		<field name="type" type="long" />
+		<field name="availableFields" type="String">
+			<hint-collection name="CLOB" />
+		</field>
+	</model>
 	<model name="com.liferay.osb.scv.user.mapper.model.UserMappingRule">
 		<field name="userMappingRuleId" type="long" />
 		<field name="companyId" type="long" />
@@ -8,12 +24,13 @@
 		<field name="userName" type="String" />
 		<field name="createDate" type="Date" />
 		<field name="modifiedDate" type="Date" />
-		<field name="dataSourceId" type="long" />
+		<field name="mappingDataSourceId" type="long" />
 		<field name="fieldSetId" type="long" />
 		<field name="modelName" type="String" />
 		<field name="sourceField" type="String" />
 		<field name="destinationField" type="String" />
 		<field name="fieldType" type="String" />
 		<field name="frequency" type="int" />
+		<field name="required" type="boolean" />
 	</model>
 </model-hints>

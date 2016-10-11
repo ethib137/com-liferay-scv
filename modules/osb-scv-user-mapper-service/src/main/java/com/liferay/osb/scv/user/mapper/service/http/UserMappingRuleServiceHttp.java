@@ -56,18 +56,17 @@ import com.liferay.portal.kernel.util.MethodKey;
 @ProviderType
 public class UserMappingRuleServiceHttp {
 	public static com.liferay.osb.scv.user.mapper.model.UserMappingRule addUserMappingRule(
-		HttpPrincipal httpPrincipal, long dataSourceId, long fieldSetId,
+		HttpPrincipal httpPrincipal, long mappingDataSourceId, long fieldSetId,
 		java.lang.String modelName, java.lang.String sourceField,
-		java.lang.String destinationField, java.lang.String fieldType,
-		int frequency)
+		java.lang.String destinationField, int frequency, boolean required)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(UserMappingRuleServiceUtil.class,
 					"addUserMappingRule", _addUserMappingRuleParameterTypes0);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey,
-					dataSourceId, fieldSetId, modelName, sourceField,
-					destinationField, fieldType, frequency);
+					mappingDataSourceId, fieldSetId, modelName, sourceField,
+					destinationField, frequency, required);
 
 			Object returnObj = null;
 
@@ -159,8 +158,8 @@ public class UserMappingRuleServiceHttp {
 	private static Log _log = LogFactoryUtil.getLog(UserMappingRuleServiceHttp.class);
 	private static final Class<?>[] _addUserMappingRuleParameterTypes0 = new Class[] {
 			long.class, long.class, java.lang.String.class,
-			java.lang.String.class, java.lang.String.class,
-			java.lang.String.class, int.class
+			java.lang.String.class, java.lang.String.class, int.class,
+			boolean.class
 		};
 	private static final Class<?>[] _deleteUserMappingRuleParameterTypes1 = new Class[] {
 			long.class

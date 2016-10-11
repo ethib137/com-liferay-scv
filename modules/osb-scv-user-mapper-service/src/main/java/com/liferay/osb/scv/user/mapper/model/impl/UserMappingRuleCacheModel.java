@@ -66,7 +66,7 @@ public class UserMappingRuleCacheModel implements CacheModel<UserMappingRule>,
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(27);
+		StringBundler sb = new StringBundler(29);
 
 		sb.append("{userMappingRuleId=");
 		sb.append(userMappingRuleId);
@@ -80,8 +80,8 @@ public class UserMappingRuleCacheModel implements CacheModel<UserMappingRule>,
 		sb.append(createDate);
 		sb.append(", modifiedDate=");
 		sb.append(modifiedDate);
-		sb.append(", dataSourceId=");
-		sb.append(dataSourceId);
+		sb.append(", mappingDataSourceId=");
+		sb.append(mappingDataSourceId);
 		sb.append(", fieldSetId=");
 		sb.append(fieldSetId);
 		sb.append(", modelName=");
@@ -94,6 +94,8 @@ public class UserMappingRuleCacheModel implements CacheModel<UserMappingRule>,
 		sb.append(fieldType);
 		sb.append(", frequency=");
 		sb.append(frequency);
+		sb.append(", required=");
+		sb.append(required);
 		sb.append("}");
 
 		return sb.toString();
@@ -128,7 +130,7 @@ public class UserMappingRuleCacheModel implements CacheModel<UserMappingRule>,
 			userMappingRuleImpl.setModifiedDate(new Date(modifiedDate));
 		}
 
-		userMappingRuleImpl.setDataSourceId(dataSourceId);
+		userMappingRuleImpl.setMappingDataSourceId(mappingDataSourceId);
 		userMappingRuleImpl.setFieldSetId(fieldSetId);
 
 		if (modelName == null) {
@@ -160,6 +162,7 @@ public class UserMappingRuleCacheModel implements CacheModel<UserMappingRule>,
 		}
 
 		userMappingRuleImpl.setFrequency(frequency);
+		userMappingRuleImpl.setRequired(required);
 
 		userMappingRuleImpl.resetOriginalValues();
 
@@ -177,7 +180,7 @@ public class UserMappingRuleCacheModel implements CacheModel<UserMappingRule>,
 		createDate = objectInput.readLong();
 		modifiedDate = objectInput.readLong();
 
-		dataSourceId = objectInput.readLong();
+		mappingDataSourceId = objectInput.readLong();
 
 		fieldSetId = objectInput.readLong();
 		modelName = objectInput.readUTF();
@@ -186,6 +189,8 @@ public class UserMappingRuleCacheModel implements CacheModel<UserMappingRule>,
 		fieldType = objectInput.readUTF();
 
 		frequency = objectInput.readInt();
+
+		required = objectInput.readBoolean();
 	}
 
 	@Override
@@ -207,7 +212,7 @@ public class UserMappingRuleCacheModel implements CacheModel<UserMappingRule>,
 		objectOutput.writeLong(createDate);
 		objectOutput.writeLong(modifiedDate);
 
-		objectOutput.writeLong(dataSourceId);
+		objectOutput.writeLong(mappingDataSourceId);
 
 		objectOutput.writeLong(fieldSetId);
 
@@ -240,6 +245,8 @@ public class UserMappingRuleCacheModel implements CacheModel<UserMappingRule>,
 		}
 
 		objectOutput.writeInt(frequency);
+
+		objectOutput.writeBoolean(required);
 	}
 
 	public long userMappingRuleId;
@@ -248,11 +255,12 @@ public class UserMappingRuleCacheModel implements CacheModel<UserMappingRule>,
 	public String userName;
 	public long createDate;
 	public long modifiedDate;
-	public long dataSourceId;
+	public long mappingDataSourceId;
 	public long fieldSetId;
 	public String modelName;
 	public String sourceField;
 	public String destinationField;
 	public String fieldType;
 	public int frequency;
+	public boolean required;
 }

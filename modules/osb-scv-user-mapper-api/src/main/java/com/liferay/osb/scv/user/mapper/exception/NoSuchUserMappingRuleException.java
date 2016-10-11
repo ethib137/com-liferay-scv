@@ -11,6 +11,7 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.liferay.osb.scv.user.mapper.exception;
 
 import aQute.bnd.annotation.ProviderType;

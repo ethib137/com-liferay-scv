@@ -54,14 +54,15 @@ public class UserMappingRuleLocalServiceUtil {
 	}
 
 	public static com.liferay.osb.scv.user.mapper.model.UserMappingRule addUserMappingRule(
-		long companyId, long userId, long dataSourceId,
+		long companyId, long userId, long mappingDataSourceId,
 		java.lang.String modelName, long fieldSetId,
 		java.lang.String sourceField, java.lang.String destinationField,
-		java.lang.String fieldType, int frequency) {
+		int frequency, boolean required)
+		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService()
-				   .addUserMappingRule(companyId, userId, dataSourceId,
-			modelName, fieldSetId, sourceField, destinationField, fieldType,
-			frequency);
+				   .addUserMappingRule(companyId, userId, mappingDataSourceId,
+			modelName, fieldSetId, sourceField, destinationField, frequency,
+			required);
 	}
 
 	/**
@@ -129,14 +130,14 @@ public class UserMappingRuleLocalServiceUtil {
 	}
 
 	public static com.liferay.osb.scv.user.mapper.model.UserMappingRule updateUserMappingRules(
-		long userMappingRuleId, long dataSourceId, long fieldSetId,
+		long userMappingRuleId, long mappingDataSourceId, long fieldSetId,
 		java.lang.String modelName, java.lang.String sourceField,
 		java.lang.String destinationField, java.lang.String fieldType,
 		int frequency) {
 		return getService()
-				   .updateUserMappingRules(userMappingRuleId, dataSourceId,
-			fieldSetId, modelName, sourceField, destinationField, fieldType,
-			frequency);
+				   .updateUserMappingRules(userMappingRuleId,
+			mappingDataSourceId, fieldSetId, modelName, sourceField,
+			destinationField, fieldType, frequency);
 	}
 
 	public static com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery getActionableDynamicQuery() {
@@ -256,8 +257,13 @@ public class UserMappingRuleLocalServiceUtil {
 	}
 
 	public static java.util.List<com.liferay.osb.scv.user.mapper.model.UserMappingRule> getUserMappingRules(
-		long dataSourceId, int frequency) {
-		return getService().getUserMappingRules(dataSourceId, frequency);
+		long mappingDataSourceId) {
+		return getService().getUserMappingRules(mappingDataSourceId);
+	}
+
+	public static java.util.List<com.liferay.osb.scv.user.mapper.model.UserMappingRule> getUserMappingRules(
+		long mappingDataSourceId, int frequency) {
+		return getService().getUserMappingRules(mappingDataSourceId, frequency);
 	}
 
 	/**

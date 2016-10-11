@@ -15,26 +15,21 @@
 package com.liferay.osb.scv.user.mapper.internal.event;
 
 import com.liferay.osb.scv.user.mapper.internal.event.constants.EventConstants;
-import com.liferay.osb.scv.user.mapper.internal.messaging.constants.UserMapperDestinationNames;
+import com.liferay.osb.scv.user.mapper.internal.event.constants.MappingDataSourceConstants;
+import com.liferay.osb.scv.user.mapper.model.MappingDataSource;
 import com.liferay.osb.scv.user.mapper.model.UserMappingRule;
 import com.liferay.osb.scv.user.mapper.sample.DataSource;
 import com.liferay.osb.scv.user.mapper.sample.DataSourceUtil;
-import com.liferay.osb.scv.user.mapper.service.UserMappingRuleLocalService;
+import com.liferay.osb.scv.user.mapper.service.MappingDataSourceLocalServiceUtil;
 import com.liferay.osb.scv.user.profile.util.UserProfileUtil;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.Message;
-import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.util.ListUtil;
-import com.liferay.portal.kernel.util.MapUtil;
-import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.kernel.util.Validator;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -48,9 +43,17 @@ import java.util.Set;
 public class UpdateUsersEvent extends BaseEvent {
 
 	public UpdateUsersEvent(
-		long dataSourceId, List<UserMappingRule> userMappingRules) {
+		long mappingDataSourceId, List<UserMappingRule> userMappingRules) {
 
-		_dataSourceId = dataSourceId;
+		this(mappingDataSourceId, userMappingRules, false);
+	}
+
+	public UpdateUsersEvent(
+		long mappingDataSourceId, List<UserMappingRule> userMappingRules,
+		boolean override) {
+
+		_mappingDataSourceId = mappingDataSourceId;
+		_override = override;
 
 		for (UserMappingRule userMappingRule : userMappingRules) {
 			List<UserMappingRule> userMapperRulesList =
@@ -67,6 +70,122 @@ public class UpdateUsersEvent extends BaseEvent {
 		}
 	}
 
+	public void handleResponse(Message message) throws Exception {
+		if (_userMappingRulesMap.isEmpty()) {
+			return;
+		}
+
+		MappingDataSource mappingDataSource =
+			MappingDataSourceLocalServiceUtil.fetchMappingDataSource(
+				_mappingDataSourceId);
+
+		JSONObject sourceJSONObject = JSONFactoryUtil.createJSONObject(
+			String.valueOf(message.getPayload()));
+
+		JSONObject destinationJSONObject = JSONFactoryUtil.createJSONObject();
+
+		Iterator<String> keys = sourceJSONObject.keys();
+
+		while (keys.hasNext()) {
+			String key = keys.next();
+
+			List<UserMappingRule> userMappingRules = _userMappingRulesMap.get(
+				key);
+
+			if (ListUtil.isNotNull(userMappingRules)) {
+				Set<String> processedKeys = new HashSet<>();
+
+				JSONArray sourceModelJSONArray = sourceJSONObject.getJSONArray(
+					key);
+
+				JSONArray destinationModelJSONArray =
+					JSONFactoryUtil.createJSONArray();
+
+				for (int i = 0; i < sourceModelJSONArray.length(); i++) {
+					JSONObject sourceModelJSONObject =
+						sourceModelJSONArray.getJSONObject(i);
+					JSONObject destinationModelJSONObject =
+						JSONFactoryUtil.createJSONObject();
+
+					for (UserMappingRule userMappingRule : userMappingRules) {
+						processedKeys.add(userMappingRule.getSourceField());
+
+						String value = sourceModelJSONObject.getString(
+							userMappingRule.getSourceField());
+
+						if ((value != null) && !_override) {
+							destinationModelJSONObject.put(
+								userMappingRule.getDestinationField(), value);
+						}
+					}
+
+					Iterator<String> allKeys = sourceModelJSONObject.keys();
+
+					while (allKeys.hasNext()) {
+						String curKey = allKeys.next();
+
+						if (processedKeys.contains(curKey)) {
+							continue;
+						}
+
+						destinationModelJSONObject.put(
+							curKey, sourceModelJSONObject.getString(curKey));
+					}
+
+					destinationModelJSONArray.put(destinationModelJSONObject);
+				}
+
+				destinationJSONObject.put(key, destinationModelJSONArray);
+			}
+		}
+
+		if (destinationJSONObject.length() == 0) {
+			return;
+		}
+
+		JSONArray sourceUserJSONArray = sourceJSONObject.getJSONArray("User");
+
+		if ((mappingDataSource.getType() !=
+				MappingDataSourceConstants.CUSTOM) &&
+				!_userMappingRulesMap.containsKey("User") &&
+				(sourceUserJSONArray != null)) {
+
+			JSONArray destinationUserJSONArray =
+				JSONFactoryUtil.createJSONArray();
+
+			for (int i = 0; i < sourceUserJSONArray.length(); i++) {
+				JSONObject sourceUserJSONObject =
+						sourceUserJSONArray.getJSONObject(i);
+				JSONObject destinationUserJSONObject =
+						JSONFactoryUtil.createJSONObject();
+
+				keys = sourceUserJSONObject.keys();
+
+				while (keys.hasNext()) {
+					String key = keys.next();
+
+					destinationUserJSONObject.put(
+						key, sourceUserJSONObject.getString(key));
+				}
+
+				destinationUserJSONArray.put(destinationUserJSONObject);
+			}
+
+			destinationJSONObject.put("User", destinationUserJSONArray);
+		}
+
+		// START: TEMP CODE //
+
+		Map<String, List<String>> map = new HashMap<>();
+
+		map.put("User", Arrays.asList("emailAddress"));
+
+		// END: TEMP CODE //
+
+		UserProfileUtil.updateDataSourceEntries(
+			_mappingDataSourceId, map, destinationJSONObject);
+	}
+
 	@Override
 	public void run() {
 		try {
@@ -78,7 +197,7 @@ public class UpdateUsersEvent extends BaseEvent {
 
 			Map<String, List<String>> fieldsMap = new HashMap<>();
 
-			parameters.put("method", EventConstants.GET_USERS + "2");
+			parameters.put("method", EventConstants.GET_USERS);
 
 			for (Map.Entry<String, List<UserMappingRule>> entry :
 					_userMappingRulesMap.entrySet()) {
@@ -98,56 +217,8 @@ public class UpdateUsersEvent extends BaseEvent {
 				}
 			}
 
-			DataSource dataSource = DataSourceUtil.getDataSource(_dataSourceId);
-
-			Map<String, Map<String, String>> idFields =
-				dataSource.getIdFields();
-
-			for (Map.Entry<String, Map<String, String>> entry :
-					idFields.entrySet()) {
-
-				String key = entry.getKey();
-
-				List<String> fields = fieldsMap.get(key);
-
-				if ((fields == null)) {
-					if (!key.equals("User")) {
-						continue;
-					}
-
-					fields = new ArrayList<>();
-
-					fieldsMap.put(key, fields);
-				}
-
-				Map<String, String> values = entry.getValue();
-
-				for (String field : values.keySet()) {
-					fields.add(field);
-				}
-			}
-
-			Map<String, Map<String, String>> requiredFields =
-				dataSource.getRequiredFields();
-
-			for (Map.Entry<String, Map<String, String>> entry :
-					requiredFields.entrySet()) {
-
-				String key = entry.getKey();
-
-				List<String> fields = fieldsMap.get(key);
-
-				if ((fields != null)) {
-					Map<String, String> values = entry.getValue();
-
-					for (String field : values.keySet()) {
-						fields.add(field);
-					}
-				}
-			}
-
 			parameters.put("fields", fieldsMap);
-			parameters.put("dataSourceId", _dataSourceId);
+			parameters.put("mappingDataSourceId", _mappingDataSourceId);
 
 			run(parameters);
 		}
@@ -156,171 +227,8 @@ public class UpdateUsersEvent extends BaseEvent {
 		}
 	}
 
-	public void handleResponse(Message message) throws Exception {
-		JSONObject sourceJSONObject = JSONFactoryUtil.createJSONObject(
-			String.valueOf(message.getPayload()));
-
-		JSONObject destinationJSONObject = JSONFactoryUtil.createJSONObject();
-
-		DataSource dataSource = DataSourceUtil.getDataSource(_dataSourceId);
-
-		Map<String, Map<String, String>> idFields = dataSource.getIdFields();
-		Map<String, Map<String, String>> requiredFields =
-			dataSource.getRequiredFields();
-
-		if (!_userMappingRulesMap.containsKey("User")) {
-			Map<String, String> userIdFields = idFields.get("User");
-			Map<String, String> userRequiredFields = requiredFields.get("User");
-
-			JSONArray sourceUserJSONArray = sourceJSONObject.getJSONArray(
-				"User");
-			JSONArray destinationUserJSONArray =
-				JSONFactoryUtil.createJSONArray();
-
-			for (int i = 0; i < sourceUserJSONArray.length(); i++) {
-				JSONObject sourceUserJSONObject =
-					sourceUserJSONArray.getJSONObject(i);
-				JSONObject destinationUserJSONObject =
-					JSONFactoryUtil.createJSONObject();
-
-				Iterator<String> keys = sourceUserJSONObject.keys();
-
-				while (keys.hasNext()) {
-					String key = keys.next();
-
-					String type = userIdFields.get(key);
-
-					if (type == null) {
-						type = userRequiredFields.get(key);
-					}
-
-					if (type == null) {
-						type = long[].class.getSimpleName();
-					}
-
-					destinationUserJSONObject.put(
-						key, sourceUserJSONObject.getString(key));
-				}
-
-				destinationUserJSONArray.put(destinationUserJSONObject);
-			}
-
-			destinationJSONObject.put("User", destinationUserJSONArray);
-		}
-
-		Iterator<String> keys = sourceJSONObject.keys();
-
-		while (keys.hasNext()) {
-			String key = keys.next();
-
-			List<UserMappingRule> userMappingRules = _userMappingRulesMap.get(
-				key);
-
-			if (ListUtil.isNotNull(userMappingRules)) {
-				Set<String> processedKeys = new HashSet<>();
-
-				JSONArray sourceModelJSONArray =
-					sourceJSONObject.getJSONArray(key);
-
-				JSONArray destinationModelJSONArray =
-					JSONFactoryUtil.createJSONArray();
-
-				for (int i = 0; i < sourceModelJSONArray.length(); i++) {
-					JSONObject sourceModelJSONObject =
-						sourceModelJSONArray.getJSONObject(i);
-					JSONObject destinationModelJSONObject =
-						JSONFactoryUtil.createJSONObject();
-
-					for (UserMappingRule userMappingRule : userMappingRules) {
-						processedKeys.add(userMappingRule.getSourceField());
-
-						destinationModelJSONObject.put(
-							userMappingRule.getDestinationField(),
-							sourceModelJSONObject.getString(
-								userMappingRule.getSourceField()));
-
-						Map<String, String> idFieldsMap = idFields.get(
-							key);
-
-						if (!MapUtil.isEmpty(idFieldsMap)) {
-							for (Map.Entry<String, String> entrySet :
-									idFieldsMap.entrySet()) {
-
-								processedKeys.add(entrySet.getKey());
-
-								destinationModelJSONObject.put(
-									entrySet.getKey(),
-									sourceModelJSONObject.getString(
-										entrySet.getKey()));
-							}
-						}
-
-						Map<String, String> requiredFieldsMap = idFields.get(
-							key);
-
-						if (!MapUtil.isEmpty(requiredFieldsMap)) {
-							for (Map.Entry<String, String> entrySet :
-									requiredFieldsMap.entrySet()) {
-
-								processedKeys.add(entrySet.getKey());
-
-								destinationModelJSONObject.put(
-									entrySet.getKey(),
-									sourceModelJSONObject.getString(
-										entrySet.getKey()));
-							}
-						}
-					}
-
-					Map<String, String> modelIdFields = idFields.get(key);
-
-					Iterator<String> allKeys = sourceModelJSONObject.keys();
-
-					while (allKeys.hasNext()) {
-						String curKey = allKeys.next();
-
-						if (processedKeys.contains(curKey)) {
-							continue;
-						}
-
-						String type = modelIdFields.get(key);
-
-						if (type == null) {
-							type = long[].class.getSimpleName();
-						}
-
-						destinationModelJSONObject.put(
-							curKey, sourceModelJSONObject.getString(curKey));
-					}
-
-					destinationModelJSONArray.put(destinationModelJSONObject);
-				}
-
-				destinationJSONObject.put(key, destinationModelJSONArray);
-			}
-		}
-
-		UserProfileUtil.updateDataSourceEntries(
-			_dataSourceId, getRequiredFieldsWithoutTypes(requiredFields),
-			destinationJSONObject);
-	}
-
-	protected Map<String, List<String>> getRequiredFieldsWithoutTypes(
-		Map<String, Map<String, String>> map) {
-
-		Map<String, List<String>> newMap = new HashMap<>();
-
-		for (String key : map.keySet()) {
-			List<String> requiredFields = new ArrayList<>(
-				map.get(key).keySet());
-
-			newMap.put(key, requiredFields);
-		}
-
-		return newMap;
-	}
-
-	private final long _dataSourceId;
+	private final long _mappingDataSourceId;
+	private final boolean _override;
 	private final Map<String, List<UserMappingRule>> _userMappingRulesMap =
 		new HashMap<>();
 
