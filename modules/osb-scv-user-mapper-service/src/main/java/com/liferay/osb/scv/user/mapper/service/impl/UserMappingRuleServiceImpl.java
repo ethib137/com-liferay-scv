@@ -33,11 +33,11 @@ import java.util.Map;
 @ProviderType
 public class UserMappingRuleServiceImpl extends UserMappingRuleServiceBaseImpl {
 
-	public List<String> getUserMappingRuleDestinationFields()
+	public Map<String, Integer> getUserMappingRuleDestinationFields()
 		throws Exception {
 
 		return
-			userMappingRuleLocalService.getUserMappingRuleDestinationFields(
+			userMappingRuleLocalService.getUserMappingRuleDestinationFieldsCount(
 				CompanyThreadLocal.getCompanyId());
 	}
 

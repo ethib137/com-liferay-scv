@@ -37,6 +37,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import java.io.Serializable;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Provides the local service interface for UserMappingRule. Methods of this
@@ -207,10 +208,6 @@ public interface UserMappingRuleLocalService extends BaseLocalService,
 	public <T> List<T> dynamicQuery(DynamicQuery dynamicQuery, int start,
 		int end, OrderByComparator<T> orderByComparator);
 
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<java.lang.String> getUserMappingRuleDestinationFields(
-		long companyId) throws java.lang.Exception;
-
 	/**
 	* Returns a range of all the user mapping rules.
 	*
@@ -239,6 +236,10 @@ public interface UserMappingRuleLocalService extends BaseLocalService,
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<UserMappingRule> getUserMappingRules(long mappingDataSourceId,
 		int frequency);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Map<java.lang.String, java.lang.Integer> getUserMappingRuleDestinationFieldsCount(
+		long companyId) throws java.lang.Exception;
 
 	/**
 	* Returns the number of rows matching the dynamic query.

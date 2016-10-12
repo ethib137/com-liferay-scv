@@ -55,7 +55,7 @@ import com.liferay.portal.kernel.util.MethodKey;
  */
 @ProviderType
 public class UserMappingRuleServiceHttp {
-	public static java.util.List<java.lang.String> getUserMappingRuleDestinationFields(
+	public static java.util.Map<java.lang.String, java.lang.Integer> getUserMappingRuleDestinationFields(
 		HttpPrincipal httpPrincipal) throws java.lang.Exception {
 		try {
 			MethodKey methodKey = new MethodKey(UserMappingRuleServiceUtil.class,
@@ -77,7 +77,7 @@ public class UserMappingRuleServiceHttp {
 				throw new com.liferay.portal.kernel.exception.SystemException(e);
 			}
 
-			return (java.util.List<java.lang.String>)returnObj;
+			return (java.util.Map<java.lang.String, java.lang.Integer>)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException se) {
 			_log.error(se, se);

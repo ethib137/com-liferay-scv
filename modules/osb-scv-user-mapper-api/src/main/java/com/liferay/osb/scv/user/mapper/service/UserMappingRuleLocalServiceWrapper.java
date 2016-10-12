@@ -245,12 +245,6 @@ public class UserMappingRuleLocalServiceWrapper
 			end, orderByComparator);
 	}
 
-	@Override
-	public java.util.List<java.lang.String> getUserMappingRuleDestinationFields(
-		long companyId) throws java.lang.Exception {
-		return _userMappingRuleLocalService.getUserMappingRuleDestinationFields(companyId);
-	}
-
 	/**
 	* Returns a range of all the user mapping rules.
 	*
@@ -293,6 +287,12 @@ public class UserMappingRuleLocalServiceWrapper
 		long mappingDataSourceId, int frequency) {
 		return _userMappingRuleLocalService.getUserMappingRules(mappingDataSourceId,
 			frequency);
+	}
+
+	@Override
+	public java.util.Map<java.lang.String, java.lang.Integer> getUserMappingRuleDestinationFieldsCount(
+		long companyId) throws java.lang.Exception {
+		return _userMappingRuleLocalService.getUserMappingRuleDestinationFieldsCount(companyId);
 	}
 
 	/**

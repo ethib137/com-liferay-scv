@@ -66,11 +66,6 @@ public class UserMappingRuleServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static java.util.List<java.lang.String> getUserMappingRuleDestinationFields()
-		throws java.lang.Exception {
-		return getService().getUserMappingRuleDestinationFields();
-	}
-
 	public static java.util.List<com.liferay.osb.scv.user.mapper.model.UserMappingRule> getUserMappingRules(
 		int start, int end)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -81,6 +76,11 @@ public class UserMappingRuleServiceUtil {
 		java.lang.String destinationField)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getUserMappingRules(destinationField);
+	}
+
+	public static java.util.Map<java.lang.String, java.lang.Integer> getUserMappingRuleDestinationFields()
+		throws java.lang.Exception {
+		return getService().getUserMappingRuleDestinationFields();
 	}
 
 	public static UserMappingRuleService getService() {

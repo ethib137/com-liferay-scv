@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.util.UniqueList;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -45,19 +46,28 @@ import java.util.Set;
 public class UserMappingRuleLocalServiceImpl
 	extends UserMappingRuleLocalServiceBaseImpl {
 
-	public List<String> getUserMappingRuleDestinationFields(long companyId)
+	public Map<String, Integer> getUserMappingRuleDestinationFieldsCount(
+			long companyId)
 		throws Exception {
 
-		Set<String> set = new HashSet<>();
+		Map<String, Integer> map = new HashMap<>();
 
 		List<UserMappingRule> userMappingRules = getUserMappingRules(
 			companyId, -1, -1);
 
 		for (UserMappingRule userMappingRule : userMappingRules) {
-			set.add(userMappingRule.getDestinationField());
+			Integer count = map.get(userMappingRule.getDestinationField());
+
+			if (count == null) {
+				count = 0;
+			}
+
+			count++;
+
+			map.put(userMappingRule.getDestinationField(), count);
 		}
 
-		return new ArrayList<>(set);
+		return map;
 	}
 
 	@Override
