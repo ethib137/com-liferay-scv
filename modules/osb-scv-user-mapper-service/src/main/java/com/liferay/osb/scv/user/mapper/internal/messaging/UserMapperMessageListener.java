@@ -162,7 +162,7 @@ public class UserMapperMessageListener extends BaseMessageListener {
 			{"User", "emailAddress", "Email Address", true},
 //		{"User", "portraitId", "Portrait Id", true},
 			{"User", "firstName", "First Name", true},
-			{"User", "firstName", "Middle Name", false},
+			{"User", "middleName", "Middle Name", false},
 			{"User", "lastName", "Last Name", true},
 			{"User", "jobTitle", "Job Title", false},
 			{"User", "openId", "Open ID", false},
@@ -180,7 +180,7 @@ public class UserMapperMessageListener extends BaseMessageListener {
 
 			{"Address", "street", "Street", false},
 			{"Address", "city", "City", false},
-			{"Address", "state", "State", false},
+			{"Address", "region", "State", false},
 			{"Address", "zip", "Zip", false},
 			{"Address", "country", "Country", false},
 	};
