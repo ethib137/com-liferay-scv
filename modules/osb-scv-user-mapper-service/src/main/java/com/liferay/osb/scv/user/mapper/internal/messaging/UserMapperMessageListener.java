@@ -178,7 +178,7 @@ public class UserMapperMessageListener extends BaseMessageListener {
 			{"Phone", "extension", "Extension", false},
 			{"Phone", "primary", "Primary", false},
 
-			{"Address", "street", "Street", false},
+			{"Address", "street1", "Street", false},
 			{"Address", "city", "City", false},
 			{"Address", "region", "State", false},
 			{"Address", "zip", "Zip", false},
