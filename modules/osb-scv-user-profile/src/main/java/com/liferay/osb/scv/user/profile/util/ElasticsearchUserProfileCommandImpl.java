@@ -439,7 +439,7 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 	private static final TimeValue _SEARCH_SCROLL_KEEP_ALIVE_TIME_VALUE =
 		new TimeValue(1, TimeUnit.MINUTES);
 
-	private static final String _TRANSPORT_ADDRESS = "localhost";
+	private static final String _TRANSPORT_ADDRESS = "docker-engine-wcm";
 
 	private static final int _TRANSPORT_ADDRESS_PORT = 9300;
 
