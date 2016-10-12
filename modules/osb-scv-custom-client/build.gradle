@@ -9,6 +9,9 @@ dependencies {
 
 }
 
+task deploy(overwrite: true) {
+}
+
 task copyLibs(type: Copy) {
 	from configurations.compile
 	into 'lib'
