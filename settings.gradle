@@ -5,6 +5,10 @@ buildscript {
 
 	repositories {
 		maven {
+			url "https://cdn.lfrs.sl/repository.liferay.com/nexus/content/groups/public"
+		}
+
+		maven {
 			url "http://docker-engine-wcm:8081/repository/dxp/"
 		}
 	}
