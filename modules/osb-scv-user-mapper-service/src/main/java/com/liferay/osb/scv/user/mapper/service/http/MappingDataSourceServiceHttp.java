@@ -55,12 +55,43 @@ import com.liferay.portal.kernel.util.MethodKey;
  */
 @ProviderType
 public class MappingDataSourceServiceHttp {
+	public static java.util.Map<java.lang.Long, java.lang.String> getMappingDataSourceTypes(
+		HttpPrincipal httpPrincipal) throws java.lang.Exception {
+		try {
+			MethodKey methodKey = new MethodKey(MappingDataSourceServiceUtil.class,
+					"getMappingDataSourceTypes",
+					_getMappingDataSourceTypesParameterTypes0);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				if (e instanceof java.lang.Exception) {
+					throw (java.lang.Exception)e;
+				}
+
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+
+			return (java.util.Map<java.lang.Long, java.lang.String>)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
 	public static java.util.List<com.liferay.osb.scv.user.mapper.model.MappingDataSource> getMappingDataSources(
 		HttpPrincipal httpPrincipal) {
 		try {
 			MethodKey methodKey = new MethodKey(MappingDataSourceServiceUtil.class,
 					"getMappingDataSources",
-					_getMappingDataSourcesParameterTypes0);
+					_getMappingDataSourcesParameterTypes1);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey);
 
@@ -89,7 +120,7 @@ public class MappingDataSourceServiceHttp {
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(MappingDataSourceServiceUtil.class,
-					"addMappingDataSource", _addMappingDataSourceParameterTypes1);
+					"addMappingDataSource", _addMappingDataSourceParameterTypes2);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, name,
 					url, login, password, type, availableFields);
@@ -117,10 +148,13 @@ public class MappingDataSourceServiceHttp {
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(MappingDataSourceServiceHttp.class);
-	private static final Class<?>[] _getMappingDataSourcesParameterTypes0 = new Class[] {
+	private static final Class<?>[] _getMappingDataSourceTypesParameterTypes0 = new Class[] {
 			
 		};
-	private static final Class<?>[] _addMappingDataSourceParameterTypes1 = new Class[] {
+	private static final Class<?>[] _getMappingDataSourcesParameterTypes1 = new Class[] {
+			
+		};
+	private static final Class<?>[] _addMappingDataSourceParameterTypes2 = new Class[] {
 			java.lang.String.class, java.lang.String.class,
 			java.lang.String.class, java.lang.String.class, long.class,
 			java.lang.String.class

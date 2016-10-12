@@ -16,6 +16,7 @@ package com.liferay.osb.scv.user.mapper.service.impl;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.osb.scv.user.mapper.internal.event.constants.MappingDataSourceConstants;
 import com.liferay.osb.scv.user.mapper.model.UserMappingRule;
 import com.liferay.osb.scv.user.mapper.service.base.UserMappingRuleServiceBaseImpl;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -24,12 +25,29 @@ import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Shinn Lok
  */
 @ProviderType
 public class UserMappingRuleServiceImpl extends UserMappingRuleServiceBaseImpl {
+
+	public List<String> getUserMappingRuleDestinationFields()
+		throws Exception {
+
+		return
+			userMappingRuleLocalService.getUserMappingRuleDestinationFields(
+				CompanyThreadLocal.getCompanyId());
+	}
+
+	@Override
+	public List<UserMappingRule> getUserMappingRules(String destinationField)
+			throws PortalException {
+
+		return userMappingRuleLocalService.getUserMappingRules(
+			CompanyThreadLocal.getCompanyId(), destinationField);
+	}
 
 	@Override
 	public UserMappingRule addUserMappingRule(

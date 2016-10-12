@@ -21,16 +21,22 @@ import com.liferay.osb.scv.user.mapper.internal.event.UpdateUsersEvent;
 import com.liferay.osb.scv.user.mapper.internal.event.constants.MappingDataSourceConstants;
 import com.liferay.osb.scv.user.mapper.model.MappingDataSource;
 import com.liferay.osb.scv.user.mapper.model.UserMappingRule;
+import com.liferay.osb.scv.user.mapper.sample.FrequencyUtil;
 import com.liferay.osb.scv.user.mapper.service.base.UserMappingRuleLocalServiceBaseImpl;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.util.UniqueList;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /**
  * @author Shinn Lok
@@ -38,6 +44,21 @@ import java.util.List;
 @ProviderType
 public class UserMappingRuleLocalServiceImpl
 	extends UserMappingRuleLocalServiceBaseImpl {
+
+	public List<String> getUserMappingRuleDestinationFields(long companyId)
+		throws Exception {
+
+		Set<String> set = new HashSet<>();
+
+		List<UserMappingRule> userMappingRules = getUserMappingRules(
+			companyId, -1, -1);
+
+		for (UserMappingRule userMappingRule : userMappingRules) {
+			set.add(userMappingRule.getDestinationField());
+		}
+
+		return new ArrayList<>(set);
+	}
 
 	@Override
 	public UserMappingRule addUserMappingRule(
@@ -65,10 +86,10 @@ public class UserMappingRuleLocalServiceImpl
 			mappingDataSourceLocalService.fetchMappingDataSource(
 				mappingDataSourceId);
 
+		// START TEMP FIX
+
 		JSONObject fieldsJSONObject = JSONFactoryUtil.createJSONObject(
 			mappingDataSource.getAvailableFields());
-
-		// START TEMP FIX
 
 		if (fieldsJSONObject.length() == 0) {
 			userMappingRule.setFieldType("String");
@@ -92,14 +113,16 @@ public class UserMappingRuleLocalServiceImpl
 
 		userMappingRules.add(userMappingRule);
 
-		if (mappingDataSource.getType() == MappingDataSourceConstants.CUSTOM) {
+		if ((mappingDataSource.getType() == MappingDataSourceConstants.CUSTOM) ||
+			(frequency == FrequencyUtil.INSTANT)){
+
 			return userMappingRule;
 		}
 
-		Event updateUsersEvent = new UpdateUsersEvent(
-			mappingDataSourceId, userMappingRules);
-
-		updateUsersEvent.run();
+//		Event updateUsersEvent = new UpdateUsersEvent(
+//			mappingDataSourceId, userMappingRules);
+//
+//		updateUsersEvent.run();
 
 		return userMappingRule;
 	}
@@ -131,6 +154,13 @@ public class UserMappingRuleLocalServiceImpl
 
 		return userMappingRulePersistence.findByCompanyId(
 			companyId, start, end);
+	}
+
+	public List<UserMappingRule> getUserMappingRules(
+		long companyId, String destinationField) {
+
+		return userMappingRulePersistence.findByC_D(
+			companyId, destinationField);
 	}
 
 	@Override

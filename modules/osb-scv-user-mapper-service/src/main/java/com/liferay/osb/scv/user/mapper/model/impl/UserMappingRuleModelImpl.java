@@ -121,9 +121,10 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 				"value.object.column.bitmask.enabled.com.liferay.osb.scv.user.mapper.model.UserMappingRule"),
 			true);
 	public static final long COMPANYID_COLUMN_BITMASK = 1L;
-	public static final long FREQUENCY_COLUMN_BITMASK = 2L;
-	public static final long MAPPINGDATASOURCEID_COLUMN_BITMASK = 4L;
-	public static final long USERMAPPINGRULEID_COLUMN_BITMASK = 8L;
+	public static final long DESTINATIONFIELD_COLUMN_BITMASK = 2L;
+	public static final long FREQUENCY_COLUMN_BITMASK = 4L;
+	public static final long MAPPINGDATASOURCEID_COLUMN_BITMASK = 8L;
+	public static final long USERMAPPINGRULEID_COLUMN_BITMASK = 16L;
 
 	/**
 	 * Converts the soap model instance into a normal model instance.
@@ -509,7 +510,17 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 
 	@Override
 	public void setDestinationField(String destinationField) {
+		_columnBitmask |= DESTINATIONFIELD_COLUMN_BITMASK;
+
+		if (_originalDestinationField == null) {
+			_originalDestinationField = _destinationField;
+		}
+
 		_destinationField = destinationField;
+	}
+
+	public String getOriginalDestinationField() {
+		return GetterUtil.getString(_originalDestinationField);
 	}
 
 	@JSON
@@ -684,6 +695,8 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 		userMappingRuleModelImpl._originalMappingDataSourceId = userMappingRuleModelImpl._mappingDataSourceId;
 
 		userMappingRuleModelImpl._setOriginalMappingDataSourceId = false;
+
+		userMappingRuleModelImpl._originalDestinationField = userMappingRuleModelImpl._destinationField;
 
 		userMappingRuleModelImpl._originalFrequency = userMappingRuleModelImpl._frequency;
 
@@ -898,6 +911,7 @@ public class UserMappingRuleModelImpl extends BaseModelImpl<UserMappingRule>
 	private String _modelName;
 	private String _sourceField;
 	private String _destinationField;
+	private String _originalDestinationField;
 	private String _fieldType;
 	private int _frequency;
 	private int _originalFrequency;

@@ -235,6 +235,11 @@ public class UserMappingRuleLocalServiceUtil {
 				   .dynamicQuery(dynamicQuery, start, end, orderByComparator);
 	}
 
+	public static java.util.List<java.lang.String> getUserMappingRuleDestinationFields(
+		long companyId) throws java.lang.Exception {
+		return getService().getUserMappingRuleDestinationFields(companyId);
+	}
+
 	/**
 	* Returns a range of all the user mapping rules.
 	*
@@ -254,6 +259,11 @@ public class UserMappingRuleLocalServiceUtil {
 	public static java.util.List<com.liferay.osb.scv.user.mapper.model.UserMappingRule> getUserMappingRules(
 		long companyId, int start, int end) {
 		return getService().getUserMappingRules(companyId, start, end);
+	}
+
+	public static java.util.List<com.liferay.osb.scv.user.mapper.model.UserMappingRule> getUserMappingRules(
+		long companyId, java.lang.String destinationField) {
+		return getService().getUserMappingRules(companyId, destinationField);
 	}
 
 	public static java.util.List<com.liferay.osb.scv.user.mapper.model.UserMappingRule> getUserMappingRules(

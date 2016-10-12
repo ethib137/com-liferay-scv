@@ -17,6 +17,7 @@ package com.liferay.osb.scv.user.mapper.model.impl;
 import aQute.bnd.annotation.ProviderType;
 import com.liferay.osb.scv.user.mapper.internal.event.Event;
 import com.liferay.osb.scv.user.mapper.internal.event.GetFieldsEvent;
+import com.liferay.osb.scv.user.mapper.internal.event.constants.MappingDataSourceConstants;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.util.Validator;
@@ -29,12 +30,6 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * The extended model implementation for the MappingDataSource service. Represents a row in the &quot;OSB_SCV_MappingDataSource&quot; database table, with each column mapped to a property of this class.
- *
- * <p>
- * Helper methods and all application logic should be put in this class. Whenever methods are added, rerun ServiceBuilder to copy their definitions into the {@link com.liferay.osb.scv.user.mapper.model.MappingDataSource} interface.
- * </p>
- *
  * @author Brian Wing Shun Chan
  */
 @ProviderType
@@ -85,11 +80,6 @@ public class MappingDataSourceImpl extends MappingDataSourceBaseImpl {
 		return map;
 	}
 
-	/**
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never reference this class directly. All methods that expect a mapping data source model instance should use the {@link com.liferay.osb.scv.user.mapper.model.MappingDataSource} interface instead.
-	 */
 	public MappingDataSourceImpl() {
 	}
 

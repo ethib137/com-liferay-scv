@@ -67,6 +67,11 @@
 			<finder-column name="companyId" />
 		</finder>
 
+		<finder name="C_D" return-type="Collection">
+			<finder-column name="companyId" />
+			<finder-column name="destinationField" />
+		</finder>
+
 		<finder name="MappingDataSourceId" return-type="Collection">
 			<finder-column name="mappingDataSourceId" />
 		</finder>

@@ -58,6 +58,12 @@ public class MappingDataSourceServiceWrapper implements MappingDataSourceService
 	}
 
 	@Override
+	public java.util.Map<java.lang.Long, java.lang.String> getMappingDataSourceTypes()
+		throws java.lang.Exception {
+		return _mappingDataSourceService.getMappingDataSourceTypes();
+	}
+
+	@Override
 	public MappingDataSourceService getWrappedService() {
 		return _mappingDataSourceService;
 	}

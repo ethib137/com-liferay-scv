@@ -29,6 +29,7 @@ import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Provides the remote service interface for MappingDataSource. Methods of this
@@ -68,4 +69,8 @@ public interface MappingDataSourceService extends BaseService {
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<MappingDataSource> getMappingDataSources();
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public Map<java.lang.Long, java.lang.String> getMappingDataSourceTypes()
+		throws java.lang.Exception;
 }

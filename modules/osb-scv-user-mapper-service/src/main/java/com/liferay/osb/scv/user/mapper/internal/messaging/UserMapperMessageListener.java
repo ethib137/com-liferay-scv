@@ -34,6 +34,7 @@ import com.liferay.portal.kernel.json.JSONSerializer;
 import com.liferay.portal.kernel.messaging.BaseMessageListener;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
+import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.util.List;
@@ -102,6 +103,34 @@ public class UserMapperMessageListener extends BaseMessageListener {
 				MappingDataSourceServiceUtil.addMappingDataSource(
 					name, url, login, password, type, availableFields);
 
+			if (type == MappingDataSourceConstants.LIFERAY) {
+				GetFieldsEvent getFieldsEvent = new GetFieldsEvent(
+						mappingDataSource.getMappingDataSourceId());
+
+				getFieldsEvent.run();
+
+				for (Object[] liferayField : _LIFERAY_FIELDS) {
+					UserMappingRuleLocalServiceUtil.addUserMappingRule(
+							CompanyThreadLocal.getCompanyId(), 0,
+							mappingDataSource.getMappingDataSourceId(),
+							String.valueOf(liferayField[0]), 0,
+							String.valueOf(liferayField[1]),
+							String.valueOf(liferayField[2]), FrequencyUtil.INSTANT,
+							(Boolean) liferayField[3]);
+				}
+
+				List<UserMappingRule> userMappingRules =
+						UserMappingRuleLocalServiceUtil.getUserMappingRules(
+								mappingDataSource.getMappingDataSourceId(),
+								FrequencyUtil.INSTANT);
+
+				UpdateUsersEvent updateUsersEvent = new UpdateUsersEvent(
+					mappingDataSource.getMappingDataSourceId(),
+					userMappingRules);
+
+				updateUsersEvent.run();
+			}
+
 			Message responseMessage = MessageBusUtil.createResponseMessage(
 				message);
 
@@ -128,5 +157,32 @@ public class UserMapperMessageListener extends BaseMessageListener {
 		}
 	}
 
+	private static final Object[][] _LIFERAY_FIELDS = {
+			{"User", "screenName", "Screen Name", false},
+			{"User", "emailAddress", "Email Address", true},
+//		{"User", "portraitId", "Portrait Id", true},
+			{"User", "firstName", "First Name", true},
+			{"User", "firstName", "Middle Name", false},
+			{"User", "lastName", "Last Name", true},
+			{"User", "jobTitle", "Job Title", false},
+			{"User", "openId", "Open ID", false},
+			{"User", "googleUserId", "Google User Id", false},
+
+			{"Contact", "male", "Is Male?", false},
+			{"Contact", "birthday", "Date of Birth", false},
+			{"Contact", "facebookSn", "Facebook SN", false},
+			{"Contact", "twitterSn", "Twitter SN", false},
+			{"Contact", "skypeSn", "Skype SN", false},
+
+			{"Phone", "number", "Number", false},
+			{"Phone", "extension", "Extension", false},
+			{"Phone", "primary", "Primary", false},
+
+			{"Address", "street", "Street", false},
+			{"Address", "city", "City", false},
+			{"Address", "state", "State", false},
+			{"Address", "zip", "Zip", false},
+			{"Address", "country", "Country", false},
+	};
 
 }

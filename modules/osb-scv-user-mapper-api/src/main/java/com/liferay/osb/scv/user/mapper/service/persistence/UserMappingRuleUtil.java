@@ -274,6 +274,194 @@ public class UserMappingRuleUtil {
 	}
 
 	/**
+	* Returns all the user mapping rules where companyId = &#63; and destinationField = &#63;.
+	*
+	* @param companyId the company ID
+	* @param destinationField the destination field
+	* @return the matching user mapping rules
+	*/
+	public static List<UserMappingRule> findByC_D(long companyId,
+		java.lang.String destinationField) {
+		return getPersistence().findByC_D(companyId, destinationField);
+	}
+
+	/**
+	* Returns a range of all the user mapping rules where companyId = &#63; and destinationField = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link UserMappingRuleModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param companyId the company ID
+	* @param destinationField the destination field
+	* @param start the lower bound of the range of user mapping rules
+	* @param end the upper bound of the range of user mapping rules (not inclusive)
+	* @return the range of matching user mapping rules
+	*/
+	public static List<UserMappingRule> findByC_D(long companyId,
+		java.lang.String destinationField, int start, int end) {
+		return getPersistence()
+				   .findByC_D(companyId, destinationField, start, end);
+	}
+
+	/**
+	* Returns an ordered range of all the user mapping rules where companyId = &#63; and destinationField = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link UserMappingRuleModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param companyId the company ID
+	* @param destinationField the destination field
+	* @param start the lower bound of the range of user mapping rules
+	* @param end the upper bound of the range of user mapping rules (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @return the ordered range of matching user mapping rules
+	*/
+	public static List<UserMappingRule> findByC_D(long companyId,
+		java.lang.String destinationField, int start, int end,
+		OrderByComparator<UserMappingRule> orderByComparator) {
+		return getPersistence()
+				   .findByC_D(companyId, destinationField, start, end,
+			orderByComparator);
+	}
+
+	/**
+	* Returns an ordered range of all the user mapping rules where companyId = &#63; and destinationField = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link UserMappingRuleModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	* </p>
+	*
+	* @param companyId the company ID
+	* @param destinationField the destination field
+	* @param start the lower bound of the range of user mapping rules
+	* @param end the upper bound of the range of user mapping rules (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @param retrieveFromCache whether to retrieve from the finder cache
+	* @return the ordered range of matching user mapping rules
+	*/
+	public static List<UserMappingRule> findByC_D(long companyId,
+		java.lang.String destinationField, int start, int end,
+		OrderByComparator<UserMappingRule> orderByComparator,
+		boolean retrieveFromCache) {
+		return getPersistence()
+				   .findByC_D(companyId, destinationField, start, end,
+			orderByComparator, retrieveFromCache);
+	}
+
+	/**
+	* Returns the first user mapping rule in the ordered set where companyId = &#63; and destinationField = &#63;.
+	*
+	* @param companyId the company ID
+	* @param destinationField the destination field
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching user mapping rule
+	* @throws NoSuchUserMappingRuleException if a matching user mapping rule could not be found
+	*/
+	public static UserMappingRule findByC_D_First(long companyId,
+		java.lang.String destinationField,
+		OrderByComparator<UserMappingRule> orderByComparator)
+		throws com.liferay.osb.scv.user.mapper.exception.NoSuchUserMappingRuleException {
+		return getPersistence()
+				   .findByC_D_First(companyId, destinationField,
+			orderByComparator);
+	}
+
+	/**
+	* Returns the first user mapping rule in the ordered set where companyId = &#63; and destinationField = &#63;.
+	*
+	* @param companyId the company ID
+	* @param destinationField the destination field
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching user mapping rule, or <code>null</code> if a matching user mapping rule could not be found
+	*/
+	public static UserMappingRule fetchByC_D_First(long companyId,
+		java.lang.String destinationField,
+		OrderByComparator<UserMappingRule> orderByComparator) {
+		return getPersistence()
+				   .fetchByC_D_First(companyId, destinationField,
+			orderByComparator);
+	}
+
+	/**
+	* Returns the last user mapping rule in the ordered set where companyId = &#63; and destinationField = &#63;.
+	*
+	* @param companyId the company ID
+	* @param destinationField the destination field
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching user mapping rule
+	* @throws NoSuchUserMappingRuleException if a matching user mapping rule could not be found
+	*/
+	public static UserMappingRule findByC_D_Last(long companyId,
+		java.lang.String destinationField,
+		OrderByComparator<UserMappingRule> orderByComparator)
+		throws com.liferay.osb.scv.user.mapper.exception.NoSuchUserMappingRuleException {
+		return getPersistence()
+				   .findByC_D_Last(companyId, destinationField,
+			orderByComparator);
+	}
+
+	/**
+	* Returns the last user mapping rule in the ordered set where companyId = &#63; and destinationField = &#63;.
+	*
+	* @param companyId the company ID
+	* @param destinationField the destination field
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching user mapping rule, or <code>null</code> if a matching user mapping rule could not be found
+	*/
+	public static UserMappingRule fetchByC_D_Last(long companyId,
+		java.lang.String destinationField,
+		OrderByComparator<UserMappingRule> orderByComparator) {
+		return getPersistence()
+				   .fetchByC_D_Last(companyId, destinationField,
+			orderByComparator);
+	}
+
+	/**
+	* Returns the user mapping rules before and after the current user mapping rule in the ordered set where companyId = &#63; and destinationField = &#63;.
+	*
+	* @param userMappingRuleId the primary key of the current user mapping rule
+	* @param companyId the company ID
+	* @param destinationField the destination field
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the previous, current, and next user mapping rule
+	* @throws NoSuchUserMappingRuleException if a user mapping rule with the primary key could not be found
+	*/
+	public static UserMappingRule[] findByC_D_PrevAndNext(
+		long userMappingRuleId, long companyId,
+		java.lang.String destinationField,
+		OrderByComparator<UserMappingRule> orderByComparator)
+		throws com.liferay.osb.scv.user.mapper.exception.NoSuchUserMappingRuleException {
+		return getPersistence()
+				   .findByC_D_PrevAndNext(userMappingRuleId, companyId,
+			destinationField, orderByComparator);
+	}
+
+	/**
+	* Removes all the user mapping rules where companyId = &#63; and destinationField = &#63; from the database.
+	*
+	* @param companyId the company ID
+	* @param destinationField the destination field
+	*/
+	public static void removeByC_D(long companyId,
+		java.lang.String destinationField) {
+		getPersistence().removeByC_D(companyId, destinationField);
+	}
+
+	/**
+	* Returns the number of user mapping rules where companyId = &#63; and destinationField = &#63;.
+	*
+	* @param companyId the company ID
+	* @param destinationField the destination field
+	* @return the number of matching user mapping rules
+	*/
+	public static int countByC_D(long companyId,
+		java.lang.String destinationField) {
+		return getPersistence().countByC_D(companyId, destinationField);
+	}
+
+	/**
 	* Returns all the user mapping rules where mappingDataSourceId = &#63;.
 	*
 	* @param mappingDataSourceId the mapping data source ID

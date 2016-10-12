@@ -63,6 +63,11 @@ public class MappingDataSourceServiceUtil {
 		return getService().getMappingDataSources();
 	}
 
+	public static java.util.Map<java.lang.Long, java.lang.String> getMappingDataSourceTypes()
+		throws java.lang.Exception {
+		return getService().getMappingDataSourceTypes();
+	}
+
 	public static MappingDataSourceService getService() {
 		return _serviceTracker.getService();
 	}

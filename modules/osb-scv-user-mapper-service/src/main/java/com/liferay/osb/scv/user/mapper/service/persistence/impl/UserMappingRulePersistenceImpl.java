@@ -50,6 +50,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 /**
@@ -597,6 +598,603 @@ public class UserMappingRulePersistenceImpl extends BasePersistenceImpl<UserMapp
 	}
 
 	private static final String _FINDER_COLUMN_COMPANYID_COMPANYID_2 = "userMappingRule.companyId = ?";
+	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_C_D = new FinderPath(UserMappingRuleModelImpl.ENTITY_CACHE_ENABLED,
+			UserMappingRuleModelImpl.FINDER_CACHE_ENABLED,
+			UserMappingRuleImpl.class, FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
+			"findByC_D",
+			new String[] {
+				Long.class.getName(), String.class.getName(),
+				
+			Integer.class.getName(), Integer.class.getName(),
+				OrderByComparator.class.getName()
+			});
+	public static final FinderPath FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_D = new FinderPath(UserMappingRuleModelImpl.ENTITY_CACHE_ENABLED,
+			UserMappingRuleModelImpl.FINDER_CACHE_ENABLED,
+			UserMappingRuleImpl.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByC_D",
+			new String[] { Long.class.getName(), String.class.getName() },
+			UserMappingRuleModelImpl.COMPANYID_COLUMN_BITMASK |
+			UserMappingRuleModelImpl.DESTINATIONFIELD_COLUMN_BITMASK);
+	public static final FinderPath FINDER_PATH_COUNT_BY_C_D = new FinderPath(UserMappingRuleModelImpl.ENTITY_CACHE_ENABLED,
+			UserMappingRuleModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByC_D",
+			new String[] { Long.class.getName(), String.class.getName() });
+
+	/**
+	 * Returns all the user mapping rules where companyId = &#63; and destinationField = &#63;.
+	 *
+	 * @param companyId the company ID
+	 * @param destinationField the destination field
+	 * @return the matching user mapping rules
+	 */
+	@Override
+	public List<UserMappingRule> findByC_D(long companyId,
+		String destinationField) {
+		return findByC_D(companyId, destinationField, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the user mapping rules where companyId = &#63; and destinationField = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link UserMappingRuleModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param companyId the company ID
+	 * @param destinationField the destination field
+	 * @param start the lower bound of the range of user mapping rules
+	 * @param end the upper bound of the range of user mapping rules (not inclusive)
+	 * @return the range of matching user mapping rules
+	 */
+	@Override
+	public List<UserMappingRule> findByC_D(long companyId,
+		String destinationField, int start, int end) {
+		return findByC_D(companyId, destinationField, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the user mapping rules where companyId = &#63; and destinationField = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link UserMappingRuleModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param companyId the company ID
+	 * @param destinationField the destination field
+	 * @param start the lower bound of the range of user mapping rules
+	 * @param end the upper bound of the range of user mapping rules (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching user mapping rules
+	 */
+	@Override
+	public List<UserMappingRule> findByC_D(long companyId,
+		String destinationField, int start, int end,
+		OrderByComparator<UserMappingRule> orderByComparator) {
+		return findByC_D(companyId, destinationField, start, end,
+			orderByComparator, true);
+	}
+
+	/**
+	 * Returns an ordered range of all the user mapping rules where companyId = &#63; and destinationField = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link QueryUtil#ALL_POS} will return the full result set. If <code>orderByComparator</code> is specified, then the query will include the given ORDER BY logic. If <code>orderByComparator</code> is absent and pagination is required (<code>start</code> and <code>end</code> are not {@link QueryUtil#ALL_POS}), then the query will include the default ORDER BY logic from {@link UserMappingRuleModelImpl}. If both <code>orderByComparator</code> and pagination are absent, for performance reasons, the query will not have an ORDER BY clause and the returned result set will be sorted on by the primary key in an ascending order.
+	 * </p>
+	 *
+	 * @param companyId the company ID
+	 * @param destinationField the destination field
+	 * @param start the lower bound of the range of user mapping rules
+	 * @param end the upper bound of the range of user mapping rules (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @param retrieveFromCache whether to retrieve from the finder cache
+	 * @return the ordered range of matching user mapping rules
+	 */
+	@Override
+	public List<UserMappingRule> findByC_D(long companyId,
+		String destinationField, int start, int end,
+		OrderByComparator<UserMappingRule> orderByComparator,
+		boolean retrieveFromCache) {
+		boolean pagination = true;
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+				(orderByComparator == null)) {
+			pagination = false;
+			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_D;
+			finderArgs = new Object[] { companyId, destinationField };
+		}
+		else {
+			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_C_D;
+			finderArgs = new Object[] {
+					companyId, destinationField,
+					
+					start, end, orderByComparator
+				};
+		}
+
+		List<UserMappingRule> list = null;
+
+		if (retrieveFromCache) {
+			list = (List<UserMappingRule>)finderCache.getResult(finderPath,
+					finderArgs, this);
+
+			if ((list != null) && !list.isEmpty()) {
+				for (UserMappingRule userMappingRule : list) {
+					if ((companyId != userMappingRule.getCompanyId()) ||
+							!Objects.equals(destinationField,
+								userMappingRule.getDestinationField())) {
+						list = null;
+
+						break;
+					}
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler query = null;
+
+			if (orderByComparator != null) {
+				query = new StringBundler(4 +
+						(orderByComparator.getOrderByFields().length * 2));
+			}
+			else {
+				query = new StringBundler(4);
+			}
+
+			query.append(_SQL_SELECT_USERMAPPINGRULE_WHERE);
+
+			query.append(_FINDER_COLUMN_C_D_COMPANYID_2);
+
+			boolean bindDestinationField = false;
+
+			if (destinationField == null) {
+				query.append(_FINDER_COLUMN_C_D_DESTINATIONFIELD_1);
+			}
+			else if (destinationField.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_D_DESTINATIONFIELD_3);
+			}
+			else {
+				bindDestinationField = true;
+
+				query.append(_FINDER_COLUMN_C_D_DESTINATIONFIELD_2);
+			}
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator);
+			}
+			else
+			 if (pagination) {
+				query.append(UserMappingRuleModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(companyId);
+
+				if (bindDestinationField) {
+					qPos.add(destinationField);
+				}
+
+				if (!pagination) {
+					list = (List<UserMappingRule>)QueryUtil.list(q,
+							getDialect(), start, end, false);
+
+					Collections.sort(list);
+
+					list = Collections.unmodifiableList(list);
+				}
+				else {
+					list = (List<UserMappingRule>)QueryUtil.list(q,
+							getDialect(), start, end);
+				}
+
+				cacheResult(list);
+
+				finderCache.putResult(finderPath, finderArgs, list);
+			}
+			catch (Exception e) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first user mapping rule in the ordered set where companyId = &#63; and destinationField = &#63;.
+	 *
+	 * @param companyId the company ID
+	 * @param destinationField the destination field
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching user mapping rule
+	 * @throws NoSuchUserMappingRuleException if a matching user mapping rule could not be found
+	 */
+	@Override
+	public UserMappingRule findByC_D_First(long companyId,
+		String destinationField,
+		OrderByComparator<UserMappingRule> orderByComparator)
+		throws NoSuchUserMappingRuleException {
+		UserMappingRule userMappingRule = fetchByC_D_First(companyId,
+				destinationField, orderByComparator);
+
+		if (userMappingRule != null) {
+			return userMappingRule;
+		}
+
+		StringBundler msg = new StringBundler(6);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("companyId=");
+		msg.append(companyId);
+
+		msg.append(", destinationField=");
+		msg.append(destinationField);
+
+		msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+		throw new NoSuchUserMappingRuleException(msg.toString());
+	}
+
+	/**
+	 * Returns the first user mapping rule in the ordered set where companyId = &#63; and destinationField = &#63;.
+	 *
+	 * @param companyId the company ID
+	 * @param destinationField the destination field
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching user mapping rule, or <code>null</code> if a matching user mapping rule could not be found
+	 */
+	@Override
+	public UserMappingRule fetchByC_D_First(long companyId,
+		String destinationField,
+		OrderByComparator<UserMappingRule> orderByComparator) {
+		List<UserMappingRule> list = findByC_D(companyId, destinationField, 0,
+				1, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last user mapping rule in the ordered set where companyId = &#63; and destinationField = &#63;.
+	 *
+	 * @param companyId the company ID
+	 * @param destinationField the destination field
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching user mapping rule
+	 * @throws NoSuchUserMappingRuleException if a matching user mapping rule could not be found
+	 */
+	@Override
+	public UserMappingRule findByC_D_Last(long companyId,
+		String destinationField,
+		OrderByComparator<UserMappingRule> orderByComparator)
+		throws NoSuchUserMappingRuleException {
+		UserMappingRule userMappingRule = fetchByC_D_Last(companyId,
+				destinationField, orderByComparator);
+
+		if (userMappingRule != null) {
+			return userMappingRule;
+		}
+
+		StringBundler msg = new StringBundler(6);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("companyId=");
+		msg.append(companyId);
+
+		msg.append(", destinationField=");
+		msg.append(destinationField);
+
+		msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+		throw new NoSuchUserMappingRuleException(msg.toString());
+	}
+
+	/**
+	 * Returns the last user mapping rule in the ordered set where companyId = &#63; and destinationField = &#63;.
+	 *
+	 * @param companyId the company ID
+	 * @param destinationField the destination field
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching user mapping rule, or <code>null</code> if a matching user mapping rule could not be found
+	 */
+	@Override
+	public UserMappingRule fetchByC_D_Last(long companyId,
+		String destinationField,
+		OrderByComparator<UserMappingRule> orderByComparator) {
+		int count = countByC_D(companyId, destinationField);
+
+		if (count == 0) {
+			return null;
+		}
+
+		List<UserMappingRule> list = findByC_D(companyId, destinationField,
+				count - 1, count, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the user mapping rules before and after the current user mapping rule in the ordered set where companyId = &#63; and destinationField = &#63;.
+	 *
+	 * @param userMappingRuleId the primary key of the current user mapping rule
+	 * @param companyId the company ID
+	 * @param destinationField the destination field
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next user mapping rule
+	 * @throws NoSuchUserMappingRuleException if a user mapping rule with the primary key could not be found
+	 */
+	@Override
+	public UserMappingRule[] findByC_D_PrevAndNext(long userMappingRuleId,
+		long companyId, String destinationField,
+		OrderByComparator<UserMappingRule> orderByComparator)
+		throws NoSuchUserMappingRuleException {
+		UserMappingRule userMappingRule = findByPrimaryKey(userMappingRuleId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			UserMappingRule[] array = new UserMappingRuleImpl[3];
+
+			array[0] = getByC_D_PrevAndNext(session, userMappingRule,
+					companyId, destinationField, orderByComparator, true);
+
+			array[1] = userMappingRule;
+
+			array[2] = getByC_D_PrevAndNext(session, userMappingRule,
+					companyId, destinationField, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected UserMappingRule getByC_D_PrevAndNext(Session session,
+		UserMappingRule userMappingRule, long companyId,
+		String destinationField,
+		OrderByComparator<UserMappingRule> orderByComparator, boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(5 +
+					(orderByComparator.getOrderByConditionFields().length * 3) +
+					(orderByComparator.getOrderByFields().length * 3));
+		}
+		else {
+			query = new StringBundler(4);
+		}
+
+		query.append(_SQL_SELECT_USERMAPPINGRULE_WHERE);
+
+		query.append(_FINDER_COLUMN_C_D_COMPANYID_2);
+
+		boolean bindDestinationField = false;
+
+		if (destinationField == null) {
+			query.append(_FINDER_COLUMN_C_D_DESTINATIONFIELD_1);
+		}
+		else if (destinationField.equals(StringPool.BLANK)) {
+			query.append(_FINDER_COLUMN_C_D_DESTINATIONFIELD_3);
+		}
+		else {
+			bindDestinationField = true;
+
+			query.append(_FINDER_COLUMN_C_D_DESTINATIONFIELD_2);
+		}
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+		else {
+			query.append(UserMappingRuleModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = query.toString();
+
+		Query q = session.createQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(companyId);
+
+		if (bindDestinationField) {
+			qPos.add(destinationField);
+		}
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByConditionValues(userMappingRule);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<UserMappingRule> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
+	 * Removes all the user mapping rules where companyId = &#63; and destinationField = &#63; from the database.
+	 *
+	 * @param companyId the company ID
+	 * @param destinationField the destination field
+	 */
+	@Override
+	public void removeByC_D(long companyId, String destinationField) {
+		for (UserMappingRule userMappingRule : findByC_D(companyId,
+				destinationField, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null)) {
+			remove(userMappingRule);
+		}
+	}
+
+	/**
+	 * Returns the number of user mapping rules where companyId = &#63; and destinationField = &#63;.
+	 *
+	 * @param companyId the company ID
+	 * @param destinationField the destination field
+	 * @return the number of matching user mapping rules
+	 */
+	@Override
+	public int countByC_D(long companyId, String destinationField) {
+		FinderPath finderPath = FINDER_PATH_COUNT_BY_C_D;
+
+		Object[] finderArgs = new Object[] { companyId, destinationField };
+
+		Long count = (Long)finderCache.getResult(finderPath, finderArgs, this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(3);
+
+			query.append(_SQL_COUNT_USERMAPPINGRULE_WHERE);
+
+			query.append(_FINDER_COLUMN_C_D_COMPANYID_2);
+
+			boolean bindDestinationField = false;
+
+			if (destinationField == null) {
+				query.append(_FINDER_COLUMN_C_D_DESTINATIONFIELD_1);
+			}
+			else if (destinationField.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_C_D_DESTINATIONFIELD_3);
+			}
+			else {
+				bindDestinationField = true;
+
+				query.append(_FINDER_COLUMN_C_D_DESTINATIONFIELD_2);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(companyId);
+
+				if (bindDestinationField) {
+					qPos.add(destinationField);
+				}
+
+				count = (Long)q.uniqueResult();
+
+				finderCache.putResult(finderPath, finderArgs, count);
+			}
+			catch (Exception e) {
+				finderCache.removeResult(finderPath, finderArgs);
+
+				throw processException(e);
+			}
+			finally {
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	private static final String _FINDER_COLUMN_C_D_COMPANYID_2 = "userMappingRule.companyId = ? AND ";
+	private static final String _FINDER_COLUMN_C_D_DESTINATIONFIELD_1 = "userMappingRule.destinationField IS NULL";
+	private static final String _FINDER_COLUMN_C_D_DESTINATIONFIELD_2 = "userMappingRule.destinationField = ?";
+	private static final String _FINDER_COLUMN_C_D_DESTINATIONFIELD_3 = "(userMappingRule.destinationField IS NULL OR userMappingRule.destinationField = '')";
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_MAPPINGDATASOURCEID =
 		new FinderPath(UserMappingRuleModelImpl.ENTITY_CACHE_ENABLED,
 			UserMappingRuleModelImpl.FINDER_CACHE_ENABLED,
@@ -1928,6 +2526,27 @@ public class UserMappingRulePersistenceImpl extends BasePersistenceImpl<UserMapp
 
 				finderCache.removeResult(FINDER_PATH_COUNT_BY_COMPANYID, args);
 				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPANYID,
+					args);
+			}
+
+			if ((userMappingRuleModelImpl.getColumnBitmask() &
+					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_D.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						userMappingRuleModelImpl.getOriginalCompanyId(),
+						userMappingRuleModelImpl.getOriginalDestinationField()
+					};
+
+				finderCache.removeResult(FINDER_PATH_COUNT_BY_C_D, args);
+				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_D,
+					args);
+
+				args = new Object[] {
+						userMappingRuleModelImpl.getCompanyId(),
+						userMappingRuleModelImpl.getDestinationField()
+					};
+
+				finderCache.removeResult(FINDER_PATH_COUNT_BY_C_D, args);
+				finderCache.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_C_D,
 					args);
 			}
 

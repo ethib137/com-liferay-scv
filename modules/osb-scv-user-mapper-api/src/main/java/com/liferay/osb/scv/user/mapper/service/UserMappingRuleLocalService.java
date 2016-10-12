@@ -207,6 +207,10 @@ public interface UserMappingRuleLocalService extends BaseLocalService,
 	public <T> List<T> dynamicQuery(DynamicQuery dynamicQuery, int start,
 		int end, OrderByComparator<T> orderByComparator);
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<java.lang.String> getUserMappingRuleDestinationFields(
+		long companyId) throws java.lang.Exception;
+
 	/**
 	* Returns a range of all the user mapping rules.
 	*
@@ -224,6 +228,10 @@ public interface UserMappingRuleLocalService extends BaseLocalService,
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<UserMappingRule> getUserMappingRules(long companyId, int start,
 		int end);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<UserMappingRule> getUserMappingRules(long companyId,
+		java.lang.String destinationField);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<UserMappingRule> getUserMappingRules(long mappingDataSourceId);

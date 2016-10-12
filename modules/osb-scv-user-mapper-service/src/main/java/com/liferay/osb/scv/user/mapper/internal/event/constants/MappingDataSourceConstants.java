@@ -14,6 +14,13 @@
 
 package com.liferay.osb.scv.user.mapper.internal.event.constants;
 
+import com.liferay.osb.scv.user.mapper.sample.Frequency;
+import com.liferay.osb.scv.user.mapper.sample.FrequencyUtil;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author Shinn Lok
  */
@@ -24,5 +31,24 @@ public class MappingDataSourceConstants {
 	public static final long LIFERAY = 1;
 
 	public static final long SALESFORCE = 2;
+
+	public static final long HUBSPOT = 3;
+
+	public static Map<Long, String> getMappingDataSourceTypes() {
+		Map<Long, String> map = new HashMap<>();
+
+		for (Object[] mappingDataSource : _mappingDataSources) {
+			map.put((Long)mappingDataSource[0], (String)mappingDataSource[1]);
+		}
+
+		return map;
+	}
+
+	private static final Object[][] _mappingDataSources = {
+		{MappingDataSourceConstants.CUSTOM, "custom"},
+		{MappingDataSourceConstants.LIFERAY, "liferay"},
+		{MappingDataSourceConstants.SALESFORCE, "salesforce"},
+		{MappingDataSourceConstants.HUBSPOT, "hubspot"},
+	};
 
 }

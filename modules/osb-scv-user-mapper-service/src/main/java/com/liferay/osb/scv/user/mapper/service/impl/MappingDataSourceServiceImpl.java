@@ -16,12 +16,14 @@ package com.liferay.osb.scv.user.mapper.service.impl;
 
 import aQute.bnd.annotation.ProviderType;
 
+import com.liferay.osb.scv.user.mapper.internal.event.constants.MappingDataSourceConstants;
 import com.liferay.osb.scv.user.mapper.model.MappingDataSource;
 import com.liferay.osb.scv.user.mapper.service.base.MappingDataSourceServiceBaseImpl;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author Shinn Lok
@@ -29,6 +31,10 @@ import java.util.List;
 @ProviderType
 public class MappingDataSourceServiceImpl
 	extends MappingDataSourceServiceBaseImpl {
+
+	public Map<Long, String> getMappingDataSourceTypes() throws Exception {
+		return MappingDataSourceConstants.getMappingDataSourceTypes();
+	}
 
 	public List<MappingDataSource> getMappingDataSources() {
 		return mappingDataSourcePersistence.findByCompanyId(CompanyThreadLocal.getCompanyId());

@@ -245,6 +245,12 @@ public class UserMappingRuleLocalServiceWrapper
 			end, orderByComparator);
 	}
 
+	@Override
+	public java.util.List<java.lang.String> getUserMappingRuleDestinationFields(
+		long companyId) throws java.lang.Exception {
+		return _userMappingRuleLocalService.getUserMappingRuleDestinationFields(companyId);
+	}
+
 	/**
 	* Returns a range of all the user mapping rules.
 	*
@@ -267,6 +273,13 @@ public class UserMappingRuleLocalServiceWrapper
 		long companyId, int start, int end) {
 		return _userMappingRuleLocalService.getUserMappingRules(companyId,
 			start, end);
+	}
+
+	@Override
+	public java.util.List<com.liferay.osb.scv.user.mapper.model.UserMappingRule> getUserMappingRules(
+		long companyId, java.lang.String destinationField) {
+		return _userMappingRuleLocalService.getUserMappingRules(companyId,
+			destinationField);
 	}
 
 	@Override

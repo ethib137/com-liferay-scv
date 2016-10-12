@@ -58,7 +58,7 @@ public abstract class SCVModel<T extends BaseModel<T>>
 	public abstract List<Long> getPrimaryKeys(User user) throws Exception;
 
 	public String[] getRequiredFields() {
-		return null;
+		return new String[]{};
 	}
 
 	public boolean isPrimary() {

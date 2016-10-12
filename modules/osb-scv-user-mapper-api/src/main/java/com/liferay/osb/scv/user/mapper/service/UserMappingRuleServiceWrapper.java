@@ -62,10 +62,23 @@ public class UserMappingRuleServiceWrapper implements UserMappingRuleService,
 	}
 
 	@Override
+	public java.util.List<java.lang.String> getUserMappingRuleDestinationFields()
+		throws java.lang.Exception {
+		return _userMappingRuleService.getUserMappingRuleDestinationFields();
+	}
+
+	@Override
 	public java.util.List<com.liferay.osb.scv.user.mapper.model.UserMappingRule> getUserMappingRules(
 		int start, int end)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _userMappingRuleService.getUserMappingRules(start, end);
+	}
+
+	@Override
+	public java.util.List<com.liferay.osb.scv.user.mapper.model.UserMappingRule> getUserMappingRules(
+		java.lang.String destinationField)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return _userMappingRuleService.getUserMappingRules(destinationField);
 	}
 
 	@Override
