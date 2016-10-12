@@ -12,9 +12,6 @@ dependencies {
 task deploy(overwrite: true) {
 }
 
-task jar(overwrite: true) {
-}
-
 task copyLibs(type: Copy) {
 	from configurations.compile
 	into 'lib'
