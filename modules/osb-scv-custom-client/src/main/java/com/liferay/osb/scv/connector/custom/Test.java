@@ -60,16 +60,24 @@ public class Test {
 	public static void main(String[] args) throws Exception {
 		setup();
 
-		String path = System.getProperty("user.home") + "/scv.txt";
+		importSql("create.sql");
+
+		String path = System.getProperty("user.home") + "/.scvtest";
+
+		System.out.println(Paths.get(path).toString());
 
 		long mappingDataSourceId = 0;
 
 		if (Files.exists(Paths.get(path))) {
+			importCsv("job2.csv");
+
 			List<String> strings = Files.readAllLines(Paths.get(path));
 
 			mappingDataSourceId = Long.valueOf(strings.get(0));
 		}
 		else {
+			importCsv("job.csv");
+
 			mappingDataSourceId = addDataSource();
 
 			Path path1 = Paths.get(path);
@@ -93,10 +101,6 @@ public class Test {
 			Map<String, String> fields = entry.getValue();
 
 			for (String field : fields.keySet()) {
-				if (!syncFields.contains(field)) {
-					continue;
-				}
-
 				addUserMappingRule(
 					mappingDataSourceId, tableName, field, splitCamelCase(field));
 			}
@@ -196,7 +200,7 @@ public class Test {
 
 		Map<String, Object> map = new HashMap<>();
 
-		map.put("name", "Magic");
+		map.put("name", "Custom Data Source #9");
 		map.put("availableFields", getAvailableFields());
 
 		HttpEntity httpEntity = getURLEncodedFormEntity(map);
@@ -300,9 +304,6 @@ public class Test {
 			Statement statement = _connection.createStatement();
 
 			statement.executeUpdate("truncate People");
-
-			importData("create.sql");
-			importData("update.sql");
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -323,7 +324,21 @@ public class Test {
 		return tempFile;
 	}
 
-	protected static void importData(String fileName) throws Exception {
+	protected static void importCsv(String fileName) throws Exception {
+		File tempFile = createTempFile(fileName);
+
+		Statement statement = getConnection().createStatement();
+
+		String s =
+			"LOAD DATA LOCAL INFILE '" + tempFile.getAbsolutePath() +"' INTO TABLE people " +
+			"FIELDS TERMINATED BY ',' enclosed by '\"' lines terminated by '\n'(firstName,lastName,emailAddress,jobTitle,salary,expertise,company)";
+
+		statement.executeUpdate(s);
+
+		tempFile.delete();
+	}
+
+	protected static void importSql(String fileName) throws Exception {
 		File tempFile = createTempFile(fileName);
 
 		Runtime runtime = Runtime.getRuntime();

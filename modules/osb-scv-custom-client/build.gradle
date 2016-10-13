@@ -1,6 +1,6 @@
 apply plugin: "application"
 
-mainClassName = "Test"
+mainClassName = "com.liferay.osb.scv.connector.custom.Test"
 
 dependencies {
 	compile group: "mysql", name: "mysql-connector-java", version: "6.0.4"
@@ -10,6 +10,10 @@ dependencies {
 }
 
 task deploy(overwrite: true) {
+}
+
+task scv() {
+	delete System.getProperty("user.home") + '/.scvtest'
 }
 
 task copyLibs(type: Copy) {
