@@ -209,8 +209,6 @@ public class Test {
 
 		String mappingDataSourceId = EntityUtils.toString(entity);
 
-		System.out.println(mappingDataSourceId);
-
 		return Long.parseLong(mappingDataSourceId.replaceAll("\"", ""));
 	}
 
@@ -231,7 +229,7 @@ public class Test {
 			tableName = matcher.group(1);
 		}
 
-		Pattern pattern2 = Pattern.compile("([^\\s]+ [^\\s]+),");
+		Pattern pattern2 = Pattern.compile("([^\\s]+ VARCHAR\\(50\\))");
 
 		Matcher matcher2 = pattern2.matcher(content);
 
