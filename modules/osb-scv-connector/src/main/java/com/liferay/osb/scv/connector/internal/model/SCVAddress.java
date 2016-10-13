@@ -58,7 +58,7 @@ public class SCVAddress extends SCVModel<Address> {
 
 	private static String[] _availableFields =
 		new String[] {
-			"city", "countryId", "street1", "street2", "street3", "zip"
+			"city", "country", "region", "street1", "street2", "street3", "zip"
 		};
 	private static String _primaryKeyField = "addressId";
 

@@ -221,9 +221,17 @@ public class SCVUserJSONWS {
 				jsonObject.put(field, String.valueOf(attribute));
 			}
 			else {
-				String value = BeanPropertiesUtil.getString(baseModel, field);
+				Object object = BeanPropertiesUtil.getObject(baseModel, field);
 
-				jsonObject.put(field, value);
+				if (object instanceof BaseModel) {
+					String name = BeanPropertiesUtil.getStringSilent(
+						object, "name");
+
+					jsonObject.put(field, name);
+				}
+				else {
+					jsonObject.put(field, object);
+				}
 			}
 		}
 
@@ -249,33 +257,39 @@ public class SCVUserJSONWS {
 		}
 	}
 
+	protected void getFields(JSONObject jsonObject, Class<?> clazz, SCVModel scvModel)
+		throws Exception {
+
+		BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
+
+		PropertyDescriptor[] propertyDescriptors =
+			beanInfo.getPropertyDescriptors();
+
+		List<String> availableFields = Arrays.asList(
+			scvModel.getAvailableFields());
+
+		for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+			String name = propertyDescriptor.getName();
+
+			if (!availableFields.contains(name)) {
+				continue;
+			}
+
+			Class<?> propertyTypeClass =
+				propertyDescriptor.getPropertyType();
+
+			jsonObject.put(name, propertyTypeClass.getSimpleName());
+		}
+	}
+
 	protected JSONObject getFields(Class<?> clazz) {
 		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
 		try {
-			BeanInfo beanInfo = Introspector.getBeanInfo(
-				clazz.getInterfaces()[0]);
-
-			PropertyDescriptor[] propertyDescriptors =
-				beanInfo.getPropertyDescriptors();
-
 			SCVModel scvModel = _scvModelMap.get(clazz.getSimpleName());
 
-			List<String> availableFields = Arrays.asList(
-				scvModel.getAvailableFields());
-
-			for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
-				String name = propertyDescriptor.getName();
-
-				if (!availableFields.contains(name)) {
-					continue;
-				}
-
-				Class<?> propertyTypeClass =
-					propertyDescriptor.getPropertyType();
-
-				jsonObject.put(name, propertyTypeClass.getSimpleName());
-			}
+			getFields(jsonObject, clazz, scvModel);
+			getFields(jsonObject, clazz.getInterfaces()[0], scvModel);
 
 			ExpandoBridge expandoBridge =
 				ExpandoBridgeFactoryUtil.getExpandoBridge(

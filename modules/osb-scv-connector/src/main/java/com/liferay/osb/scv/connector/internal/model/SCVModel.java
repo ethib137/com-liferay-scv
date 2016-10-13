@@ -68,9 +68,12 @@ public abstract class SCVModel<T extends BaseModel<T>>
 	protected void addData(Map<String, String> parameters)
 		throws Exception {
 
-		getJSONWebServiceClient().doPost(
-			"http://localhost:8080/api/jsonws/Cloud.cloud/add-data",
-			parameters);
+		try {
+			getJSONWebServiceClient().doPost(
+				_serverName + "/api/jsonws/Cloud.cloud/add-data", parameters);
+		}
+		catch (Exception e) {
+		}
 	}
 
 	@Override
@@ -227,7 +230,7 @@ public abstract class SCVModel<T extends BaseModel<T>>
 
 		_jsonWebServiceClient = new JSONWebServiceClientImpl();
 
-		URL url = new URL("http://localhost:8080");
+		URL url = new URL(_serverName);
 
 		_jsonWebServiceClient.setHostName(url.getHost());
 		_jsonWebServiceClient.setHostPort(url.getPort());
@@ -245,5 +248,6 @@ public abstract class SCVModel<T extends BaseModel<T>>
 		return stream.collect(Collectors.toList());
 	}
 
+	private static String _serverName = "http://docker-engine-wcm:9012";
 	private static JSONWebServiceClient _jsonWebServiceClient;
 }
