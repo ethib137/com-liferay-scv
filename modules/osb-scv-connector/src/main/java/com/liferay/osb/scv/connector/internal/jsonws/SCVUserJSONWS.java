@@ -46,6 +46,7 @@ import java.io.Serializable;
 
 import java.lang.reflect.InvocationHandler;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -104,6 +105,10 @@ public class SCVUserJSONWS {
 		JSONObject usersJSONObject = JSONFactoryUtil.createJSONObject();
 
 		List<String> userFields = fields.get("User");
+
+		if (userFields == null) {
+			userFields = new ArrayList<>();
+		}
 
 		SCVModel scvModel = _scvModelMap.get("User");
 

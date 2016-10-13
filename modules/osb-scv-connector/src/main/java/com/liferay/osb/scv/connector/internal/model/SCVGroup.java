@@ -48,7 +48,7 @@ public class SCVGroup extends SCVModel<Group> {
 	}
 
 	private static String[] _availableFields =
-		new String[] {"description", "friendlyURL", "type"};
+		new String[] {"description", "friendlyURL", "name", "type"};
 	private static String _primaryKeyField = "groupId";
 
 }

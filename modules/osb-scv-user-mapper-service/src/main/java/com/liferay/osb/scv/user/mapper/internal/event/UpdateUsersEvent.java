@@ -138,8 +138,13 @@ public class UpdateUsersEvent extends BaseEvent {
 								continue;
 							}
 
-							destinationModelJSONObject.put(
-								curKey, sourceModelJSONObject.getString(curKey));
+							String value = sourceModelJSONObject.getString(curKey);
+
+							if (value.equals("[]")) {
+								continue;
+							}
+
+							destinationModelJSONObject.put(curKey, value);
 						}
 					}
 
@@ -175,8 +180,13 @@ public class UpdateUsersEvent extends BaseEvent {
 				while (keys.hasNext()) {
 					String key = keys.next();
 
-					destinationUserJSONObject.put(
-						key, sourceUserJSONObject.getString(key));
+					String string = sourceUserJSONObject.getString(key);
+
+					if (string.equals("[]")) {
+						continue;
+					}
+
+					destinationUserJSONObject.put(key, string);
 				}
 
 				destinationUserJSONArray.put(destinationUserJSONObject);
