@@ -60,17 +60,13 @@ public class Test {
 	public static void main(String[] args) throws Exception {
 		setup();
 
-		importSql("create.sql");
+		importSql("create2.sql");
 
 		String path = System.getProperty("user.home") + "/.scvtest";
-
-		System.out.println(Paths.get(path).toString());
 
 		long mappingDataSourceId = 0;
 
 		if (Files.exists(Paths.get(path))) {
-			importCsv("job2.csv");
-
 			List<String> strings = Files.readAllLines(Paths.get(path));
 
 			mappingDataSourceId = Long.valueOf(strings.get(0));
@@ -213,13 +209,15 @@ public class Test {
 
 		String mappingDataSourceId = EntityUtils.toString(entity);
 
+		System.out.println(mappingDataSourceId);
+
 		return Long.parseLong(mappingDataSourceId.replaceAll("\"", ""));
 	}
 
 	protected static String getAvailableFields()
 		throws Exception{
 
-		File tempFile = createTempFile("create.sql");
+		File tempFile = createTempFile("create2.sql");
 
 		String content = new String(Files.readAllBytes(tempFile.toPath()));
 
@@ -331,7 +329,7 @@ public class Test {
 
 		String s =
 			"LOAD DATA LOCAL INFILE '" + tempFile.getAbsolutePath() +"' INTO TABLE people " +
-			"FIELDS TERMINATED BY ',' enclosed by '\"' lines terminated by '\n'(firstName,lastName,emailAddress,jobTitle,salary,expertise,company)";
+			"FIELDS TERMINATED BY ',' enclosed by '\"' lines terminated by '\n'(firstName,lastName,emailAddress,jobTitle,salary,expertise)";
 
 		statement.executeUpdate(s);
 
@@ -386,7 +384,5 @@ public class Test {
 		new HashMap<>();
 	private static HttpClient _httpClient;
 	private static Connection _connection;
-
-	protected static List<String> syncFields = Arrays.asList("emailAddress", "companyName", "jobTitle", "salary");
 
 }

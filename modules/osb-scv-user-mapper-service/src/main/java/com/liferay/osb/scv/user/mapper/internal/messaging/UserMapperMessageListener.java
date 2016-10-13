@@ -168,7 +168,7 @@ public class UserMapperMessageListener extends BaseMessageListener {
 			{"User", "openId", "Open ID", false},
 			{"User", "googleUserId", "Google User Id", false},
 
-			{"Contact", "male", "Is Male?", false},
+			{"Contact", "male", "Gender", false},
 			{"Contact", "birthday", "Date of Birth", false},
 			{"Contact", "facebookSn", "Facebook SN", false},
 			{"Contact", "twitterSn", "Twitter SN", false},

@@ -27,6 +27,7 @@ import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.Validator;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -115,7 +116,7 @@ public class UpdateUsersEvent extends BaseEvent {
 						String value = sourceModelJSONObject.getString(
 							userMappingRule.getSourceField());
 
-						if ((value != null) && !_override) {
+						if (!Validator.isBlank(value) && !_override) {
 							destinationModelJSONObject.put(
 								userMappingRule.getDestinationField(), value);
 						}
