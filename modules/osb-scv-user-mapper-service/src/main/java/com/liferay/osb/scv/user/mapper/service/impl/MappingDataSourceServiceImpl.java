@@ -20,8 +20,12 @@ import com.liferay.osb.scv.user.mapper.internal.event.constants.MappingDataSourc
 import com.liferay.osb.scv.user.mapper.model.MappingDataSource;
 import com.liferay.osb.scv.user.mapper.service.base.MappingDataSourceServiceBaseImpl;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -50,6 +54,49 @@ public class MappingDataSourceServiceImpl
 
 	public List<MappingDataSource> getMappingDataSources() {
 		return mappingDataSourcePersistence.findByCompanyId(CompanyThreadLocal.getCompanyId());
+	}
+
+	public JSONArray getMappingDataSourceNames() {
+		List<MappingDataSource> mappingDataSources =
+			mappingDataSourcePersistence.findByCompanyId(
+				CompanyThreadLocal.getCompanyId());
+
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+		for (MappingDataSource mappingDataSource : mappingDataSources) {
+			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+			jsonObject.put("name", mappingDataSource.getName());
+			jsonObject.put(
+				"mappingDataSourceId",
+				mappingDataSource.getMappingDataSourceId());
+
+			jsonArray.put(jsonObject);
+		}
+
+		return jsonArray;
+	}
+
+	public List<String> getMappingDataSourceTableNames(long mappingDataSourceId)
+		throws Exception {
+
+		MappingDataSource mappingDataSource =
+			mappingDataSourcePersistence.fetchByPrimaryKey(mappingDataSourceId);
+
+		return mappingDataSource.getTableNames();
+	}
+
+	public List<String> getMappingDataSourceFieldNames(
+			long mappingDataSourceId, String tableName)
+		throws Exception {
+
+		MappingDataSource mappingDataSource =
+			mappingDataSourcePersistence.fetchByPrimaryKey(mappingDataSourceId);
+
+		Map<String, String> availableFields =
+			mappingDataSource.getAvailableFields(tableName);
+
+		return new ArrayList<>(availableFields.keySet());
 	}
 
 	@Override

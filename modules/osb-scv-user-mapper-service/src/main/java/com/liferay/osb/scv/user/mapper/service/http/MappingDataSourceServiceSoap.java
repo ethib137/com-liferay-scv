@@ -94,6 +94,50 @@ public class MappingDataSourceServiceSoap {
 		}
 	}
 
+	public static java.lang.String getMappingDataSourceNames()
+		throws RemoteException {
+		try {
+			com.liferay.portal.kernel.json.JSONArray returnValue = MappingDataSourceServiceUtil.getMappingDataSourceNames();
+
+			return returnValue.toString();
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static java.lang.String[] getMappingDataSourceTableNames(
+		long mappingDataSourceId) throws RemoteException {
+		try {
+			java.util.List<java.lang.String> returnValue = MappingDataSourceServiceUtil.getMappingDataSourceTableNames(mappingDataSourceId);
+
+			return returnValue.toArray(new java.lang.String[returnValue.size()]);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static java.lang.String[] getMappingDataSourceFieldNames(
+		long mappingDataSourceId, java.lang.String tableName)
+		throws RemoteException {
+		try {
+			java.util.List<java.lang.String> returnValue = MappingDataSourceServiceUtil.getMappingDataSourceFieldNames(mappingDataSourceId,
+					tableName);
+
+			return returnValue.toArray(new java.lang.String[returnValue.size()]);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	public static com.liferay.osb.scv.user.mapper.model.MappingDataSourceSoap addMappingDataSource(
 		java.lang.String name, java.lang.String url, java.lang.String login,
 		java.lang.String password, long type, java.lang.String availableFields)

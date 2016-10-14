@@ -20,6 +20,7 @@ import com.liferay.osb.scv.user.mapper.model.MappingDataSource;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.security.access.control.AccessControlled;
 import com.liferay.portal.kernel.service.BaseService;
@@ -63,12 +64,24 @@ public interface MappingDataSourceService extends BaseService {
 	public MappingDataSource deleteMappingDataSource(long mappingDataSourceId)
 		throws java.lang.Exception;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONArray getMappingDataSourceNames();
+
 	/**
 	* Returns the OSGi service identifier.
 	*
 	* @return the OSGi service identifier
 	*/
 	public java.lang.String getOSGiServiceIdentifier();
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<java.lang.String> getMappingDataSourceFieldNames(
+		long mappingDataSourceId, java.lang.String tableName)
+		throws java.lang.Exception;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public List<java.lang.String> getMappingDataSourceTableNames(
+		long mappingDataSourceId) throws java.lang.Exception;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<MappingDataSource> getMappingDataSources();

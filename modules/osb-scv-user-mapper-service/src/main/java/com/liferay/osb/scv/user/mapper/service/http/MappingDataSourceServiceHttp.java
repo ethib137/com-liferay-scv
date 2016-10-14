@@ -146,6 +146,99 @@ public class MappingDataSourceServiceHttp {
 		}
 	}
 
+	public static com.liferay.portal.kernel.json.JSONArray getMappingDataSourceNames(
+		HttpPrincipal httpPrincipal) {
+		try {
+			MethodKey methodKey = new MethodKey(MappingDataSourceServiceUtil.class,
+					"getMappingDataSourceNames",
+					_getMappingDataSourceNamesParameterTypes3);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+
+			return (com.liferay.portal.kernel.json.JSONArray)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
+	public static java.util.List<java.lang.String> getMappingDataSourceTableNames(
+		HttpPrincipal httpPrincipal, long mappingDataSourceId)
+		throws java.lang.Exception {
+		try {
+			MethodKey methodKey = new MethodKey(MappingDataSourceServiceUtil.class,
+					"getMappingDataSourceTableNames",
+					_getMappingDataSourceTableNamesParameterTypes4);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey,
+					mappingDataSourceId);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				if (e instanceof java.lang.Exception) {
+					throw (java.lang.Exception)e;
+				}
+
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+
+			return (java.util.List<java.lang.String>)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
+	public static java.util.List<java.lang.String> getMappingDataSourceFieldNames(
+		HttpPrincipal httpPrincipal, long mappingDataSourceId,
+		java.lang.String tableName) throws java.lang.Exception {
+		try {
+			MethodKey methodKey = new MethodKey(MappingDataSourceServiceUtil.class,
+					"getMappingDataSourceFieldNames",
+					_getMappingDataSourceFieldNamesParameterTypes5);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey,
+					mappingDataSourceId, tableName);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				if (e instanceof java.lang.Exception) {
+					throw (java.lang.Exception)e;
+				}
+
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+
+			return (java.util.List<java.lang.String>)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
 	public static com.liferay.osb.scv.user.mapper.model.MappingDataSource addMappingDataSource(
 		HttpPrincipal httpPrincipal, java.lang.String name,
 		java.lang.String url, java.lang.String login,
@@ -153,7 +246,7 @@ public class MappingDataSourceServiceHttp {
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(MappingDataSourceServiceUtil.class,
-					"addMappingDataSource", _addMappingDataSourceParameterTypes3);
+					"addMappingDataSource", _addMappingDataSourceParameterTypes6);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, name,
 					url, login, password, type, availableFields);
@@ -190,7 +283,14 @@ public class MappingDataSourceServiceHttp {
 	private static final Class<?>[] _getMappingDataSourcesParameterTypes2 = new Class[] {
 			
 		};
-	private static final Class<?>[] _addMappingDataSourceParameterTypes3 = new Class[] {
+	private static final Class<?>[] _getMappingDataSourceNamesParameterTypes3 = new Class[] {
+			
+		};
+	private static final Class<?>[] _getMappingDataSourceTableNamesParameterTypes4 =
+		new Class[] { long.class };
+	private static final Class<?>[] _getMappingDataSourceFieldNamesParameterTypes5 =
+		new Class[] { long.class, java.lang.String.class };
+	private static final Class<?>[] _addMappingDataSourceParameterTypes6 = new Class[] {
 			java.lang.String.class, java.lang.String.class,
 			java.lang.String.class, java.lang.String.class, long.class,
 			java.lang.String.class

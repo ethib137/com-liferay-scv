@@ -48,6 +48,11 @@ public class MappingDataSourceServiceWrapper implements MappingDataSourceService
 		return _mappingDataSourceService.deleteMappingDataSource(mappingDataSourceId);
 	}
 
+	@Override
+	public com.liferay.portal.kernel.json.JSONArray getMappingDataSourceNames() {
+		return _mappingDataSourceService.getMappingDataSourceNames();
+	}
+
 	/**
 	* Returns the OSGi service identifier.
 	*
@@ -56,6 +61,20 @@ public class MappingDataSourceServiceWrapper implements MappingDataSourceService
 	@Override
 	public java.lang.String getOSGiServiceIdentifier() {
 		return _mappingDataSourceService.getOSGiServiceIdentifier();
+	}
+
+	@Override
+	public java.util.List<java.lang.String> getMappingDataSourceFieldNames(
+		long mappingDataSourceId, java.lang.String tableName)
+		throws java.lang.Exception {
+		return _mappingDataSourceService.getMappingDataSourceFieldNames(mappingDataSourceId,
+			tableName);
+	}
+
+	@Override
+	public java.util.List<java.lang.String> getMappingDataSourceTableNames(
+		long mappingDataSourceId) throws java.lang.Exception {
+		return _mappingDataSourceService.getMappingDataSourceTableNames(mappingDataSourceId);
 	}
 
 	@Override

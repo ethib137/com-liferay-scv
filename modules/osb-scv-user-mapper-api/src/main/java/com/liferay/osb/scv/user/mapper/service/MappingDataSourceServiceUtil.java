@@ -55,6 +55,10 @@ public class MappingDataSourceServiceUtil {
 		return getService().deleteMappingDataSource(mappingDataSourceId);
 	}
 
+	public static com.liferay.portal.kernel.json.JSONArray getMappingDataSourceNames() {
+		return getService().getMappingDataSourceNames();
+	}
+
 	/**
 	* Returns the OSGi service identifier.
 	*
@@ -62,6 +66,19 @@ public class MappingDataSourceServiceUtil {
 	*/
 	public static java.lang.String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
+	}
+
+	public static java.util.List<java.lang.String> getMappingDataSourceFieldNames(
+		long mappingDataSourceId, java.lang.String tableName)
+		throws java.lang.Exception {
+		return getService()
+				   .getMappingDataSourceFieldNames(mappingDataSourceId,
+			tableName);
+	}
+
+	public static java.util.List<java.lang.String> getMappingDataSourceTableNames(
+		long mappingDataSourceId) throws java.lang.Exception {
+		return getService().getMappingDataSourceTableNames(mappingDataSourceId);
 	}
 
 	public static java.util.List<com.liferay.osb.scv.user.mapper.model.MappingDataSource> getMappingDataSources() {
