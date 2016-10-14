@@ -72,7 +72,7 @@ public class UserMappingRuleLocalServiceImpl
 			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
 			jsonObject.put("name", entry.getKey());
-			jsonObject.put("value", entry.getValue());
+			jsonObject.put("count", entry.getValue());
 
 			jsonArray.put(jsonObject);
 		}
