@@ -60,6 +60,9 @@ public interface MappingDataSourceService extends BaseService {
 		java.lang.String password, long type, java.lang.String availableFields)
 		throws PortalException;
 
+	public MappingDataSource deleteMappingDataSource(long mappingDataSourceId)
+		throws java.lang.Exception;
+
 	/**
 	* Returns the OSGi service identifier.
 	*

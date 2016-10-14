@@ -65,6 +65,20 @@ import java.rmi.RemoteException;
  */
 @ProviderType
 public class MappingDataSourceServiceSoap {
+	public static com.liferay.osb.scv.user.mapper.model.MappingDataSourceSoap deleteMappingDataSource(
+		long mappingDataSourceId) throws RemoteException {
+		try {
+			com.liferay.osb.scv.user.mapper.model.MappingDataSource returnValue = MappingDataSourceServiceUtil.deleteMappingDataSource(mappingDataSourceId);
+
+			return com.liferay.osb.scv.user.mapper.model.MappingDataSourceSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	public static com.liferay.osb.scv.user.mapper.model.MappingDataSourceSoap[] getMappingDataSources()
 		throws RemoteException {
 		try {

@@ -50,6 +50,11 @@ public class MappingDataSourceServiceUtil {
 			availableFields);
 	}
 
+	public static com.liferay.osb.scv.user.mapper.model.MappingDataSource deleteMappingDataSource(
+		long mappingDataSourceId) throws java.lang.Exception {
+		return getService().deleteMappingDataSource(mappingDataSourceId);
+	}
+
 	/**
 	* Returns the OSGi service identifier.
 	*

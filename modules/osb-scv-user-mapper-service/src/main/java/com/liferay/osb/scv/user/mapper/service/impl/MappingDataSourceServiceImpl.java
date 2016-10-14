@@ -32,6 +32,17 @@ import java.util.Map;
 public class MappingDataSourceServiceImpl
 	extends MappingDataSourceServiceBaseImpl {
 
+	public MappingDataSource deleteMappingDataSource(long mappingDataSourceId)
+		throws Exception {
+
+		MappingDataSource mappingDataSource =
+			mappingDataSourcePersistence.fetchByPrimaryKey(mappingDataSourceId);
+
+		mappingDataSourcePersistence.remove(mappingDataSource);
+
+		return mappingDataSource;
+	}
+
 	public Map<Long, String> getMappingDataSourceTypes() throws Exception {
 		return MappingDataSourceConstants.getMappingDataSourceTypes();
 	}

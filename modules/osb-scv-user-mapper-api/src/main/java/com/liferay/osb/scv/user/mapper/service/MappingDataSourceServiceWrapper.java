@@ -42,6 +42,12 @@ public class MappingDataSourceServiceWrapper implements MappingDataSourceService
 			password, type, availableFields);
 	}
 
+	@Override
+	public com.liferay.osb.scv.user.mapper.model.MappingDataSource deleteMappingDataSource(
+		long mappingDataSourceId) throws java.lang.Exception {
+		return _mappingDataSourceService.deleteMappingDataSource(mappingDataSourceId);
+	}
+
 	/**
 	* Returns the OSGi service identifier.
 	*

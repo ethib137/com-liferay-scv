@@ -55,12 +55,45 @@ import com.liferay.portal.kernel.util.MethodKey;
  */
 @ProviderType
 public class MappingDataSourceServiceHttp {
+	public static com.liferay.osb.scv.user.mapper.model.MappingDataSource deleteMappingDataSource(
+		HttpPrincipal httpPrincipal, long mappingDataSourceId)
+		throws java.lang.Exception {
+		try {
+			MethodKey methodKey = new MethodKey(MappingDataSourceServiceUtil.class,
+					"deleteMappingDataSource",
+					_deleteMappingDataSourceParameterTypes0);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey,
+					mappingDataSourceId);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				if (e instanceof java.lang.Exception) {
+					throw (java.lang.Exception)e;
+				}
+
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+
+			return (com.liferay.osb.scv.user.mapper.model.MappingDataSource)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
 	public static java.util.Map<java.lang.Long, java.lang.String> getMappingDataSourceTypes(
 		HttpPrincipal httpPrincipal) throws java.lang.Exception {
 		try {
 			MethodKey methodKey = new MethodKey(MappingDataSourceServiceUtil.class,
 					"getMappingDataSourceTypes",
-					_getMappingDataSourceTypesParameterTypes0);
+					_getMappingDataSourceTypesParameterTypes1);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey);
 
@@ -91,7 +124,7 @@ public class MappingDataSourceServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(MappingDataSourceServiceUtil.class,
 					"getMappingDataSources",
-					_getMappingDataSourcesParameterTypes1);
+					_getMappingDataSourcesParameterTypes2);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey);
 
@@ -120,7 +153,7 @@ public class MappingDataSourceServiceHttp {
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(MappingDataSourceServiceUtil.class,
-					"addMappingDataSource", _addMappingDataSourceParameterTypes2);
+					"addMappingDataSource", _addMappingDataSourceParameterTypes3);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, name,
 					url, login, password, type, availableFields);
@@ -148,13 +181,16 @@ public class MappingDataSourceServiceHttp {
 	}
 
 	private static Log _log = LogFactoryUtil.getLog(MappingDataSourceServiceHttp.class);
-	private static final Class<?>[] _getMappingDataSourceTypesParameterTypes0 = new Class[] {
+	private static final Class<?>[] _deleteMappingDataSourceParameterTypes0 = new Class[] {
+			long.class
+		};
+	private static final Class<?>[] _getMappingDataSourceTypesParameterTypes1 = new Class[] {
 			
 		};
-	private static final Class<?>[] _getMappingDataSourcesParameterTypes1 = new Class[] {
+	private static final Class<?>[] _getMappingDataSourcesParameterTypes2 = new Class[] {
 			
 		};
-	private static final Class<?>[] _addMappingDataSourceParameterTypes2 = new Class[] {
+	private static final Class<?>[] _addMappingDataSourceParameterTypes3 = new Class[] {
 			java.lang.String.class, java.lang.String.class,
 			java.lang.String.class, java.lang.String.class, long.class,
 			java.lang.String.class
