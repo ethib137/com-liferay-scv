@@ -60,8 +60,9 @@ public class UserProfileCommandUtil {
 		return _userProfileCommand.search(jsonObject, documentType);
 	}
 
-	public static List<Long> search(String field, String documentType) {
-		return _userProfileCommand.search(field, documentType);
+	public static List<Long> search(
+			String field, int from, int size, String documentType) {
+		return _userProfileCommand.search(field, from, size, documentType);
 	}
 
 	public static void update(

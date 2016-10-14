@@ -124,11 +124,13 @@ public class UserProfileUtil {
 		return jsonObject;
 	}
 
-	public static JSONArray getSCVUserProfiles() throws Exception {
+	public static JSONArray getSCVUserProfiles(
+			int from, int size) throws Exception {
+
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
 		List<Long> scvUserProfileIds = _userProfileCommandUtil.search(
-			"scvUserProfileId",
+			"scvUserProfileId", from, size,
 			UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE);
 
 		for (long scvUserProfileId : scvUserProfileIds) {

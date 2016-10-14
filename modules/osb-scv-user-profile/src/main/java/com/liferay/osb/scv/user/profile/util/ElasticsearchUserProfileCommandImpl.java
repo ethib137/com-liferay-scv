@@ -335,13 +335,16 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 		return dataSourceEntries;
 	}
 
-	public List<Long> search(String field, String documentType) {
+	public List<Long> search(
+			String field, int from, int size, String documentType) {
+
 		List<Long> searchResults = new ArrayList<>();
 
 		SearchRequestBuilder searchRequestBuilder = _client.prepareSearch();
 
 		searchRequestBuilder.setIndices(_INDEX_NAME);
-		searchRequestBuilder.setSize(0);
+		searchRequestBuilder.setSize(size);
+		searchRequestBuilder.setFrom(from);
 		searchRequestBuilder.setQuery(QueryBuilders.matchAllQuery());
 		searchRequestBuilder.setTypes(documentType);
 
