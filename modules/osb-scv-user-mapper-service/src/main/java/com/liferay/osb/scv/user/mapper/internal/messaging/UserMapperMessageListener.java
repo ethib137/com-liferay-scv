@@ -120,25 +120,34 @@ public class UserMapperMessageListener extends BaseMessageListener {
 				}
 
 				List<UserMappingRule> userMappingRules =
-						UserMappingRuleLocalServiceUtil.getUserMappingRules(
-								mappingDataSource.getMappingDataSourceId(),
-								FrequencyUtil.INSTANT);
+					UserMappingRuleLocalServiceUtil.getUserMappingRules(
+						mappingDataSource.getMappingDataSourceId(),
+							FrequencyUtil.INSTANT);
 
 				UpdateUsersEvent updateUsersEvent = new UpdateUsersEvent(
 					mappingDataSource.getMappingDataSourceId(),
 					userMappingRules);
 
 				updateUsersEvent.run();
+
+				Message responseMessage = MessageBusUtil.createResponseMessage(
+					message);
+
+				responseMessage.setPayload(mappingDataSource);
+
+				MessageBusUtil.sendMessage(
+					responseMessage.getDestinationName(), responseMessage);
 			}
+			else {
+				Message responseMessage = MessageBusUtil.createResponseMessage(
+					message);
 
-			Message responseMessage = MessageBusUtil.createResponseMessage(
-				message);
+				responseMessage.setPayload(
+					mappingDataSource.getMappingDataSourceId());
 
-			responseMessage.setPayload(
-				mappingDataSource.getMappingDataSourceId());
-
-			MessageBusUtil.sendMessage(
-				responseMessage.getDestinationName(), responseMessage);
+				MessageBusUtil.sendMessage(
+					responseMessage.getDestinationName(), responseMessage);
+			}
 		}
 		else if (method.equals("addUserMappingRule")) {
 			String modelName = message.getString("modelName");

@@ -52,7 +52,7 @@ import java.util.Map;
 @JSONWebService
 public class Cloud {
 
-	public static void addDataSource(
+	public static Object addDataSource(
 			String name, String urlString, String login, String password)
 		throws Exception {
 
@@ -68,8 +68,9 @@ public class Cloud {
 
 		message.setValues(parameters);
 
-		Object object = MessageBusUtil.sendSynchronousMessage(
-			UserMapperDestinationNames.SCV_USER_MAPPER, message);
+		MappingDataSource mappingDataSource =
+			(MappingDataSource)MessageBusUtil.sendSynchronousMessage(
+				UserMapperDestinationNames.SCV_USER_MAPPER, message);
 
 		// **** START DEV ONLY ****
 
@@ -85,17 +86,18 @@ public class Cloud {
 
 		Map<String, String> responseParameters = new HashMap<>();
 
-		String mappingDataSourceId = String.valueOf(object);
-
-		responseParameters.put("mappingDataSourceId", mappingDataSourceId);
+		responseParameters.put(
+			"mappingDataSourceId",
+			String.valueOf(mappingDataSource.getMappingDataSourceId()));
 
 		jsonWebServiceClient.doPost(
 			urlString + "/set-mapping-data-source-id", responseParameters);
 
-		getFields(Long.parseLong(mappingDataSourceId));
+		getFields(mappingDataSource.getMappingDataSourceId());
 
 		// **** END DEV ONLY ****
 
+		return mappingDataSource;
 	}
 
 	public static void getFields(long mappingDataSourceId) {
