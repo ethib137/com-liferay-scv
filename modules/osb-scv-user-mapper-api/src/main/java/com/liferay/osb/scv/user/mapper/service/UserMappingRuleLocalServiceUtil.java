@@ -152,9 +152,14 @@ public class UserMappingRuleLocalServiceUtil {
 		return getService().getIndexableActionableDynamicQuery();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONArray getUserMappingRuleDestinationFieldsCount(
+	public static com.liferay.portal.kernel.json.JSONArray getUserMappingRuleDestinationFields(
 		long companyId) throws java.lang.Exception {
-		return getService().getUserMappingRuleDestinationFieldsCount(companyId);
+		return getService().getUserMappingRuleDestinationFields(companyId);
+	}
+
+	public static com.liferay.portal.kernel.json.JSONArray getUserMappingRules(
+		long companyId, java.lang.String destinationField) {
+		return getService().getUserMappingRules(companyId, destinationField);
 	}
 
 	/**
@@ -188,6 +193,12 @@ public class UserMappingRuleLocalServiceUtil {
 	*/
 	public static java.lang.String getOSGiServiceIdentifier() {
 		return getService().getOSGiServiceIdentifier();
+	}
+
+	public static java.util.List<com.liferay.osb.scv.user.mapper.model.UserMappingRule> deleteUserMappingRules(
+		long companyId, java.lang.String destinationField)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().deleteUserMappingRules(companyId, destinationField);
 	}
 
 	/**
@@ -259,11 +270,6 @@ public class UserMappingRuleLocalServiceUtil {
 	public static java.util.List<com.liferay.osb.scv.user.mapper.model.UserMappingRule> getUserMappingRules(
 		long companyId, int start, int end) {
 		return getService().getUserMappingRules(companyId, start, end);
-	}
-
-	public static java.util.List<com.liferay.osb.scv.user.mapper.model.UserMappingRule> getUserMappingRules(
-		long companyId, java.lang.String destinationField) {
-		return getService().getUserMappingRules(companyId, destinationField);
 	}
 
 	public static java.util.List<com.liferay.osb.scv.user.mapper.model.UserMappingRule> getUserMappingRules(

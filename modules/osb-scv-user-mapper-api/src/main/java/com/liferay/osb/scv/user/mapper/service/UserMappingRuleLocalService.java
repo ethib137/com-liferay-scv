@@ -143,8 +143,12 @@ public interface UserMappingRuleLocalService extends BaseLocalService,
 	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONArray getUserMappingRuleDestinationFieldsCount(long companyId)
+	public JSONArray getUserMappingRuleDestinationFields(long companyId)
 		throws java.lang.Exception;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONArray getUserMappingRules(long companyId,
+		java.lang.String destinationField);
 
 	/**
 	* @throws PortalException
@@ -172,6 +176,9 @@ public interface UserMappingRuleLocalService extends BaseLocalService,
 	* @return the OSGi service identifier
 	*/
 	public java.lang.String getOSGiServiceIdentifier();
+
+	public List<UserMappingRule> deleteUserMappingRules(long companyId,
+		java.lang.String destinationField) throws PortalException;
 
 	/**
 	* Performs a dynamic query on the database and returns the matching rows.
@@ -229,10 +236,6 @@ public interface UserMappingRuleLocalService extends BaseLocalService,
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<UserMappingRule> getUserMappingRules(long companyId, int start,
 		int end);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public List<UserMappingRule> getUserMappingRules(long companyId,
-		java.lang.String destinationField);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<UserMappingRule> getUserMappingRules(long mappingDataSourceId);

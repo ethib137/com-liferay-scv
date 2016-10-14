@@ -46,8 +46,10 @@ import java.util.Set;
 public class UserMappingRuleLocalServiceImpl
 	extends UserMappingRuleLocalServiceBaseImpl {
 
-	public JSONArray getUserMappingRuleDestinationFieldsCount(long companyId)
+	public JSONArray getUserMappingRuleDestinationFields(long companyId)
 		throws Exception {
+
+		Set<String> set = new HashSet<>();
 
 		Map<String, Integer> map = new HashMap<>();
 
@@ -63,6 +65,10 @@ public class UserMappingRuleLocalServiceImpl
 
 			count++;
 
+			if (userMappingRule.getRequired()) {
+				set.add(userMappingRule.getDestinationField());
+			}
+
 			map.put(userMappingRule.getDestinationField(), count);
 		}
 
@@ -73,6 +79,7 @@ public class UserMappingRuleLocalServiceImpl
 
 			jsonObject.put("name", entry.getKey());
 			jsonObject.put("count", entry.getValue());
+			jsonObject.put("required", set.contains(entry.getKey()));
 
 			jsonArray.put(jsonObject);
 		}
@@ -147,6 +154,20 @@ public class UserMappingRuleLocalServiceImpl
 		return userMappingRule;
 	}
 
+	public List<UserMappingRule> deleteUserMappingRules(
+			long companyId, String destinationField)
+		throws PortalException {
+
+		List<UserMappingRule> userMappingRules =
+			userMappingRulePersistence.findByC_D(companyId, destinationField);
+
+		for (UserMappingRule userMappingRule : userMappingRules) {
+			userMappingRulePersistence.remove(userMappingRule);
+		}
+
+		return userMappingRules;
+	}
+
 	@Override
 	public UserMappingRule deleteUserMappingRule(long userMappingRuleId)
 		throws PortalException {
@@ -176,11 +197,33 @@ public class UserMappingRuleLocalServiceImpl
 			companyId, start, end);
 	}
 
-	public List<UserMappingRule> getUserMappingRules(
+	public JSONArray getUserMappingRules(
 		long companyId, String destinationField) {
 
-		return userMappingRulePersistence.findByC_D(
-			companyId, destinationField);
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+		List<UserMappingRule> userMappingRules =
+			userMappingRulePersistence.findByC_D(companyId, destinationField);
+
+		for (UserMappingRule userMappingRule : userMappingRules) {
+			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+			MappingDataSource mappingDataSource =
+				mappingDataSourcePersistence.fetchByPrimaryKey(
+					userMappingRule.getMappingDataSourceId());
+
+			jsonObject.put(
+				"mappingDataSourceName", mappingDataSource.getName());
+
+			jsonObject.put("required", userMappingRule.getRequired());
+			jsonObject.put("sourceField", userMappingRule.getSourceField());
+			jsonObject.put(
+				"userMappingRuleId", userMappingRule.getUserMappingRuleId());
+
+			jsonArray.put(jsonObject);
+		}
+
+		return jsonArray;
 	}
 
 	@Override

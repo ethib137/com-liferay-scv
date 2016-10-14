@@ -38,12 +38,12 @@ public class UserMappingRuleServiceImpl extends UserMappingRuleServiceBaseImpl {
 		throws Exception {
 
 		return
-			userMappingRuleLocalService.getUserMappingRuleDestinationFieldsCount(
+			userMappingRuleLocalService.getUserMappingRuleDestinationFields(
 				CompanyThreadLocal.getCompanyId());
 	}
 
 	@Override
-	public List<UserMappingRule> getUserMappingRules(String destinationField)
+	public JSONArray getUserMappingRules(String destinationField)
 			throws PortalException {
 
 		return userMappingRuleLocalService.getUserMappingRules(

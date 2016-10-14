@@ -79,13 +79,12 @@ public class UserMappingRuleServiceSoap {
 		}
 	}
 
-	public static com.liferay.osb.scv.user.mapper.model.UserMappingRuleSoap[] getUserMappingRules(
+	public static java.lang.String getUserMappingRules(
 		java.lang.String destinationField) throws RemoteException {
 		try {
-			java.util.List<com.liferay.osb.scv.user.mapper.model.UserMappingRule> returnValue =
-				UserMappingRuleServiceUtil.getUserMappingRules(destinationField);
+			com.liferay.portal.kernel.json.JSONArray returnValue = UserMappingRuleServiceUtil.getUserMappingRules(destinationField);
 
-			return com.liferay.osb.scv.user.mapper.model.UserMappingRuleSoap.toSoapModels(returnValue);
+			return returnValue.toString();
 		}
 		catch (Exception e) {
 			_log.error(e, e);

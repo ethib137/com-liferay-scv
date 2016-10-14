@@ -86,7 +86,7 @@ public class UserMappingRuleServiceHttp {
 		}
 	}
 
-	public static java.util.List<com.liferay.osb.scv.user.mapper.model.UserMappingRule> getUserMappingRules(
+	public static com.liferay.portal.kernel.json.JSONArray getUserMappingRules(
 		HttpPrincipal httpPrincipal, java.lang.String destinationField)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
@@ -109,7 +109,7 @@ public class UserMappingRuleServiceHttp {
 				throw new com.liferay.portal.kernel.exception.SystemException(e);
 			}
 
-			return (java.util.List<com.liferay.osb.scv.user.mapper.model.UserMappingRule>)returnObj;
+			return (com.liferay.portal.kernel.json.JSONArray)returnObj;
 		}
 		catch (com.liferay.portal.kernel.exception.SystemException se) {
 			_log.error(se, se);
