@@ -57,6 +57,11 @@ public class UserMappingRuleServiceUtil {
 		return getService().deleteUserMappingRule(userMappingRuleId);
 	}
 
+	public static com.liferay.portal.kernel.json.JSONArray getUserMappingRuleDestinationFields()
+		throws java.lang.Exception {
+		return getService().getUserMappingRuleDestinationFields();
+	}
+
 	/**
 	* Returns the OSGi service identifier.
 	*
@@ -76,11 +81,6 @@ public class UserMappingRuleServiceUtil {
 		java.lang.String destinationField)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return getService().getUserMappingRules(destinationField);
-	}
-
-	public static java.util.Map<java.lang.String, java.lang.Integer> getUserMappingRuleDestinationFields()
-		throws java.lang.Exception {
-		return getService().getUserMappingRuleDestinationFields();
 	}
 
 	public static UserMappingRuleService getService() {

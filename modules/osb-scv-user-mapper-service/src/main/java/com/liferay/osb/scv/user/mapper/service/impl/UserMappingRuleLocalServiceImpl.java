@@ -46,8 +46,7 @@ import java.util.Set;
 public class UserMappingRuleLocalServiceImpl
 	extends UserMappingRuleLocalServiceBaseImpl {
 
-	public Map<String, Integer> getUserMappingRuleDestinationFieldsCount(
-			long companyId)
+	public JSONArray getUserMappingRuleDestinationFieldsCount(long companyId)
 		throws Exception {
 
 		Map<String, Integer> map = new HashMap<>();
@@ -67,7 +66,18 @@ public class UserMappingRuleLocalServiceImpl
 			map.put(userMappingRule.getDestinationField(), count);
 		}
 
-		return map;
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+		for (Map.Entry<String, Integer> entry : map.entrySet()) {
+			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+			jsonObject.put("name", entry.getKey());
+			jsonObject.put("value", entry.getValue());
+
+			jsonArray.put(jsonObject);
+		}
+
+		return jsonArray;
 	}
 
 	@Override

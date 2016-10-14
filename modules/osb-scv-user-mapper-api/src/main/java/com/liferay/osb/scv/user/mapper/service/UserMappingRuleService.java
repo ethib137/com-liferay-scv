@@ -20,6 +20,7 @@ import com.liferay.osb.scv.user.mapper.model.UserMappingRule;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.security.access.control.AccessControlled;
 import com.liferay.portal.kernel.service.BaseService;
@@ -29,7 +30,6 @@ import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.Transactional;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Provides the remote service interface for UserMappingRule. Methods of this
@@ -63,6 +63,10 @@ public interface UserMappingRuleService extends BaseService {
 	public UserMappingRule deleteUserMappingRule(long userMappingRuleId)
 		throws PortalException;
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONArray getUserMappingRuleDestinationFields()
+		throws java.lang.Exception;
+
 	/**
 	* Returns the OSGi service identifier.
 	*
@@ -77,8 +81,4 @@ public interface UserMappingRuleService extends BaseService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<UserMappingRule> getUserMappingRules(
 		java.lang.String destinationField) throws PortalException;
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Map<java.lang.String, java.lang.Integer> getUserMappingRuleDestinationFields()
-		throws java.lang.Exception;
 }

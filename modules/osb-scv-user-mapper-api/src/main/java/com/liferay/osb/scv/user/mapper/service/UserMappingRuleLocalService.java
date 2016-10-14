@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.dao.orm.IndexableActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.Projection;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.model.PersistedModel;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
@@ -37,7 +38,6 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import java.io.Serializable;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Provides the local service interface for UserMappingRule. Methods of this
@@ -142,6 +142,10 @@ public interface UserMappingRuleLocalService extends BaseLocalService,
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();
 
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONArray getUserMappingRuleDestinationFieldsCount(long companyId)
+		throws java.lang.Exception;
+
 	/**
 	* @throws PortalException
 	*/
@@ -236,10 +240,6 @@ public interface UserMappingRuleLocalService extends BaseLocalService,
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<UserMappingRule> getUserMappingRules(long mappingDataSourceId,
 		int frequency);
-
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public Map<java.lang.String, java.lang.Integer> getUserMappingRuleDestinationFieldsCount(
-		long companyId) throws java.lang.Exception;
 
 	/**
 	* Returns the number of rows matching the dynamic query.

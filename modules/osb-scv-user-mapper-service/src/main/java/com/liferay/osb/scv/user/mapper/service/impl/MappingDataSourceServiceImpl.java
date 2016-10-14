@@ -32,6 +32,7 @@ import java.util.Map;
 public class MappingDataSourceServiceImpl
 	extends MappingDataSourceServiceBaseImpl {
 
+	@Override
 	public MappingDataSource deleteMappingDataSource(long mappingDataSourceId)
 		throws Exception {
 

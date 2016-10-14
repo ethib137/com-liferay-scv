@@ -152,6 +152,11 @@ public class UserMappingRuleLocalServiceUtil {
 		return getService().getIndexableActionableDynamicQuery();
 	}
 
+	public static com.liferay.portal.kernel.json.JSONArray getUserMappingRuleDestinationFieldsCount(
+		long companyId) throws java.lang.Exception {
+		return getService().getUserMappingRuleDestinationFieldsCount(companyId);
+	}
+
 	/**
 	* @throws PortalException
 	*/
@@ -269,11 +274,6 @@ public class UserMappingRuleLocalServiceUtil {
 	public static java.util.List<com.liferay.osb.scv.user.mapper.model.UserMappingRule> getUserMappingRules(
 		long mappingDataSourceId, int frequency) {
 		return getService().getUserMappingRules(mappingDataSourceId, frequency);
-	}
-
-	public static java.util.Map<java.lang.String, java.lang.Integer> getUserMappingRuleDestinationFieldsCount(
-		long companyId) throws java.lang.Exception {
-		return getService().getUserMappingRuleDestinationFieldsCount(companyId);
 	}
 
 	/**

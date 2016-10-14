@@ -65,6 +65,20 @@ import java.rmi.RemoteException;
  */
 @ProviderType
 public class UserMappingRuleServiceSoap {
+	public static java.lang.String getUserMappingRuleDestinationFields()
+		throws RemoteException {
+		try {
+			com.liferay.portal.kernel.json.JSONArray returnValue = UserMappingRuleServiceUtil.getUserMappingRuleDestinationFields();
+
+			return returnValue.toString();
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	public static com.liferay.osb.scv.user.mapper.model.UserMappingRuleSoap[] getUserMappingRules(
 		java.lang.String destinationField) throws RemoteException {
 		try {

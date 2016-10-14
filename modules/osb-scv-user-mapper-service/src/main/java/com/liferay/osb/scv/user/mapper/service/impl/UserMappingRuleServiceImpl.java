@@ -21,6 +21,7 @@ import com.liferay.osb.scv.user.mapper.model.UserMappingRule;
 import com.liferay.osb.scv.user.mapper.service.base.UserMappingRuleServiceBaseImpl;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 
@@ -33,7 +34,7 @@ import java.util.Map;
 @ProviderType
 public class UserMappingRuleServiceImpl extends UserMappingRuleServiceBaseImpl {
 
-	public Map<String, Integer> getUserMappingRuleDestinationFields()
+	public JSONArray getUserMappingRuleDestinationFields()
 		throws Exception {
 
 		return

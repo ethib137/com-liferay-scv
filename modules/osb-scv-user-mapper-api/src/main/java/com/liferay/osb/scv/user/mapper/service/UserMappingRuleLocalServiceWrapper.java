@@ -154,6 +154,12 @@ public class UserMappingRuleLocalServiceWrapper
 		return _userMappingRuleLocalService.getIndexableActionableDynamicQuery();
 	}
 
+	@Override
+	public com.liferay.portal.kernel.json.JSONArray getUserMappingRuleDestinationFieldsCount(
+		long companyId) throws java.lang.Exception {
+		return _userMappingRuleLocalService.getUserMappingRuleDestinationFieldsCount(companyId);
+	}
+
 	/**
 	* @throws PortalException
 	*/
@@ -287,12 +293,6 @@ public class UserMappingRuleLocalServiceWrapper
 		long mappingDataSourceId, int frequency) {
 		return _userMappingRuleLocalService.getUserMappingRules(mappingDataSourceId,
 			frequency);
-	}
-
-	@Override
-	public java.util.Map<java.lang.String, java.lang.Integer> getUserMappingRuleDestinationFieldsCount(
-		long companyId) throws java.lang.Exception {
-		return _userMappingRuleLocalService.getUserMappingRuleDestinationFieldsCount(companyId);
 	}
 
 	/**
