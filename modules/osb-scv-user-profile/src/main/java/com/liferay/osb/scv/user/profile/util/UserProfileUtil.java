@@ -124,20 +124,18 @@ public class UserProfileUtil {
 		return jsonObject;
 	}
 
-	public static JSONObject getSCVUserProfiles() throws Exception {
-		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+	public static JSONArray getSCVUserProfiles() throws Exception {
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
 		List<Long> scvUserProfileIds = _userProfileCommandUtil.search(
 			"scvUserProfileId",
 			UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE);
 
 		for (long scvUserProfileId : scvUserProfileIds) {
-			jsonObject.put(
-				String.valueOf(scvUserProfileId),
-				getSCVUserProfile(scvUserProfileId));
+			jsonArray.put(getSCVUserProfile(scvUserProfileId));
 		}
 
-		return jsonObject;
+		return jsonArray;
 	}
 
 	public static JSONArray getSCVVersioning(
