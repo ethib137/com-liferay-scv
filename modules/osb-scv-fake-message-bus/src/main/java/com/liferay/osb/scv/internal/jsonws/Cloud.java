@@ -53,7 +53,7 @@ import java.util.Map;
 public class Cloud {
 
 	public static Object addDataSource(
-			String name, String url, String login, String password)
+			String name, String url, String login, String password, String type)
 		throws Exception {
 
 		Message message = new Message();
@@ -65,6 +65,7 @@ public class Cloud {
 		parameters.put("url", url);
 		parameters.put("login", login);
 		parameters.put("password", password);
+		parameters.put("type", type);
 
 		message.setValues(parameters);
 
