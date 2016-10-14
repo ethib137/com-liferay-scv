@@ -121,8 +121,6 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 		if (!hasIndex(_INDEX_NAME)) {
 			addIndex();
 		}
-
-		deleteAll();
 	}
 
 	@Override
