@@ -88,15 +88,9 @@ public class UserMapperMessageListener extends BaseMessageListener {
 		else if (method.equals("addDataSource")) {
 			String name = message.getString("name");
 			String url = message.getString("url");
-
-			long type = MappingDataSourceConstants.CUSTOM;
-
-			if (!url.equals("null") && !Validator.isBlank(url)) {
-				type = MappingDataSourceConstants.LIFERAY;
-			}
-
 			String login = message.getString("login");
 			String password = message.getString("password");
+			long type = message.getLong("type");
 			String availableFields = message.getString("availableFields");
 
 			MappingDataSource mappingDataSource =

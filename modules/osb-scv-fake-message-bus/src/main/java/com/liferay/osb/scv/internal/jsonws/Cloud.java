@@ -53,7 +53,7 @@ import java.util.Map;
 public class Cloud {
 
 	public static Object addDataSource(
-			String name, String urlString, String login, String password)
+			String name, String url, String login, String password)
 		throws Exception {
 
 		Message message = new Message();
@@ -62,7 +62,7 @@ public class Cloud {
 
 		parameters.put("method", "addDataSource");
 		parameters.put("name", name);
-		parameters.put("url", urlString);
+		parameters.put("url", url);
 		parameters.put("login", login);
 		parameters.put("password", password);
 
@@ -77,10 +77,10 @@ public class Cloud {
 		JSONWebServiceClient jsonWebServiceClient =
 			new JSONWebServiceClientImpl();
 
-		URL url = new URL(urlString);
+		URL urlObject = new URL(url);
 
-		jsonWebServiceClient.setHostName(url.getHost());
-		jsonWebServiceClient.setHostPort(url.getPort());
+		jsonWebServiceClient.setHostName(urlObject.getHost());
+		jsonWebServiceClient.setHostPort(urlObject.getPort());
 		jsonWebServiceClient.setLogin(login);
 		jsonWebServiceClient.setPassword(password);
 
@@ -91,7 +91,7 @@ public class Cloud {
 			String.valueOf(mappingDataSource.getMappingDataSourceId()));
 
 		jsonWebServiceClient.doPost(
-			urlString + "/set-mapping-data-source-id", responseParameters);
+			url + "/set-mapping-data-source-id", responseParameters);
 
 		getFields(mappingDataSource.getMappingDataSourceId());
 
