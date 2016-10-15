@@ -341,15 +341,15 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 		SearchRequestBuilder searchRequestBuilder = _client.prepareSearch();
 
 		searchRequestBuilder.setIndices(_INDEX_NAME);
-		searchRequestBuilder.setSize(size);
-		searchRequestBuilder.setFrom(from);
 		searchRequestBuilder.setQuery(QueryBuilders.matchAllQuery());
 		searchRequestBuilder.setTypes(documentType);
+		searchRequestBuilder.setFrom(from);
+		searchRequestBuilder.setSize(size);
 
 		TermsBuilder termsBuilder = AggregationBuilders.terms("ids");
 
 		termsBuilder.field(field);
-		termsBuilder.size(0);
+		termsBuilder.size(size);
 
 		searchRequestBuilder.addAggregation(termsBuilder);
 
