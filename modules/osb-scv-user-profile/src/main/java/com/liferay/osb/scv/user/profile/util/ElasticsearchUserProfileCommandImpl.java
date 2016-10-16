@@ -343,13 +343,11 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 		searchRequestBuilder.setIndices(_INDEX_NAME);
 		searchRequestBuilder.setQuery(QueryBuilders.matchAllQuery());
 		searchRequestBuilder.setTypes(documentType);
-		searchRequestBuilder.setFrom(from);
-		searchRequestBuilder.setSize(size);
 
 		TermsBuilder termsBuilder = AggregationBuilders.terms("ids");
 
 		termsBuilder.field(field);
-		termsBuilder.size(size);
+		termsBuilder.size(0);
 
 		searchRequestBuilder.addAggregation(termsBuilder);
 
@@ -361,7 +359,9 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 
 		List<Terms.Bucket> buckets = terms.getBuckets();
 
-		for (int i = 0; i < buckets.size(); i++) {
+		//TODO Not the best way to do pagination. Need to improve.
+
+		for (int i = from; i < from + size; i++) {
 			Terms.Bucket bucket = buckets.get(i);
 
 			searchResults.add(GetterUtil.getLong(bucket.getKey()));
