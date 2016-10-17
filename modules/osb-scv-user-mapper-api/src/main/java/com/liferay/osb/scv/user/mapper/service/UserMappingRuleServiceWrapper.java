@@ -58,6 +58,11 @@ public class UserMappingRuleServiceWrapper implements UserMappingRuleService,
 	}
 
 	@Override
+	public com.liferay.portal.kernel.json.JSONArray getUserMappingRuleFrequencies() {
+		return _userMappingRuleService.getUserMappingRuleFrequencies();
+	}
+
+	@Override
 	public com.liferay.portal.kernel.json.JSONArray getUserMappingRules(
 		java.lang.String destinationField)
 		throws com.liferay.portal.kernel.exception.PortalException {

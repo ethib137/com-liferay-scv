@@ -18,10 +18,14 @@ import aQute.bnd.annotation.ProviderType;
 
 import com.liferay.osb.scv.user.mapper.internal.event.constants.MappingDataSourceConstants;
 import com.liferay.osb.scv.user.mapper.model.UserMappingRule;
+import com.liferay.osb.scv.user.mapper.sample.Frequency;
+import com.liferay.osb.scv.user.mapper.sample.FrequencyUtil;
 import com.liferay.osb.scv.user.mapper.service.base.UserMappingRuleServiceBaseImpl;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 
@@ -40,6 +44,21 @@ public class UserMappingRuleServiceImpl extends UserMappingRuleServiceBaseImpl {
 		return
 			userMappingRuleLocalService.getUserMappingRuleDestinationFields(
 				CompanyThreadLocal.getCompanyId());
+	}
+
+	public JSONArray getUserMappingRuleFrequencies() {
+		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
+
+		for (Frequency frequency : FrequencyUtil.getFrequencies()) {
+			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+			jsonObject.put("name", frequency.getName());
+			jsonObject.put("frequencyId", frequency.getFrequencyId());
+
+			jsonArray.put(jsonObject);
+		}
+
+		return jsonArray;
 	}
 
 	@Override

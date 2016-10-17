@@ -86,12 +86,39 @@ public class UserMappingRuleServiceHttp {
 		}
 	}
 
+	public static com.liferay.portal.kernel.json.JSONArray getUserMappingRuleFrequencies(
+		HttpPrincipal httpPrincipal) {
+		try {
+			MethodKey methodKey = new MethodKey(UserMappingRuleServiceUtil.class,
+					"getUserMappingRuleFrequencies",
+					_getUserMappingRuleFrequenciesParameterTypes1);
+
+			MethodHandler methodHandler = new MethodHandler(methodKey);
+
+			Object returnObj = null;
+
+			try {
+				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
+			}
+			catch (Exception e) {
+				throw new com.liferay.portal.kernel.exception.SystemException(e);
+			}
+
+			return (com.liferay.portal.kernel.json.JSONArray)returnObj;
+		}
+		catch (com.liferay.portal.kernel.exception.SystemException se) {
+			_log.error(se, se);
+
+			throw se;
+		}
+	}
+
 	public static com.liferay.portal.kernel.json.JSONArray getUserMappingRules(
 		HttpPrincipal httpPrincipal, java.lang.String destinationField)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(UserMappingRuleServiceUtil.class,
-					"getUserMappingRules", _getUserMappingRulesParameterTypes1);
+					"getUserMappingRules", _getUserMappingRulesParameterTypes2);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey,
 					destinationField);
@@ -125,7 +152,7 @@ public class UserMappingRuleServiceHttp {
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(UserMappingRuleServiceUtil.class,
-					"addUserMappingRule", _addUserMappingRuleParameterTypes2);
+					"addUserMappingRule", _addUserMappingRuleParameterTypes3);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey,
 					mappingDataSourceId, fieldSetId, modelName, sourceField,
@@ -159,7 +186,7 @@ public class UserMappingRuleServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(UserMappingRuleServiceUtil.class,
 					"deleteUserMappingRules",
-					_deleteUserMappingRulesParameterTypes3);
+					_deleteUserMappingRulesParameterTypes4);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey,
 					destinationField);
@@ -192,7 +219,7 @@ public class UserMappingRuleServiceHttp {
 		try {
 			MethodKey methodKey = new MethodKey(UserMappingRuleServiceUtil.class,
 					"deleteUserMappingRule",
-					_deleteUserMappingRuleParameterTypes4);
+					_deleteUserMappingRuleParameterTypes5);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey,
 					userMappingRuleId);
@@ -224,7 +251,7 @@ public class UserMappingRuleServiceHttp {
 		throws com.liferay.portal.kernel.exception.PortalException {
 		try {
 			MethodKey methodKey = new MethodKey(UserMappingRuleServiceUtil.class,
-					"getUserMappingRules", _getUserMappingRulesParameterTypes5);
+					"getUserMappingRules", _getUserMappingRulesParameterTypes6);
 
 			MethodHandler methodHandler = new MethodHandler(methodKey, start,
 					end);
@@ -254,21 +281,23 @@ public class UserMappingRuleServiceHttp {
 	private static Log _log = LogFactoryUtil.getLog(UserMappingRuleServiceHttp.class);
 	private static final Class<?>[] _getUserMappingRuleDestinationFieldsParameterTypes0 =
 		new Class[] {  };
-	private static final Class<?>[] _getUserMappingRulesParameterTypes1 = new Class[] {
+	private static final Class<?>[] _getUserMappingRuleFrequenciesParameterTypes1 =
+		new Class[] {  };
+	private static final Class<?>[] _getUserMappingRulesParameterTypes2 = new Class[] {
 			java.lang.String.class
 		};
-	private static final Class<?>[] _addUserMappingRuleParameterTypes2 = new Class[] {
+	private static final Class<?>[] _addUserMappingRuleParameterTypes3 = new Class[] {
 			long.class, long.class, java.lang.String.class,
 			java.lang.String.class, java.lang.String.class, int.class,
 			boolean.class
 		};
-	private static final Class<?>[] _deleteUserMappingRulesParameterTypes3 = new Class[] {
+	private static final Class<?>[] _deleteUserMappingRulesParameterTypes4 = new Class[] {
 			java.lang.String.class
 		};
-	private static final Class<?>[] _deleteUserMappingRuleParameterTypes4 = new Class[] {
+	private static final Class<?>[] _deleteUserMappingRuleParameterTypes5 = new Class[] {
 			long.class
 		};
-	private static final Class<?>[] _getUserMappingRulesParameterTypes5 = new Class[] {
+	private static final Class<?>[] _getUserMappingRulesParameterTypes6 = new Class[] {
 			int.class, int.class
 		};
 }

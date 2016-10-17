@@ -62,6 +62,10 @@ public class UserMappingRuleServiceUtil {
 		return getService().getUserMappingRuleDestinationFields();
 	}
 
+	public static com.liferay.portal.kernel.json.JSONArray getUserMappingRuleFrequencies() {
+		return getService().getUserMappingRuleFrequencies();
+	}
+
 	public static com.liferay.portal.kernel.json.JSONArray getUserMappingRules(
 		java.lang.String destinationField)
 		throws com.liferay.portal.kernel.exception.PortalException {

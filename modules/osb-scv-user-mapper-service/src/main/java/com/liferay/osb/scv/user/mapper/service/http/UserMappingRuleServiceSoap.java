@@ -79,6 +79,20 @@ public class UserMappingRuleServiceSoap {
 		}
 	}
 
+	public static java.lang.String getUserMappingRuleFrequencies()
+		throws RemoteException {
+		try {
+			com.liferay.portal.kernel.json.JSONArray returnValue = UserMappingRuleServiceUtil.getUserMappingRuleFrequencies();
+
+			return returnValue.toString();
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	public static java.lang.String getUserMappingRules(
 		java.lang.String destinationField) throws RemoteException {
 		try {

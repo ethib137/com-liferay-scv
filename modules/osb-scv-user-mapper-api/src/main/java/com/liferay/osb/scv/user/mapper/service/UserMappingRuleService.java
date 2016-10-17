@@ -68,6 +68,9 @@ public interface UserMappingRuleService extends BaseService {
 		throws java.lang.Exception;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public JSONArray getUserMappingRuleFrequencies();
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public JSONArray getUserMappingRules(java.lang.String destinationField)
 		throws PortalException;
 
