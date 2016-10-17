@@ -150,7 +150,7 @@ public class UserMapperMessageListener extends BaseMessageListener {
 
 			UserMappingRuleServiceUtil.addUserMappingRule(
 				mappingDataSourceId, 0, modelName, sourceField,
-				destinationField, FrequencyUtil.ONCE, false);
+				destinationField, FrequencyUtil.ONCE, false, false);
 		}
 		else if (method.equals("getFields")) {
 			GetFieldsEvent getFieldsEvent = new GetFieldsEvent(
