@@ -60,6 +60,12 @@ public interface UserMappingRuleService extends BaseService {
 		java.lang.String sourceField, java.lang.String destinationField,
 		int frequency, boolean required) throws PortalException;
 
+	public UserMappingRule addUserMappingRule(long mappingDataSourceId,
+		long fieldSetId, java.lang.String modelName,
+		java.lang.String sourceField, java.lang.String destinationField,
+		int frequency, boolean sync, boolean required)
+		throws PortalException;
+
 	public UserMappingRule deleteUserMappingRule(long userMappingRuleId)
 		throws PortalException;
 

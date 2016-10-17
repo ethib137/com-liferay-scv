@@ -69,17 +69,28 @@ public class UserMappingRuleServiceImpl extends UserMappingRuleServiceBaseImpl {
 			CompanyThreadLocal.getCompanyId(), destinationField);
 	}
 
-	@Override
 	public UserMappingRule addUserMappingRule(
 			long mappingDataSourceId, long fieldSetId, String modelName,
 			String sourceField, String destinationField, int frequency,
 			boolean required)
 		throws PortalException {
 
+		return addUserMappingRule(
+			mappingDataSourceId, fieldSetId, modelName,
+			sourceField, destinationField, frequency, true, required);
+	}
+
+	@Override
+	public UserMappingRule addUserMappingRule(
+			long mappingDataSourceId, long fieldSetId, String modelName,
+			String sourceField, String destinationField, int frequency,
+			boolean sync, boolean required)
+		throws PortalException {
+
 		return userMappingRuleLocalService.addUserMappingRule(
 			CompanyThreadLocal.getCompanyId(), getUserId(), mappingDataSourceId,
-			modelName, fieldSetId, sourceField, destinationField,
-			frequency, required);
+			fieldSetId, modelName, sourceField, destinationField,
+			frequency, sync, required);
 	}
 
 	public List<UserMappingRule> deleteUserMappingRules(String destinationField)

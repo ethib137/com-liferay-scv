@@ -51,6 +51,16 @@ public class UserMappingRuleServiceUtil {
 			modelName, sourceField, destinationField, frequency, required);
 	}
 
+	public static com.liferay.osb.scv.user.mapper.model.UserMappingRule addUserMappingRule(
+		long mappingDataSourceId, long fieldSetId, java.lang.String modelName,
+		java.lang.String sourceField, java.lang.String destinationField,
+		int frequency, boolean sync, boolean required)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService()
+				   .addUserMappingRule(mappingDataSourceId, fieldSetId,
+			modelName, sourceField, destinationField, frequency, sync, required);
+	}
+
 	public static com.liferay.osb.scv.user.mapper.model.UserMappingRule deleteUserMappingRule(
 		long userMappingRuleId)
 		throws com.liferay.portal.kernel.exception.PortalException {

@@ -107,10 +107,10 @@ public class UserMapperMessageListener extends BaseMessageListener {
 					UserMappingRuleLocalServiceUtil.addUserMappingRule(
 							CompanyThreadLocal.getCompanyId(), 0,
 							mappingDataSource.getMappingDataSourceId(),
-							String.valueOf(liferayField[0]), 0,
+							0, String.valueOf(liferayField[0]),
 							String.valueOf(liferayField[1]),
 							String.valueOf(liferayField[2]), FrequencyUtil.INSTANT,
-							(Boolean) liferayField[3]);
+							false, (Boolean) liferayField[3]);
 				}
 
 				List<UserMappingRule> userMappingRules =

@@ -90,8 +90,9 @@ public class UserMappingRuleLocalServiceImpl
 	@Override
 	public UserMappingRule addUserMappingRule(
 			long companyId, long userId, long mappingDataSourceId,
-			String modelName, long fieldSetId, String sourceField,
-			String destinationField, int frequency, boolean required)
+			long fieldSetId, String modelName, String sourceField,
+			String destinationField, int frequency, boolean sync,
+			boolean required)
 		throws PortalException {
 
 		long userMappingRuleId = counterLocalService.increment();
@@ -140,16 +141,14 @@ public class UserMappingRuleLocalServiceImpl
 
 		userMappingRules.add(userMappingRule);
 
-		if ((mappingDataSource.getType() == MappingDataSourceConstants.CUSTOM) ||
-			(frequency == FrequencyUtil.INSTANT)){
-
+		if (!sync) {
 			return userMappingRule;
 		}
 
-//		Event updateUsersEvent = new UpdateUsersEvent(
-//			mappingDataSourceId, userMappingRules);
-//
-//		updateUsersEvent.run();
+		Event updateUsersEvent = new UpdateUsersEvent(
+			mappingDataSourceId, userMappingRules);
+
+		updateUsersEvent.run();
 
 		return userMappingRule;
 	}

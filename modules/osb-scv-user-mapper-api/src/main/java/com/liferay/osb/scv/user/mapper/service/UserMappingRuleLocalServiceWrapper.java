@@ -48,14 +48,14 @@ public class UserMappingRuleLocalServiceWrapper
 
 	@Override
 	public com.liferay.osb.scv.user.mapper.model.UserMappingRule addUserMappingRule(
-		long companyId, long userId, long mappingDataSourceId,
-		java.lang.String modelName, long fieldSetId,
-		java.lang.String sourceField, java.lang.String destinationField,
-		int frequency, boolean required)
+		long companyId, long userId, long mappingDataSourceId, long fieldSetId,
+		java.lang.String modelName, java.lang.String sourceField,
+		java.lang.String destinationField, int frequency, boolean sync,
+		boolean required)
 		throws com.liferay.portal.kernel.exception.PortalException {
 		return _userMappingRuleLocalService.addUserMappingRule(companyId,
-			userId, mappingDataSourceId, modelName, fieldSetId, sourceField,
-			destinationField, frequency, required);
+			userId, mappingDataSourceId, fieldSetId, modelName, sourceField,
+			destinationField, frequency, sync, required);
 	}
 
 	/**

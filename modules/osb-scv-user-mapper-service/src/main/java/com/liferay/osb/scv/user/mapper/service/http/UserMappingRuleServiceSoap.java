@@ -125,6 +125,25 @@ public class UserMappingRuleServiceSoap {
 		}
 	}
 
+	public static com.liferay.osb.scv.user.mapper.model.UserMappingRuleSoap addUserMappingRule(
+		long mappingDataSourceId, long fieldSetId, java.lang.String modelName,
+		java.lang.String sourceField, java.lang.String destinationField,
+		int frequency, boolean sync, boolean required)
+		throws RemoteException {
+		try {
+			com.liferay.osb.scv.user.mapper.model.UserMappingRule returnValue = UserMappingRuleServiceUtil.addUserMappingRule(mappingDataSourceId,
+					fieldSetId, modelName, sourceField, destinationField,
+					frequency, sync, required);
+
+			return com.liferay.osb.scv.user.mapper.model.UserMappingRuleSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	public static com.liferay.osb.scv.user.mapper.model.UserMappingRuleSoap[] deleteUserMappingRules(
 		java.lang.String destinationField) throws RemoteException {
 		try {
