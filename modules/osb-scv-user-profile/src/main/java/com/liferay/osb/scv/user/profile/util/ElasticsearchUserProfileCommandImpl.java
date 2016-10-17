@@ -362,6 +362,10 @@ public class ElasticsearchUserProfileCommandImpl implements UserProfileCommand {
 		//TODO Not the best way to do pagination. Need to improve.
 
 		for (int i = from; i < from + size; i++) {
+			if (i >= buckets.size()) {
+				break;
+			}
+
 			Terms.Bucket bucket = buckets.get(i);
 
 			searchResults.add(GetterUtil.getLong(bucket.getKey()));
