@@ -23,7 +23,7 @@ import com.liferay.osb.scv.user.mapper.sample.DataSource;
 import com.liferay.osb.scv.user.mapper.sample.DataSourceUtil;
 import com.liferay.osb.scv.user.mapper.sample.Frequency;
 import com.liferay.osb.scv.user.mapper.sample.FrequencyUtil;
-import com.liferay.osb.scv.user.mapper.service.MappingDataSourceLocalServiceUtil;
+import com.liferay.osb.scv.user.mapper.service.MappingDataSourceLocalService;
 import com.liferay.osb.scv.user.mapper.service.UserMappingRuleLocalService;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -46,12 +46,10 @@ public class SchedulerUtil {
 
 	@Activate
 	public void activate() throws Exception {
-		DataSourceUtil.clearDataSources();
-
 		List<Frequency> frequencies = FrequencyUtil.getFrequencies();
 
 		_scheduledExecutorService = Executors.newScheduledThreadPool(
-			frequencies.size() - 1);
+			frequencies.size() - 2);
 
 		for (final Frequency frequency : frequencies) {
 			if ((frequency.getFrequencyId() == FrequencyUtil.ONCE) ||
@@ -64,8 +62,7 @@ public class SchedulerUtil {
 
 				public void run() {
 					for (MappingDataSource mappingDataSource :
-							MappingDataSourceLocalServiceUtil.
-								getMappingDataSources(-1, -1)) {
+							_mappingDataSourceLocalService.getMappingDataSources(-1, -1)) {
 
 						try {
 							List<UserMappingRule> userMappingRules =
@@ -100,6 +97,9 @@ public class SchedulerUtil {
 	private static final Log _log = LogFactoryUtil.getLog(SchedulerUtil.class);
 
 	private ScheduledExecutorService _scheduledExecutorService;
+
+	@Reference
+	private MappingDataSourceLocalService _mappingDataSourceLocalService;
 
 	@Reference
 	private UserMappingRuleLocalService _userMappingRuleLocalService;

@@ -195,6 +195,10 @@ public class UpdateUsersEvent extends BaseEvent {
 			destinationJSONObject.put("User", destinationUserJSONArray);
 		}
 
+		if (map.isEmpty()) {
+			map.put("User", Arrays.asList("emailAddress"));
+		}
+
 		UserProfileUtil.updateDataSourceEntries(
 			_mappingDataSourceId, map, destinationJSONObject);
 	}

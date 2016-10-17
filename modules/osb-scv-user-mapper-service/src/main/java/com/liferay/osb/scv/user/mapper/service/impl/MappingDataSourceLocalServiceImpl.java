@@ -33,6 +33,11 @@ import java.util.List;
 public class MappingDataSourceLocalServiceImpl
 	extends MappingDataSourceLocalServiceBaseImpl {
 
+	public List<MappingDataSource> getMappingDataSources(int start, int end) {
+		return mappingDataSourcePersistence.findAll(
+			start, end, null, false);
+	}
+
 	public List<MappingDataSource> getMappingDataSources(long companyId) {
 		return mappingDataSourcePersistence.findByCompanyId(companyId);
 	}
