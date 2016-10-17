@@ -78,6 +78,9 @@ public interface UserMappingRuleService extends BaseService {
 	*/
 	public java.lang.String getOSGiServiceIdentifier();
 
+	public List<UserMappingRule> deleteUserMappingRules(
+		java.lang.String destinationField) throws PortalException;
+
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public List<UserMappingRule> getUserMappingRules(int start, int end)
 		throws PortalException;

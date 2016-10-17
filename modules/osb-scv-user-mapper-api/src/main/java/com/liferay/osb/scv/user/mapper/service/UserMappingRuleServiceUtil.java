@@ -77,6 +77,12 @@ public class UserMappingRuleServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
+	public static java.util.List<com.liferay.osb.scv.user.mapper.model.UserMappingRule> deleteUserMappingRules(
+		java.lang.String destinationField)
+		throws com.liferay.portal.kernel.exception.PortalException {
+		return getService().deleteUserMappingRules(destinationField);
+	}
+
 	public static java.util.List<com.liferay.osb.scv.user.mapper.model.UserMappingRule> getUserMappingRules(
 		int start, int end)
 		throws com.liferay.portal.kernel.exception.PortalException {

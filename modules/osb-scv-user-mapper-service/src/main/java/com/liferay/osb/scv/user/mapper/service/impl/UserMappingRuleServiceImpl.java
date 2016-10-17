@@ -63,6 +63,13 @@ public class UserMappingRuleServiceImpl extends UserMappingRuleServiceBaseImpl {
 			frequency, required);
 	}
 
+	public List<UserMappingRule> deleteUserMappingRules(String destinationField)
+		throws PortalException {
+
+		return userMappingRuleLocalService.deleteUserMappingRules(
+			CompanyThreadLocal.getCompanyId(), destinationField);
+	}
+
 	@Override
 	public UserMappingRule deleteUserMappingRule(long userMappingRuleId)
 		throws PortalException {

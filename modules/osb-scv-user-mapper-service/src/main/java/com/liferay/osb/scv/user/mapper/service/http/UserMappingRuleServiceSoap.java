@@ -111,6 +111,21 @@ public class UserMappingRuleServiceSoap {
 		}
 	}
 
+	public static com.liferay.osb.scv.user.mapper.model.UserMappingRuleSoap[] deleteUserMappingRules(
+		java.lang.String destinationField) throws RemoteException {
+		try {
+			java.util.List<com.liferay.osb.scv.user.mapper.model.UserMappingRule> returnValue =
+				UserMappingRuleServiceUtil.deleteUserMappingRules(destinationField);
+
+			return com.liferay.osb.scv.user.mapper.model.UserMappingRuleSoap.toSoapModels(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	public static com.liferay.osb.scv.user.mapper.model.UserMappingRuleSoap deleteUserMappingRule(
 		long userMappingRuleId) throws RemoteException {
 		try {
