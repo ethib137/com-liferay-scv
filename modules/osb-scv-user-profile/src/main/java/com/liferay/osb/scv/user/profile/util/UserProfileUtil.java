@@ -253,6 +253,8 @@ public class UserProfileUtil {
 			List<String> searchTerms, JSONObject jsonObject)
 		throws Exception {
 
+		removeEmptyValues(jsonObject);
+
 		String documentType = UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE;
 
 		if (searchTerms.isEmpty()) {
@@ -439,6 +441,22 @@ public class UserProfileUtil {
 		}
 
 		return jsonArray1;
+	}
+
+	protected static void removeEmptyValues(JSONObject jsonObject) {
+		Iterator<String> iterator = jsonObject.keys();
+
+		while (iterator.hasNext()) {
+			String key = iterator.next();
+
+			String value = jsonObject.getString(key);
+
+			if (Validator.isNull(value) || value.equals("{}") ||
+				value.equals("[]")) {
+
+				iterator.remove();
+			}
+		}
 	}
 
 	@Reference(unbind = "-")
