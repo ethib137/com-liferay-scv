@@ -14,10 +14,9 @@
 
 package com.liferay.osb.scv.connector.internal.model;
 
-import com.liferay.osb.scv.connector.internal.MappingDataSourceUtil;
+import com.liferay.osb.scv.connector.internal.jsonws.SCVJSONUtil;
 import com.liferay.petra.json.web.service.client.JSONWebServiceClient;
 import com.liferay.petra.json.web.service.client.JSONWebServiceClientImpl;
-import com.liferay.portal.kernel.bean.BeanParamUtil;
 import com.liferay.portal.kernel.bean.BeanPropertiesUtil;
 import com.liferay.portal.kernel.exception.ModelListenerException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -27,13 +26,13 @@ import com.liferay.portal.kernel.model.BaseModelListener;
 import com.liferay.portal.kernel.model.PersistedModel;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.PersistedModelLocalService;
-import com.liferay.portal.kernel.service.PersistedModelLocalServiceRegistry;
 import com.liferay.portal.kernel.service.PersistedModelLocalServiceRegistryUtil;
-import com.liferay.portal.kernel.service.persistence.impl.BasePersistenceImpl;
 import com.liferay.portal.kernel.util.ArrayUtil;
 
 import java.io.Serializable;
+
 import java.net.URL;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -58,55 +57,16 @@ public abstract class SCVModel<T extends BaseModel<T>>
 	public abstract List<Long> getPrimaryKeys(User user) throws Exception;
 
 	public String[] getRequiredFields() {
-		return new String[]{};
+		return new String[0];
 	}
 
 	public boolean isPrimary() {
 		return false;
 	}
 
-	protected void addData(Map<String, String> parameters)
-		throws Exception {
-
-		try {
-			getJSONWebServiceClient().doPost(
-				_serverName + "/api/jsonws/Cloud.cloud/add-data", parameters);
-		}
-		catch (Exception e) {
-		}
-	}
-
-	@Override
-	public void onBeforeCreate(T model) throws ModelListenerException {
-	}
-
-	@Override
-	public void onBeforeUpdate(T model) throws ModelListenerException {
-		long mappingDataSourceId = MappingDataSourceUtil.getMappingDataSourceId();
-
-		if (mappingDataSourceId == 0) {
-			return;
-		}
-
-		PersistedModel originalModel = null;
-
-		try {
-			PersistedModelLocalService persistedModelLocalService =
-					PersistedModelLocalServiceRegistryUtil.
-							getPersistedModelLocalService(model.getModelClassName());
-			originalModel = persistedModelLocalService.getPersistedModel(
-					model.getPrimaryKeyObj());
-
-			_models.put(model.getPrimaryKeyObj(), originalModel);
-		}
-		catch (Exception e) {
-			throw new ModelListenerException();
-		}
-	}
-
 	@Override
 	public void onAfterCreate(T model) throws ModelListenerException {
-		long mappingDataSourceId = MappingDataSourceUtil.getMappingDataSourceId();
+		long mappingDataSourceId = SCVJSONUtil.getMappingDataSourceId();
 
 		if (mappingDataSourceId == 0) {
 			return;
@@ -118,13 +78,12 @@ public abstract class SCVModel<T extends BaseModel<T>>
 
 		Map<String, String> map = new HashMap<>();
 
-
 		for (Map.Entry<String, Object> entry : modelAttributes.entrySet()) {
 			String key = entry.getKey();
 
 			if (!ArrayUtil.contains(getAvailableFields(), key) &&
 				(!ArrayUtil.contains(getRequiredFields(), key) ||
-					!key.equals(getPrimaryKeyField()))) {
+				 !key.equals(getPrimaryKeyField()))) {
 
 				continue;
 			}
@@ -132,33 +91,27 @@ public abstract class SCVModel<T extends BaseModel<T>>
 			map.put(key, String.valueOf(entry.getValue()));
 		}
 
-
 		if (map.isEmpty()) {
 			return;
 		}
 
-		List<Object> objects = new ArrayList<>();
+		Class<?> modelClass = model.getModelClass();
 
-		objects.add(map);
-
-		jsonObject.put(model.getModelClass().getSimpleName(), objects);
+		jsonObject.put(modelClass.getSimpleName(), Arrays.asList(map));
 
 		Map<String, String> parameters = new HashMap<>();
 
-		parameters.put("mappingDataSourceId", String.valueOf(MappingDataSourceUtil.getMappingDataSourceId()));
+		parameters.put(
+			"mappingDataSourceId",
+			String.valueOf(SCVJSONUtil.getMappingDataSourceId()));
 		parameters.put("json", jsonObject.toJSONString());
 
-		try {
-			addData(parameters);
-		}
-		catch (Exception e) {
-			throw new ModelListenerException(e);
-		}
+		addData(parameters);
 	}
 
 	@Override
 	public void onAfterUpdate(T model) throws ModelListenerException {
-		long mappingDataSourceId = MappingDataSourceUtil.getMappingDataSourceId();
+		long mappingDataSourceId = SCVJSONUtil.getMappingDataSourceId();
 
 		if (mappingDataSourceId == 0) {
 			return;
@@ -188,7 +141,9 @@ public abstract class SCVModel<T extends BaseModel<T>>
 			String value = BeanPropertiesUtil.getString(
 				_models.get(model.getPrimaryKeyObj()), entry.getKey());
 
-			if (value.equals(BeanPropertiesUtil.getString(model, entry.getKey()))) {
+			if (value.equals(
+					BeanPropertiesUtil.getString(model, entry.getKey()))) {
+
 				continue;
 			}
 
@@ -207,7 +162,9 @@ public abstract class SCVModel<T extends BaseModel<T>>
 
 		Map<String, String> parameters = new HashMap<>();
 
-		parameters.put("mappingDataSourceId", String.valueOf(MappingDataSourceUtil.getMappingDataSourceId()));
+		parameters.put(
+			"mappingDataSourceId",
+			String.valueOf(SCVJSONUtil.getMappingDataSourceId()));
 		parameters.put("json", jsonObject.toJSONString());
 
 		try {
@@ -218,8 +175,33 @@ public abstract class SCVModel<T extends BaseModel<T>>
 		}
 	}
 
-	private static final Map<Serializable, PersistedModel> _models =
-		new HashMap<Serializable, PersistedModel>();
+	@Override
+	public void onBeforeCreate(T model) throws ModelListenerException {
+	}
+
+	@Override
+	public void onBeforeUpdate(T model) throws ModelListenerException {
+		long mappingDataSourceId = SCVJSONUtil.getMappingDataSourceId();
+
+		if (mappingDataSourceId == 0) {
+			return;
+		}
+
+		try {
+			PersistedModelLocalService persistedModelLocalService =
+				PersistedModelLocalServiceRegistryUtil.
+					getPersistedModelLocalService(model.getModelClassName());
+
+			PersistedModel originalModel =
+				persistedModelLocalService.getPersistedModel(
+					model.getPrimaryKeyObj());
+
+			_models.put(model.getPrimaryKeyObj(), originalModel);
+		}
+		catch (Exception e) {
+			throw new ModelListenerException();
+		}
+	}
 
 	protected static JSONWebServiceClient getJSONWebServiceClient()
 		throws Exception {
@@ -240,6 +222,18 @@ public abstract class SCVModel<T extends BaseModel<T>>
 		return _jsonWebServiceClient;
 	}
 
+	protected void addData(Map<String, String> parameters) {
+		try {
+			JSONWebServiceClient jsonWebServiceClient =
+				getJSONWebServiceClient();
+
+			jsonWebServiceClient.doPost(
+				_serverName + "/api/jsonws/Cloud.cloud/add-data", parameters);
+		}
+		catch (Exception e) {
+		}
+	}
+
 	protected List<Long> getList(long[] ids) {
 		LongStream longStream = Arrays.stream(ids);
 
@@ -248,6 +242,9 @@ public abstract class SCVModel<T extends BaseModel<T>>
 		return stream.collect(Collectors.toList());
 	}
 
-	private static String _serverName = "http://docker-engine-wcm:9012";
 	private static JSONWebServiceClient _jsonWebServiceClient;
+	private static final Map<Serializable, PersistedModel> _models =
+		new HashMap<>();
+	private static String _serverName = "http://docker-engine-wcm:9012";
+
 }

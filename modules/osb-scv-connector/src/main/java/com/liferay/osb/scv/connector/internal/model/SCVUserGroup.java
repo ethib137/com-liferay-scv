@@ -29,7 +29,7 @@ public class SCVUserGroup extends SCVModel<UserGroup> {
 
 	@Override
 	public String[] getAvailableFields() {
-		return _availableFields;
+		return _AVAILABLE_FIELDS;
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class SCVUserGroup extends SCVModel<UserGroup> {
 
 	@Override
 	public String getPrimaryKeyField() {
-		return _primaryKeyField;
+		return _PRIMARY_KEY_FIELD;
 	}
 
 	@Override
@@ -47,8 +47,9 @@ public class SCVUserGroup extends SCVModel<UserGroup> {
 		return getList(user.getUserGroupIds());
 	}
 
-	private static String[] _availableFields =
+	private static final String[] _AVAILABLE_FIELDS =
 		new String[] {"name", "description"};
-	private static String _primaryKeyField = "userGroupId";
+
+	private static final String _PRIMARY_KEY_FIELD = "userGroupId";
 
 }

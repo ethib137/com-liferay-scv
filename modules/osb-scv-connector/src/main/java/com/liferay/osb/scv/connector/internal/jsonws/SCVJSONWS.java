@@ -16,7 +16,6 @@ package com.liferay.osb.scv.connector.internal.jsonws;
 
 import com.liferay.expando.kernel.model.ExpandoBridge;
 import com.liferay.expando.kernel.util.ExpandoBridgeFactoryUtil;
-import com.liferay.osb.scv.connector.internal.MappingDataSourceUtil;
 import com.liferay.osb.scv.connector.internal.model.SCVModel;
 import com.liferay.osgi.util.ServiceTrackerFactory;
 import com.liferay.portal.kernel.bean.BeanPropertiesUtil;
@@ -31,8 +30,6 @@ import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.ModelListenerRegistrationUtil;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
-import com.liferay.portal.kernel.service.ClassNameLocalService;
-import com.liferay.portal.kernel.service.PortletPreferencesLocalService;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.ReflectionUtil;
@@ -60,7 +57,6 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
 /**
@@ -69,21 +65,14 @@ import org.osgi.util.tracker.ServiceTrackerCustomizer;
 @Component(
 	immediate = true,
 	property = {
-		"json.web.service.context.name=SCVUser",
-		"json.web.service.context.path=SCVUser"
+		"json.web.service.context.name=dxp", "json.web.service.context.path=dxp"
 	},
-	service = SCVUserJSONWS.class
+	service = SCVJSONWS.class
 )
 @JSONWebService
-public class SCVUserJSONWS {
+public class SCVJSONWS {
 
-	public void setMappingDataSourceId(long mappingDataSourceId)
-		throws Exception {
-
-		MappingDataSourceUtil.setMappingDataSourceId(mappingDataSourceId);
-	}
-
-	public JSONObject getFields() throws Exception {
+	public JSONObject getAvailableFields() throws Exception {
 		JSONObject fieldsJSONObject = JSONFactoryUtil.createJSONObject();
 
 		for (Class<?> clazz : _modelClasses.values()) {
@@ -99,18 +88,18 @@ public class SCVUserJSONWS {
 		return fieldsJSONObject;
 	}
 
-	public JSONObject getUsers(Map<String, List<String>> fields)
+	public JSONObject getUserUpdates(Map<String, List<String>> fields)
 		throws Exception {
 
-		JSONObject usersJSONObject = JSONFactoryUtil.createJSONObject();
-
-		List<String> userFields = fields.get("User");
+		List<String> userFields = fields.get(_PRIMARY_MODEL_NAME);
 
 		if (userFields == null) {
 			userFields = new ArrayList<>();
 		}
 
-		SCVModel scvModel = _scvModelMap.get("User");
+		JSONObject usersJSONObject = JSONFactoryUtil.createJSONObject();
+
+		SCVModel scvModel = _scvModelMap.get(_PRIMARY_MODEL_NAME);
 
 		userFields.add(scvModel.getPrimaryKeyField());
 		userFields.addAll(Arrays.asList(scvModel.getRequiredFields()));
@@ -122,14 +111,13 @@ public class SCVUserJSONWS {
 		for (User user : _userLocalService.getUsers(-1, -1)) {
 			JSONObject userJSONObject = JSONFactoryUtil.createJSONObject();
 
-			addUser(userJSONObject, user, userFields);
-
+			addModel(userJSONObject, user, userFields);
 			addAssociations(userJSONObject, user, fields, associatedModels);
 
 			usersJSONArray.put(userJSONObject);
 		}
 
-		usersJSONObject.put("User", usersJSONArray);
+		usersJSONObject.put(_PRIMARY_MODEL_NAME, usersJSONArray);
 
 		for (Map.Entry<String, Set<BaseModel<?>>> entrySet :
 				associatedModels.entrySet()) {
@@ -146,7 +134,7 @@ public class SCVUserJSONWS {
 			for (BaseModel<?> baseModel : entrySet.getValue()) {
 				JSONObject modelJSONObject = JSONFactoryUtil.createJSONObject();
 
-				addUser(modelJSONObject, baseModel, modelFields);
+				addModel(modelJSONObject, baseModel, modelFields);
 
 				modelsJSONArray.put(modelJSONObject);
 			}
@@ -157,191 +145,30 @@ public class SCVUserJSONWS {
 		return usersJSONObject;
 	}
 
-	public int getUsersCount() {
-		return _userLocalService.getUsersCount();
+	public void setMappingDataSourceId(long mappingDataSourceId)
+		throws Exception {
+
+		SCVJSONUtil.setMappingDataSourceId(mappingDataSourceId);
 	}
 
 	@Activate
 	protected void activate(BundleContext bundleContext) throws Exception {
-		_bundleContext = bundleContext;
-
-		initServiceTracker();
-	}
-
-	protected void addAssociations(
-			JSONObject jsonObject, User user, Map<String, List<String>> fields,
-			Map<String, Set<BaseModel<?>>> models)
-		throws Exception {
-
-		for (Map.Entry<String, SCVModel> entry : _scvModelMap.entrySet()) {
-			SCVModel scvModel = entry.getValue();
-
-			if (scvModel.isPrimary()) {
-				continue;
-			}
-
-			List<String> fieldsList = fields.get(entry.getKey());
-
-			if ((fieldsList == null) || fieldsList.isEmpty()) {
-				continue;
-			}
-
-			jsonObject.put(
-				scvModel.getPrimaryKeyField().concat("s"),
-				scvModel.getPrimaryKeys(user));
-
-			addModel(models, entry.getKey(), scvModel.getModels(user));
-		}
-	}
-
-	protected void addModel(
-		Map<String, Set<BaseModel<?>>> modelMap, String key,
-		List<? extends BaseModel<?>> modelList) {
-
-		Set<BaseModel<?>> models = modelMap.get(key);
-
-		if (models == null) {
-			models = new HashSet<>();
-		}
-
-		models.addAll(modelList);
-
-		modelMap.put(key, models);
-	}
-
-	protected JSONObject addUser(
-		JSONObject jsonObject, BaseModel baseModel, List<String> fields) {
-
-		if ((fields == null) || fields.isEmpty()) {
-			return null;
-		}
-
-		ExpandoBridge expandoBridge = baseModel.getExpandoBridge();
-
-		for (String field : fields) {
-			if (field.startsWith(_CUSTOM_FIELD)) {
-				Serializable attribute = expandoBridge.getAttribute(
-					field.replace(_CUSTOM_FIELD, StringPool.BLANK));
-
-				jsonObject.put(field, String.valueOf(attribute));
-			}
-			else {
-				Object object = BeanPropertiesUtil.getObject(baseModel, field);
-
-				if (object instanceof BaseModel) {
-					String name = BeanPropertiesUtil.getStringSilent(
-						object, "name");
-
-					jsonObject.put(field, name);
-				}
-				else {
-					jsonObject.put(field, object);
-				}
-			}
-		}
-
-		return jsonObject;
-	}
-
-	protected Class<?> getClass(String className)
-		throws ClassNotFoundException {
-
-		try {
-			Thread currentThread = Thread.currentThread();
-
-			ClassLoader classLoader = currentThread.getContextClassLoader();
-
-			return Class.forName(className, false, classLoader);
-		}
-		catch (Exception e) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(e.getMessage(), e);
-			}
-
-			return null;
-		}
-	}
-
-	protected void getFields(JSONObject jsonObject, Class<?> clazz, SCVModel scvModel)
-		throws Exception {
-
-		BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
-
-		PropertyDescriptor[] propertyDescriptors =
-			beanInfo.getPropertyDescriptors();
-
-		List<String> availableFields = Arrays.asList(
-			scvModel.getAvailableFields());
-
-		for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
-			String name = propertyDescriptor.getName();
-
-			if (!availableFields.contains(name)) {
-				continue;
-			}
-
-			Class<?> propertyTypeClass =
-				propertyDescriptor.getPropertyType();
-
-			jsonObject.put(name, propertyTypeClass.getSimpleName());
-		}
-	}
-
-	protected JSONObject getFields(Class<?> clazz) {
-		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
-
-		try {
-			SCVModel scvModel = _scvModelMap.get(clazz.getSimpleName());
-
-			getFields(jsonObject, clazz, scvModel);
-			getFields(jsonObject, clazz.getInterfaces()[0], scvModel);
-
-			ExpandoBridge expandoBridge =
-				ExpandoBridgeFactoryUtil.getExpandoBridge(
-					CompanyThreadLocal.getCompanyId(), clazz.getName());
-
-			Enumeration<String> attributeNames =
-				expandoBridge.getAttributeNames();
-
-			while (attributeNames.hasMoreElements()) {
-				String attributeName = attributeNames.nextElement();
-
-				int attributeType = expandoBridge.getAttributeType(
-					attributeName);
-
-				jsonObject.put(
-					_CUSTOM_FIELD.concat(attributeName),
-					SCVExpandoColumnConstants.getSCVTypeLabel(attributeType));
-			}
-
-			return jsonObject;
-		}
-		catch (Exception e) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(e.getMessage(), e);
-			}
-
-			return jsonObject;
-		}
-	}
-
-	protected void initServiceTracker() throws Exception {
-		_serviceTracker = ServiceTrackerFactory.open(
-			_bundleContext, SCVModel.class,
+		ServiceTrackerFactory.open(
+			bundleContext, SCVModel.class,
 			new ServiceTrackerCustomizer<SCVModel, SCVModel>() {
 
 				@Override
 				public SCVModel addingService(
 					ServiceReference<SCVModel> serviceReference) {
 
-					SCVModel scvModel = _bundleContext.getService(
+					SCVModel scvModel = bundleContext.getService(
 						serviceReference);
 
 					Class<?> clazz = getModelClass(scvModel);
 
-					_scvModelMap.put(clazz.getSimpleName(), scvModel);
 					_modelClasses.put(
 						clazz.getSimpleName(), getModelClass(scvModel));
+					_scvModelMap.put(clazz.getSimpleName(), scvModel);
 
 					ModelListenerRegistrationUtil.register(scvModel);
 
@@ -365,30 +192,32 @@ public class SCVUserJSONWS {
 
 					Class<?> clazz = getModelClass(scvModel);
 
-					_scvModelMap.remove(clazz.getSimpleName(), scvModel);
 					_modelClasses.remove(
 						clazz.getSimpleName(), getModelClass(scvModel));
+					_scvModelMap.remove(clazz.getSimpleName(), scvModel);
 
 					ModelListenerRegistrationUtil.unregister(scvModel);
 
-					_bundleContext.ungetService(serviceReference);
+					bundleContext.ungetService(serviceReference);
 				}
 
 				protected Class<?> getModelClass(SCVModel scvModel) {
 					Class<?> clazz = scvModel.getClass();
 
-					if (ProxyUtil.isProxyClass(clazz)) {
-						InvocationHandler invocationHandler =
-							ProxyUtil.getInvocationHandler(scvModel);
+					if (!ProxyUtil.isProxyClass(clazz)) {
+						return ReflectionUtil.getGenericSuperType(clazz);
+					}
 
-						if (invocationHandler instanceof ClassLoaderBeanHandler) {
-							ClassLoaderBeanHandler classLoaderBeanHandler =
-								(ClassLoaderBeanHandler)invocationHandler;
+					InvocationHandler invocationHandler =
+						ProxyUtil.getInvocationHandler(scvModel);
 
-							Object bean = classLoaderBeanHandler.getBean();
+					if (invocationHandler instanceof ClassLoaderBeanHandler) {
+						ClassLoaderBeanHandler classLoaderBeanHandler =
+							(ClassLoaderBeanHandler)invocationHandler;
 
-							clazz = bean.getClass();
-						}
+						Object bean = classLoaderBeanHandler.getBean();
+
+						clazz = bean.getClass();
 					}
 
 					return ReflectionUtil.getGenericSuperType(clazz);
@@ -397,23 +226,158 @@ public class SCVUserJSONWS {
 			});
 	}
 
-	@Reference
-	private PortletPreferencesLocalService _portletPreferencesLocalService;
+	protected void addAssociatedModel(
+		Map<String, Set<BaseModel<?>>> modelMap, String key,
+		List<? extends BaseModel<?>> modelList) {
+
+		Set<BaseModel<?>> models = modelMap.get(key);
+
+		if (models == null) {
+			models = new HashSet<>();
+		}
+
+		models.addAll(modelList);
+
+		modelMap.put(key, models);
+	}
+
+	protected void addAssociations(
+			JSONObject jsonObject, User user, Map<String, List<String>> fields,
+			Map<String, Set<BaseModel<?>>> models)
+		throws Exception {
+
+		for (Map.Entry<String, SCVModel> entry : _scvModelMap.entrySet()) {
+			SCVModel scvModel = entry.getValue();
+
+			if (scvModel.isPrimary()) {
+				continue;
+			}
+
+			List<String> fieldsList = fields.get(entry.getKey());
+
+			if ((fieldsList == null) || fieldsList.isEmpty()) {
+				continue;
+			}
+
+			String primaryKeyField = scvModel.getPrimaryKeyField();
+
+			jsonObject.put(
+				primaryKeyField.concat("s"), scvModel.getPrimaryKeys(user));
+
+			addAssociatedModel(
+				models, entry.getKey(), scvModel.getModels(user));
+		}
+	}
+
+	protected JSONObject addModel(
+		JSONObject jsonObject, BaseModel baseModel, List<String> fields) {
+
+		if ((fields == null) || fields.isEmpty()) {
+			return null;
+		}
+
+		ExpandoBridge expandoBridge = baseModel.getExpandoBridge();
+
+		for (String field : fields) {
+			if (field.startsWith(_EXPANDO_FIELD)) {
+				Serializable attribute = expandoBridge.getAttribute(
+					field.replace(_EXPANDO_FIELD, StringPool.BLANK));
+
+				jsonObject.put(field, String.valueOf(attribute));
+			}
+			else {
+				Object object = BeanPropertiesUtil.getObject(baseModel, field);
+
+				if (object instanceof BaseModel) {
+					String name = BeanPropertiesUtil.getStringSilent(
+						object, "name");
+
+					jsonObject.put(field, name);
+				}
+				else {
+					jsonObject.put(field, object);
+				}
+			}
+		}
+
+		return jsonObject;
+	}
+
+	protected JSONObject getFields(Class<?> clazz) {
+		JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+
+		try {
+			SCVModel scvModel = _scvModelMap.get(clazz.getSimpleName());
+
+			getFields(jsonObject, clazz, scvModel);
+
+			Class<?>[] interfaces = clazz.getInterfaces();
+
+			getFields(jsonObject, interfaces[0], scvModel);
+
+			ExpandoBridge expandoBridge =
+				ExpandoBridgeFactoryUtil.getExpandoBridge(
+					CompanyThreadLocal.getCompanyId(), clazz.getName());
+
+			Enumeration<String> attributeNames =
+				expandoBridge.getAttributeNames();
+
+			while (attributeNames.hasMoreElements()) {
+				String attributeName = attributeNames.nextElement();
+
+				int attributeType = expandoBridge.getAttributeType(
+					attributeName);
+
+				jsonObject.put(
+					_EXPANDO_FIELD.concat(attributeName),
+					SCVExpandoColumnConstants.getSCVTypeLabel(attributeType));
+			}
+
+			return jsonObject;
+		}
+		catch (Exception e) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(e.getMessage(), e);
+			}
+
+			return jsonObject;
+		}
+	}
+
+	protected void getFields(
+			JSONObject jsonObject, Class<?> clazz, SCVModel scvModel)
+		throws Exception {
+
+		BeanInfo beanInfo = Introspector.getBeanInfo(clazz);
+
+		PropertyDescriptor[] propertyDescriptors =
+			beanInfo.getPropertyDescriptors();
+
+		List<String> availableFields = Arrays.asList(
+			scvModel.getAvailableFields());
+
+		for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+			String name = propertyDescriptor.getName();
+
+			if (!availableFields.contains(name)) {
+				continue;
+			}
+
+			Class<?> propertyTypeClass = propertyDescriptor.getPropertyType();
+
+			jsonObject.put(name, propertyTypeClass.getSimpleName());
+		}
+	}
 
 	protected static final Map<String, Class<?>> _modelClasses =
 		new HashMap<>();
 	protected static final Map<String, SCVModel> _scvModelMap = new HashMap<>();
 
-	private static final String _CUSTOM_FIELD = "CUSTOM_FIELD#";
+	private static final String _EXPANDO_FIELD = "com.liferay.expando#";
 
-	private static final Log _log = LogFactoryUtil.getLog(SCVUserJSONWS.class);
+	private static final String _PRIMARY_MODEL_NAME = "User";
 
-	private static BundleContext _bundleContext;
-
-	@Reference
-	private ClassNameLocalService _classNameLocalService;
-
-	private ServiceTracker<SCVModel, SCVModel> _serviceTracker;
+	private static final Log _log = LogFactoryUtil.getLog(SCVJSONWS.class);
 
 	@Reference
 	private UserLocalService _userLocalService;

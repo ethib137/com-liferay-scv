@@ -28,7 +28,7 @@ public class SCVUser extends SCVModel<User> {
 
 	@Override
 	public String[] getAvailableFields() {
-		return _availableFields;
+		return _AVAILABLE_FIELDS;
 	}
 
 	@Override
@@ -38,7 +38,7 @@ public class SCVUser extends SCVModel<User> {
 
 	@Override
 	public String getPrimaryKeyField() {
-		return _primaryKeyField;
+		return _PRIMARY_KEY_FIELD;
 	}
 
 	@Override
@@ -56,12 +56,13 @@ public class SCVUser extends SCVModel<User> {
 		return true;
 	}
 
-	private static final String[] _availableFields =
-		new String[] {
-			"emailAddress", "firstName", "jobTitle", "languageId", "lastName",
-			"middleName", "portraitId", "screenName", "status", "timeZoneId"
-		};
-	private static final String _primaryKeyField = "userId";
+	private static final String[] _AVAILABLE_FIELDS = new String[] {
+		"emailAddress", "firstName", "jobTitle", "languageId", "lastName",
+		"middleName", "portraitId", "screenName", "status", "timeZoneId"
+	};
+
+	private static final String _PRIMARY_KEY_FIELD = "userId";
+
 	private static final String[] _requiredFields =
 		new String[] {"emailAddress"};
 

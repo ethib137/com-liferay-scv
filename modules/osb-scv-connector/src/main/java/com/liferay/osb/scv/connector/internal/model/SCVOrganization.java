@@ -29,7 +29,7 @@ public class SCVOrganization extends SCVModel<Organization> {
 
 	@Override
 	public String[] getAvailableFields() {
-		return _availableFields;
+		return _AVAILABLE_FIELDS;
 	}
 
 	@Override
@@ -39,7 +39,7 @@ public class SCVOrganization extends SCVModel<Organization> {
 
 	@Override
 	public String getPrimaryKeyField() {
-		return _primaryKeyField;
+		return _PRIMARY_KEY_FIELD;
 	}
 
 	@Override
@@ -47,7 +47,9 @@ public class SCVOrganization extends SCVModel<Organization> {
 		return getList(user.getOrganizationIds());
 	}
 
-	private static String[] _availableFields = new String[] {"name", "type"};
-	private static String _primaryKeyField = "organizationId";
+	private static final String[] _AVAILABLE_FIELDS =
+		new String[] {"name", "type"};
+
+	private static final String _PRIMARY_KEY_FIELD = "organizationId";
 
 }

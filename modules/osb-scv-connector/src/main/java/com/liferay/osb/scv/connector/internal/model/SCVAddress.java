@@ -30,7 +30,7 @@ public class SCVAddress extends SCVModel<Address> {
 
 	@Override
 	public String[] getAvailableFields() {
-		return _availableFields;
+		return _AVAILABLE_FIELDS;
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class SCVAddress extends SCVModel<Address> {
 
 	@Override
 	public String getPrimaryKeyField() {
-		return _primaryKeyField;
+		return _PRIMARY_KEY_FIELD;
 	}
 
 	@Override
@@ -56,10 +56,10 @@ public class SCVAddress extends SCVModel<Address> {
 		return addressIds;
 	}
 
-	private static String[] _availableFields =
-		new String[] {
-			"city", "country", "region", "street1", "street2", "street3", "zip"
-		};
-	private static String _primaryKeyField = "addressId";
+	private static final String[] _AVAILABLE_FIELDS = new String[] {
+		"city", "country", "region", "street1", "street2", "street3", "zip"
+	};
+
+	private static final String _PRIMARY_KEY_FIELD = "addressId";
 
 }

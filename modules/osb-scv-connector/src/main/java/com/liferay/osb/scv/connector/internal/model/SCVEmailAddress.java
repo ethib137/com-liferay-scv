@@ -30,7 +30,7 @@ public class SCVEmailAddress extends SCVModel<EmailAddress> {
 
 	@Override
 	public String[] getAvailableFields() {
-		return _availableFields;
+		return _AVAILABLE_FIELDS;
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class SCVEmailAddress extends SCVModel<EmailAddress> {
 
 	@Override
 	public String getPrimaryKeyField() {
-		return _primaryKeyField;
+		return _PRIMARY_KEY_FIELD;
 	}
 
 	@Override
@@ -56,7 +56,8 @@ public class SCVEmailAddress extends SCVModel<EmailAddress> {
 		return emailAddressIds;
 	}
 
-	private static String[] _availableFields = new String[0];
-	private static String _primaryKeyField = "emailAddressId";
+	private static final String[] _AVAILABLE_FIELDS = new String[0];
+
+	private static final String _PRIMARY_KEY_FIELD = "emailAddressId";
 
 }

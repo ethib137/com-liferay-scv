@@ -30,7 +30,7 @@ public class SCVContact extends SCVModel<Contact> {
 
 	@Override
 	public String[] getAvailableFields() {
-		return _availableFields;
+		return _AVAILABLE_FIELDS;
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class SCVContact extends SCVModel<Contact> {
 
 	@Override
 	public String getPrimaryKeyField() {
-		return _primaryKeyField;
+		return _PRIMARY_KEY_FIELD;
 	}
 
 	@Override
@@ -56,11 +56,11 @@ public class SCVContact extends SCVModel<Contact> {
 		return list;
 	}
 
-	private static String[] _availableFields =
-		new String[] {
-			"birthday", "employeeNumber", "employeeStatusId", "facebookSn",
-			"jabberSn", "male", "skypeSn", "twitterSn"
-		};
-	private static String _primaryKeyField = "contactId";
+	private static final String[] _AVAILABLE_FIELDS = new String[] {
+		"birthday", "employeeNumber", "employeeStatusId", "facebookSn",
+		"jabberSn", "male", "skypeSn", "twitterSn"
+	};
+
+	private static final String _PRIMARY_KEY_FIELD = "contactId";
 
 }

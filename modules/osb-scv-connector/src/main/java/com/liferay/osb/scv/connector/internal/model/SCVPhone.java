@@ -30,7 +30,7 @@ public class SCVPhone extends SCVModel<Phone> {
 
 	@Override
 	public String[] getAvailableFields() {
-		return _availableFields;
+		return _AVAILABLE_FIELDS;
 	}
 
 	@Override
@@ -40,7 +40,7 @@ public class SCVPhone extends SCVModel<Phone> {
 
 	@Override
 	public String getPrimaryKeyField() {
-		return _primaryKeyField;
+		return _PRIMARY_KEY_FIELD;
 	}
 
 	@Override
@@ -56,8 +56,9 @@ public class SCVPhone extends SCVModel<Phone> {
 		return phoneIds;
 	}
 
-	private static String[] _availableFields =
+	private static final String[] _AVAILABLE_FIELDS =
 		new String[] {"number", "extension", "typeId"};
-	private static String _primaryKeyField = "phoneId";
+
+	private static final String _PRIMARY_KEY_FIELD = "phoneId";
 
 }
