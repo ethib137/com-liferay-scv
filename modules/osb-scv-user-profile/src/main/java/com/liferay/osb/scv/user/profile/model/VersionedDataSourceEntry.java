@@ -16,7 +16,6 @@ package com.liferay.osb.scv.user.profile.model;
 
 import com.liferay.portal.kernel.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -41,7 +40,7 @@ public class VersionedDataSourceEntry extends DataSourceEntry {
 
 		_versioningDataSourceEntry = new DataSourceEntry();
 
-		_versioningDataSourceEntry.addProperty("timestamp", _timestamp);
+		_versioningDataSourceEntry.addSystemProperty("timestamp", _timestamp);
 	}
 
 	@Override
@@ -59,30 +58,14 @@ public class VersionedDataSourceEntry extends DataSourceEntry {
 	public void addProperty(String key, Object value) {
 		Object currentValue = getProperty(key);
 
-		if (!Objects.equals(value, currentValue)) {
-			super.addProperty(key + "_timestamp", _timestamp);
-
-			_versioningDataSourceEntry.addProperty(key, value);
+		if (Objects.equals(value, currentValue)) {
+			return;
 		}
 
-		sourceJSONObject.put(key, value);
-	}
+		super.addProperty(key, value);
+		super.addProperty(key + "_timestamp", _timestamp);
 
-	@Override
-	public List<String> getKeys() {
-		List<String> keys = new ArrayList<>();
-
-		Iterator<String> iterator = sourceJSONObject.keys();
-
-		while (iterator.hasNext()) {
-			String key = iterator.next();
-
-			if (!key.endsWith("_timestamp")) {
-				keys.add(key);
-			}
-		}
-
-		return keys;
+		_versioningDataSourceEntry.addProperty(key, value);
 	}
 
 	public DataSourceEntry getVersioningDataSourceEntry() {

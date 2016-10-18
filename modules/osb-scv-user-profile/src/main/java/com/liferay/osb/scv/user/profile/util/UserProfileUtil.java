@@ -75,41 +75,52 @@ public class UserProfileUtil {
 
 			if (mergeRule.equals("modifiedDate")) {
 				for (DataSourceEntry dataSourceEntry : dataSourceEntries) {
-					long currentTimestamp = dataSourceEntry.getTimestamp(key);
+					if (key.startsWith(UserProfileConstants.FIELD_ASSOCIATED)) {
+						String idFieldName = StringUtil.replace(
+							key, UserProfileConstants.FIELD_ASSOCIATED,
+							StringPool.BLANK);
 
-					if (currentTimestamp > timestamp) {
-						timestamp = currentTimestamp;
+						int index = idFieldName.lastIndexOf("Ids");
 
-						if (key.startsWith(
-								UserProfileConstants.FIELD_ASSOCIATED)) {
+						String tableName = idFieldName.substring(0, index);
 
-							String idFieldName = StringUtil.replace(
-								key, UserProfileConstants.FIELD_ASSOCIATED,
-								StringPool.BLANK);
+						Object currentValue = dataSourceEntry.getProperty(key);
 
-							int index = idFieldName.lastIndexOf("Ids");
+						if (currentValue == null) {
+							continue;
+						}
 
-							String tableName = idFieldName.substring(0, index);
+						String associatedFieldKey =
+							UserProfileConstants.FIELD_ASSOCIATED + tableName;
 
-							Object currentValue = dataSourceEntry.getProperty(
-								key);
+						JSONArray associatedJSONArray = jsonObject.getJSONArray(
+							associatedFieldKey);
 
-							value = getAssociatedJSONArray(
-								(String)dataSourceEntry.getProperty(
-									"mappingDataSourceId"),
+						if (associatedJSONArray == null) {
+							associatedJSONArray =
+								JSONFactoryUtil.createJSONArray();
+						}
+
+						value = mergeJSONArray(
+							associatedJSONArray, getAssociatedJSONArray(
+								Long.valueOf(
+									(String)dataSourceEntry.getSystemProperty(
+										"mappingDataSourceId")),
 								tableName,
 								JSONFactoryUtil.createJSONArray(
-									currentValue.toString()));
+									currentValue.toString())));
+
+						jsonObject.put(associatedFieldKey, value);
+					}
+					else {
+						long currentTimestamp = dataSourceEntry.getTimestamp(
+							key);
+
+						if (currentTimestamp > timestamp) {
+							timestamp = currentTimestamp;
 
 							jsonObject.put(
-								UserProfileConstants.FIELD_ASSOCIATED +
-									tableName,
-								value);
-						}
-						else {
-							value = dataSourceEntry.getProperty(key);
-
-							jsonObject.put(key, value);
+								key, dataSourceEntry.getProperty(key));
 						}
 					}
 				}
@@ -159,17 +170,15 @@ public class UserProfileUtil {
 
 			for (String key : keys) {
 				if (key.equals(field)) {
-					JSONObject jsonObject =
-						JSONFactoryUtil.createJSONObject();
+					JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
-					jsonObject.put(
-						field, dataSourceEntry.getProperty(field));
+					jsonObject.put(field, dataSourceEntry.getProperty(field));
 					jsonObject.put(
 						"mappingDataSourceId",
-						dataSourceEntry.getProperty("mappingDataSourceId"));
+						dataSourceEntry.getSystemProperty(
+							"mappingDataSourceId"));
 					jsonObject.put(
-						"timestamp",
-						dataSourceEntry.getProperty("timestamp"));
+						"timestamp", dataSourceEntry.getTimestamp("timestamp"));
 
 					jsonArray.put(jsonObject);
 				}
@@ -266,7 +275,7 @@ public class UserProfileUtil {
 			if (documentType ==
 					UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE) {
 
-				versionedDataSourceEntry.addProperty(
+				versionedDataSourceEntry.addSystemProperty(
 					"scvUserProfileId", scvUserProfileId);
 			}
 
@@ -284,10 +293,11 @@ public class UserProfileUtil {
 		DataSourceEntry versioningDataSourceEntry =
 			versionedDataSourceEntry.getVersioningDataSourceEntry();
 
-		versioningDataSourceEntry.addProperty("mappingDataSourceId", mappingDataSourceId);
+		versioningDataSourceEntry.addSystemProperty(
+			"mappingDataSourceId", mappingDataSourceId);
 
 		if (documentType == UserProfileConstants.DOCUMENT_TYPE_USER_PROFILE) {
-			versioningDataSourceEntry.addProperty(
+			versioningDataSourceEntry.addSystemProperty(
 				"scvUserProfileId", scvUserProfileId);
 		}
 
@@ -309,7 +319,8 @@ public class UserProfileUtil {
 	}
 
 	protected static JSONArray getAssociatedJSONArray(
-			String mappingDataSourceId, String tableName, JSONArray idFieldsJSONArray)
+			long mappingDataSourceId, String tableName,
+			JSONArray idFieldsJSONArray)
 		throws Exception {
 
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
@@ -320,8 +331,7 @@ public class UserProfileUtil {
 		searchJSONObject.put("tableName", tableName);
 
 		for (int i = 0; i < idFieldsJSONArray.length(); i++) {
-			JSONObject associatedJSONObject =
-				JSONFactoryUtil.createJSONObject();
+			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 
 			String idField = idFieldsJSONArray.getString(i);
 
@@ -338,22 +348,11 @@ public class UserProfileUtil {
 
 			DataSourceEntry dataSourceEntry = dataSourceEntries.get(0);
 
-			JSONObject sourceJSONObject = JSONFactoryUtil.createJSONObject(
-				dataSourceEntry.getSource());
-
-			Iterator<String> keys = sourceJSONObject.keys();
-
-			while (keys.hasNext()) {
-				String key = keys.next();
-
-				if (key.endsWith("_timestamp")) {
-					continue;
-				}
-
-				associatedJSONObject.put(key, sourceJSONObject.get(key));
+			for (String key : dataSourceEntry.getKeys()) {
+				jsonObject.put(key, dataSourceEntry.getProperty(key));
 			}
 
-			jsonArray.put(associatedJSONObject);
+			jsonArray.put(jsonObject);
 		}
 
 		return jsonArray;
@@ -383,7 +382,7 @@ public class UserProfileUtil {
 			DataSourceEntry dataSourceEntry = dataSourceEntries.get(0);
 
 			long scvUserProfileId = GetterUtil.getLong(
-				dataSourceEntry.getProperty("scvUserProfileId"));
+				dataSourceEntry.getSystemProperty("scvUserProfileId"));
 
 			if (Validator.isNotNull(scvUserProfileId)) {
 				return scvUserProfileId;
@@ -415,7 +414,7 @@ public class UserProfileUtil {
 		else {
 			dataSourceEntry = new DataSourceEntry();
 
-			dataSourceEntry.addProperties(jsonObject);
+			dataSourceEntry.addSystemProperties(jsonObject);
 		}
 
 		if (!searchTerms.isEmpty()) {
@@ -425,10 +424,21 @@ public class UserProfileUtil {
 				searchTermsJSONArray.put(searchTerm);
 			}
 
-			dataSourceEntry.addProperty("searchTerms", searchTermsJSONArray);
+			dataSourceEntry.addSystemProperty(
+				"searchTerms", searchTermsJSONArray);
 		}
 
 		return new VersionedDataSourceEntry(dataSourceEntry);
+	}
+
+	protected static JSONArray mergeJSONArray(
+		JSONArray jsonArray1, JSONArray jsonArray2) {
+
+		for (int i = 0; i < jsonArray2.length(); i++) {
+			jsonArray1.put(jsonArray2.get(i));
+		}
+
+		return jsonArray1;
 	}
 
 	@Reference(unbind = "-")

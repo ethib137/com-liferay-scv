@@ -16,7 +16,7 @@ package com.liferay.osb.scv.user.profile.model;
 
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.Validator;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -40,6 +40,14 @@ public class DataSourceEntry {
 
 		try {
 			sourceJSONObject = JSONFactoryUtil.createJSONObject(source);
+
+			if (Validator.isNotNull(source)) {
+				propertiesJSONObject = sourceJSONObject.getJSONObject(
+					"properties");
+			}
+			else {
+				propertiesJSONObject = JSONFactoryUtil.createJSONObject();
+			}
 		}
 		catch (Exception e) {
 		}
@@ -56,6 +64,20 @@ public class DataSourceEntry {
 	}
 
 	public void addProperty(String key, Object value) {
+		propertiesJSONObject.put(key, value);
+	}
+
+	public void addSystemProperties(JSONObject jsonObject) {
+		Iterator<String> iterator = jsonObject.keys();
+
+		while (iterator.hasNext()) {
+			String key = iterator.next();
+
+			addSystemProperty(key, jsonObject.get(key));
+		}
+	}
+
+	public void addSystemProperty(String key, Object value) {
 		sourceJSONObject.put(key, value);
 	}
 
@@ -66,28 +88,44 @@ public class DataSourceEntry {
 	public List<String> getKeys() {
 		List<String> keys = new ArrayList<>();
 
-		Iterator<String> iterator = sourceJSONObject.keys();
+		Iterator<String> iterator = propertiesJSONObject.keys();
 
 		while (iterator.hasNext()) {
-			keys.add(iterator.next());
+			String key = iterator.next();
+
+			if (!key.endsWith("_timestamp")) {
+				keys.add(key);
+			}
 		}
 
 		return keys;
 	}
 
+	public JSONObject getPropertiesJSONObject() {
+		return propertiesJSONObject;
+	}
+
 	public Object getProperty(String key) {
-		return sourceJSONObject.get(key);
+		return propertiesJSONObject.get(key);
 	}
 
 	public String getSource() {
+		sourceJSONObject.put("properties", propertiesJSONObject);
+
 		return sourceJSONObject.toString();
 	}
 
+	public Object getSystemProperty(String key) {
+		return sourceJSONObject.get(key);
+	}
+
 	public long getTimestamp(String key) {
-		return sourceJSONObject.getLong(key + "_timestamp");
+		return propertiesJSONObject.getLong(
+			key + "_timestamp", sourceJSONObject.getLong("timestamp"));
 	}
 
 	protected String dataSourceEntryId;
+	protected JSONObject propertiesJSONObject;
 	protected JSONObject sourceJSONObject;
 
 }
